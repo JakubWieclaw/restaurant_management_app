@@ -1,5 +1,8 @@
 package com.example.restaurantmanagementapp
 
+import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.classes.Opinion
+
 object TestData {
     val mealListSample = listOf(
         Meal(
@@ -56,5 +59,12 @@ object TestData {
             5,
             "NoneNow"
         )
+    )
+
+    val opinionsListSample = listOf(
+        Opinion("Geralt z Rivii",  "Bardzo dobre danie, zawsze gdy jestem w Wyzimie odwiedzam to miejsce i próbuję tej potrawy.",5),
+        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",4),
+        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",3),
+        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",2)
     )
 }

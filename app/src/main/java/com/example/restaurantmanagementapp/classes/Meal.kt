@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp
+package com.example.restaurantmanagementapp.classes
 
 class Meal(
     val id: Int,

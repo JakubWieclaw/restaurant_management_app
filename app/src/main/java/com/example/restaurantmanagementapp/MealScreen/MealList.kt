@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp
+package com.example.restaurantmanagementapp.MealScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,30 +14,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.TestData
+import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
-
-@Composable
-fun MealList(meals: List<Meal>){
-    LazyColumn{
-        items(meals){meal ->
-            MealCard(meal = meal)
-        }
-    }
-
-}
 
 @Preview(
     showBackground = true
@@ -50,6 +40,16 @@ fun MealListPreview(){
 }
 
 @Composable
+fun MealList(meals: List<Meal>){
+    LazyColumn{
+        items(meals){meal ->
+            MealCard(meal = meal)
+        }
+    }
+
+}
+
+@Composable
 fun MealCard(meal: Meal){
     Column(modifier = Modifier.padding(all = 8.dp)){
 
@@ -58,7 +58,7 @@ fun MealCard(meal: Meal){
             modifier = Modifier
                 .height(160.dp)
                 .fillMaxWidth()
-                .background(White,shape=shape),
+                .background(Color.White, shape = shape),
             contentAlignment = Alignment.BottomStart){
             Image(
                 painter = painterResource(id = R.drawable.test_meal_picture_1),
@@ -68,7 +68,7 @@ fun MealCard(meal: Meal){
                     .fillMaxSize()
                     .clip(shape)
             )
-            Text(meal.name, color = White)
+            Text(meal.name, color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -80,12 +80,3 @@ fun MealCard(meal: Meal){
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun MealCardPreview(modifier: Modifier = Modifier){
-//    RestaurantManagementAppTheme {
-//        MealCard()
-//    }
-//}
-

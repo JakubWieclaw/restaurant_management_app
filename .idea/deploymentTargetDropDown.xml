@@ -2,16 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="GreetingPreview">
+      <entry key="MealListPreview (1)">
         <State />
       </entry>
-      <entry key="LoginScreenPreview">
+      <entry key="MealScreenPreview">
         <State />
       </entry>
-      <entry key="MealCardPreview">
+      <entry key="MealScreenPreview (1)">
         <State />
       </entry>
-      <entry key="MealListPreview">
+      <entry key="MealScreenPreview (2)">
+        <State />
+      </entry>
+      <entry key="MyAppprev">
         <State />
       </entry>
       <entry key="app">
