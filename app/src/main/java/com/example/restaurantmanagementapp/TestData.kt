@@ -27,7 +27,7 @@ object TestData {
             2,
             "Ciastka",
             16.99f,
-            2,
+            0,
             2,
             2,
             "NoneNow"
@@ -36,7 +36,7 @@ object TestData {
             3,
             "Murzynek",
             13.99f,
-            3,
+            0,
             3,
             3,
             "NoneNow"
@@ -45,7 +45,7 @@ object TestData {
             4,
             "Kiełbasa śląska",
             16.99f,
-            4,
+            2,
             4,
             4,
             "NoneNow"
@@ -54,7 +54,7 @@ object TestData {
             5,
             "Pomidor",
             6.99f,
-            5,
+            3,
             5,
             5,
             "NoneNow"

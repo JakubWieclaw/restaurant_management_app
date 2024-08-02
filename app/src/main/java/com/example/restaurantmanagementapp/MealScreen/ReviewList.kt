@@ -115,8 +115,6 @@ fun ReviewList(reviews: List<Opinion>) {
             }else{
                 ReviewCard(review = reviews[index])
             }
-
-
         }
     }
 }
