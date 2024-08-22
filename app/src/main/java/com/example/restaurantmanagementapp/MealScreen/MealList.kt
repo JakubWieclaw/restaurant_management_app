@@ -22,12 +22,14 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
@@ -108,7 +110,34 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
         pageCount = { categories.size })
     val coroutineScope = rememberCoroutineScope()
 
+
     Column() {
+        Row( modifier= Modifier.fillMaxWidth(1f).padding(top=10.dp)
+        ){
+            Text(text="App name",fontSize = 24.sp, modifier = Modifier
+                    .padding(start = 10.dp)
+                    .align(Alignment.CenterVertically)
+                    .weight(0.60f))
+            Row(
+                horizontalArrangement = Arrangement.Center, modifier = Modifier
+                    .padding(end = 10.dp)
+                    .align(Alignment.CenterVertically)
+                    .weight(0.40f)
+            ) {
+                Button(onClick = {}){
+                    Icon(
+                        imageVector = Icons.Default.AccountBox,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end=8.dp)
+                            .size(24.dp)
+                            .align(Alignment.CenterVertically),
+                        tint = Color.Black
+                    )
+                    Text("Zaloguj", fontSize = 20.sp)
+                }
+            }
+        }
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.padding(top = 10.dp)
@@ -119,8 +148,10 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
                 }, text = { Text(text = name) })
             }
         }
+
         HorizontalPager(state = pagerState ,modifier = Modifier.fillMaxSize()) { index ->
             LazyColumn(modifier=Modifier.fillMaxSize()) {
+
                 items(meals.filter{it.categoryID==index}) { meal ->
                     MealCard(meal = meal, modifier = Modifier)
                 }
@@ -250,6 +281,11 @@ fun MealCard(meal: Meal, modifier: Modifier) {
             }
         }
     }
+}
+
+fun loginAction(): String{
+
+    return "sukces"
 }
 
 @Composable

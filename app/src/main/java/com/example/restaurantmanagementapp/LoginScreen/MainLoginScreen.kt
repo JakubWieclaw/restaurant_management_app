@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.MainScreen
+package com.example.restaurantmanagementapp.LoginScreen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,8 +21,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.apithings.CallbackHandler
+import com.example.restaurantmanagementapp.apithings.LoginRequest
+import com.example.restaurantmanagementapp.apithings.RegisterRequest
+import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+
+import com.google.gson.*
+import okhttp3.ResponseBody
+
+@Preview
+@Composable
+fun LoginScreenPreview(){
+    RestaurantManagementAppTheme {
+        LoginScreen()
+    }
+}
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,27 +51,31 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    LoginScreen()
                 }
             }
         }
     }
 }
+fun register(username:String, password:String){
+    val registerRequest = RegisterRequest(0,username,"string","string","string",password)
+    val call = RetrofitInstance.api.register(registerRequest)
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+    call.enqueue(
+        CallbackHandler(
+            onSuccess = { responseBody ->
+                println("Odpowiedź: $responseBody")
+                // Tutaj możesz dodać dodatkowe akcje, np. zapis do bazy danych lub nawigację do innego ekranu
+            },
+            onError = { code, errorBody ->
+                println("Błąd: $code")
+                println("Treść błędu: $errorBody")
+            },
+            onFailure = { throwable ->
+                println("Request failed: ${throwable.message}")
+            }
+        )
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RestaurantManagementAppTheme {
-        Greeting("Android")
-    }
 }
 
 @Composable
@@ -77,7 +99,7 @@ fun LoginScreen(modifier: Modifier = Modifier){
                 onValueChange = { password = it},
                 label = { Text("Password") }
             )
-            Button(onClick= {}){
+            Button(onClick= {register(login,password)}){
                 Text("Log in")
             }
         }
@@ -85,10 +107,3 @@ fun LoginScreen(modifier: Modifier = Modifier){
 }
 
 
-@Preview
-@Composable
-fun LoginScreenPreview(){
-    RestaurantManagementAppTheme {
-        LoginScreen()
-    }
-}
