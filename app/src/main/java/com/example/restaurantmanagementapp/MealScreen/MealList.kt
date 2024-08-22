@@ -1,5 +1,6 @@
 package com.example.restaurantmanagementapp.MealScreen
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,8 +26,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -44,6 +47,7 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -80,6 +84,7 @@ import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.round
 
 @Preview(
     showBackground = true
@@ -100,91 +105,35 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
         pageCount = { categories.size })
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
+    val order = remember {mutableStateListOf<Meal>()}
+    val footerHeight = 70.dp
 
-    Column() {
-        //Header
-        Row( modifier= Modifier.fillMaxWidth(1f).padding(top=10.dp)
-        ){
+    Box(modifier = Modifier.fillMaxWidth()){
 
-            Text(text="App name",fontSize = 24.sp, modifier = Modifier
-                    .padding(start = 10.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(0.60f))
-            Row(
-                horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(end = 10.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(0.40f)
+        Column(modifier = Modifier.fillMaxSize().padding(bottom=footerHeight)) {
+            Header()
+            SearchBar(searchText, onSearchTextChange = {searchText = it})
+
+            // Tabs
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                modifier = Modifier.padding(top = 10.dp)
             ) {
-                Button(onClick = {}){
-                    Icon(
-                        imageVector = Icons.Default.AccountBox,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end=8.dp)
-                            .size(24.dp)
-                            .align(Alignment.CenterVertically),
-                        tint = Color.Black
-                    )
-                    Text("Zaloguj", fontSize = 20.sp)
+                categories.forEachIndexed { index, name ->
+                    Tab(selected = pagerState.currentPage == index, onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                            searchText = ""
+                        }
+                    }, text = { Text(text = name) })
                 }
             }
-        }
-
-
-        // Pole wyszukiwania
-        TextField(
-            value = searchText,
-            onValueChange = {
-                searchText = it
-            },
-            label = { Text("Wyszukaj danie") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search icon",
-                    tint = Color.Gray
-                )
-            },
-            trailingIcon = {
-                if (searchText.isNotEmpty()) {
-                    IconButton(onClick = {
-                        searchText = ""
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Clear text icon",
-                            tint = Color.Gray
-                        )
-                    }
-                }
-            },
-            singleLine = true
-        )
-
-        // Tabs
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            modifier = Modifier.padding(top = 10.dp)
-        ) {
-            categories.forEachIndexed { index, name ->
-                Tab(selected = pagerState.currentPage == index, onClick = {
-                    coroutineScope.launch { pagerState.animateScrollToPage(index)
-                    searchText=""}
-                }, text = { Text(text = name) })
-            }
-        }
-
-
-        //Meal list
-        HorizontalPager(state = pagerState ,modifier = Modifier.fillMaxSize()) { index ->
-                val filteredMeals = meals.filter{
-                    if(searchText==""){
-                        it.categoryID==index
-                    }else{
+            //Meal list
+            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
+                val filteredMeals = meals.filter {
+                    if (searchText == "") {
+                        it.categoryID == index
+                    } else {
                         it.name.contains(searchText, ignoreCase = true)
                     }
                 }
@@ -206,16 +155,22 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
                     // Wyświetlanie listy dań
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(filteredMeals) { meal ->
-                            MealCard(meal = meal, modifier = Modifier)
+                            MealCard(
+                                meal = meal,
+                                onAddToOrder = { it -> order.add(it) },
+                                modifier = Modifier
+                            )
                         }
                     }
                 }
             }
+        }
+        Footer(order = order, onClearCart = {order.clear()}, modifier = Modifier.align(Alignment.BottomCenter).height(footerHeight))
     }
 }
 
 @Composable
-fun MealCard(meal: Meal, modifier: Modifier) {
+fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier) {
     Column(modifier = modifier.padding(all = 8.dp)) {
 
         val shape = RoundedCornerShape(30.dp)
@@ -298,7 +253,7 @@ fun MealCard(meal: Meal, modifier: Modifier) {
                 Text("details")
             }
             Button(
-                onClick = {},
+                onClick = {onAddToOrder(meal)},
                 modifier = Modifier
                     .padding(start = 4.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
                     .weight(0.5f),
@@ -309,6 +264,112 @@ fun MealCard(meal: Meal, modifier: Modifier) {
     }
 }
 
+
+@Composable
+fun Header(){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(top = 10.dp)
+    ) {
+
+        Text(
+            text = "App name", fontSize = 24.sp, modifier = Modifier
+                .padding(start = 10.dp)
+                .align(Alignment.CenterVertically)
+                .weight(0.60f)
+        )
+        Row(
+            horizontalArrangement = Arrangement.Center, modifier = Modifier
+                .padding(end = 10.dp)
+                .align(Alignment.CenterVertically)
+                .weight(0.40f)
+        ) {
+            Button(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Default.AccountBox,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically),
+                    tint = Color.Black
+                )
+                Text("Zaloguj", fontSize = 20.sp)
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchBar(
+    searchText: String,
+    onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextField(
+        value = searchText,
+        onValueChange = onSearchTextChange, // Użycie lambda zamiast bezpośredniej zmiany wartości
+        label = { Text("Wyszukaj danie") },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search icon",
+                tint = Color.Gray
+            )
+        },
+        trailingIcon = {
+            if (searchText.isNotEmpty()) {
+                IconButton(onClick = { onSearchTextChange("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Clear text icon",
+                        tint = Color.Gray
+                    )
+                }
+            }
+        },
+        singleLine = true
+    )
+}
+
+@Composable
+fun Footer(
+    order: List<Meal>,
+    onClearCart: () -> Unit,
+    modifier: Modifier = Modifier){
+    Row(modifier = Modifier.fillMaxWidth().then(modifier), horizontalArrangement = Arrangement.SpaceAround){
+        Button(onClick = {onClearCart()},
+            modifier = Modifier.padding(12.dp)){
+            Text("Wyczyść koszyk")
+        }
+
+        val totalPrice = order.sumOf { it.price } // Oblicza łączną kwotę zamówienia
+        Button(
+            onClick = {
+                // Logika, gdy klikniesz koszyk
+            },
+            modifier = modifier.padding(12.dp)
+        ) {
+            Row(modifier = Modifier.align(Alignment.CenterVertically)){
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(32.dp)
+                        .align(Alignment.CenterVertically),
+                    tint = Color.Black
+                )
+                Text("${order.size}: ${round(totalPrice * 100) / 100} ZŁ", textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterVertically))
+            }
+
+        }
+    }
+}
 @Composable
 fun OutlinedText(
     text: String,

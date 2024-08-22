@@ -8,7 +8,7 @@ object TestData {
         Meal(
             0,
             "Pierogi",
-            6.99f,
+            6.99,
             0,
             0,
             0,
@@ -17,7 +17,7 @@ object TestData {
         Meal(
             1,
             "Spaghetti",
-            4.99f,
+            4.99,
             1,
             1,
             1,
@@ -26,7 +26,7 @@ object TestData {
         Meal(
             2,
             "Ciastka",
-            16.99f,
+            16.99,
             0,
             2,
             2,
@@ -35,7 +35,7 @@ object TestData {
         Meal(
             3,
             "Murzynek",
-            13.99f,
+            13.99,
             0,
             3,
             3,
@@ -44,7 +44,7 @@ object TestData {
         Meal(
             4,
             "Kiełbasa śląska",
-            16.99f,
+            16.99,
             2,
             4,
             4,
@@ -53,7 +53,7 @@ object TestData {
         Meal(
             5,
             "Pomidor",
-            6.99f,
+            6.99,
             3,
             5,
             5,
