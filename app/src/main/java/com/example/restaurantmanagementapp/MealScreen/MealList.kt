@@ -23,9 +23,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -36,10 +39,15 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,24 +91,6 @@ fun MealListPreview() {
     }
 }
 
-
-//@Composable
-//fun TabRow(
-//    selectedTabIndex: Int,
-//    modifier: Modifier,
-//    backgroundColor:Color = MaterialTheme.colorScheme.background,
-//    contentColor:Color = contentColorFor(backgroundColor),
-//    indicator: @Composable (tabPositions:List<TabPosition>) ->
-//        Unit = @Composable{tabPositions -> TabRowDefaults.Indicator(Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]))},
-//    divider: @Composable () -> Unit = @Composable {
-//        Spacer(Modifier.height(4.dp).background(Color.White))
-//    },
-//    tabs: @Composable () -> Unit
-//){
-//
-//}
-
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MealList(meals: List<Meal>, categories: List<String>) {
@@ -109,11 +99,13 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
         initialPageOffsetFraction = 0.0f,
         pageCount = { categories.size })
     val coroutineScope = rememberCoroutineScope()
-
+    var searchText by remember { mutableStateOf("") }
 
     Column() {
+        //Header
         Row( modifier= Modifier.fillMaxWidth(1f).padding(top=10.dp)
         ){
+
             Text(text="App name",fontSize = 24.sp, modifier = Modifier
                     .padding(start = 10.dp)
                     .align(Alignment.CenterVertically)
@@ -138,55 +130,89 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
                 }
             }
         }
+
+
+        // Pole wyszukiwania
+        TextField(
+            value = searchText,
+            onValueChange = {
+                searchText = it
+            },
+            label = { Text("Wyszukaj danie") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search icon",
+                    tint = Color.Gray
+                )
+            },
+            trailingIcon = {
+                if (searchText.isNotEmpty()) {
+                    IconButton(onClick = {
+                        searchText = ""
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear text icon",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+            },
+            singleLine = true
+        )
+
+        // Tabs
         TabRow(
             selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.padding(top = 10.dp)
         ) {
             categories.forEachIndexed { index, name ->
                 Tab(selected = pagerState.currentPage == index, onClick = {
-                    coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                    coroutineScope.launch { pagerState.animateScrollToPage(index)
+                    searchText=""}
                 }, text = { Text(text = name) })
             }
         }
 
-        HorizontalPager(state = pagerState ,modifier = Modifier.fillMaxSize()) { index ->
-            LazyColumn(modifier=Modifier.fillMaxSize()) {
 
-                items(meals.filter{it.categoryID==index}) { meal ->
-                    MealCard(meal = meal, modifier = Modifier)
+        //Meal list
+        HorizontalPager(state = pagerState ,modifier = Modifier.fillMaxSize()) { index ->
+                val filteredMeals = meals.filter{
+                    if(searchText==""){
+                        it.categoryID==index
+                    }else{
+                        it.name.contains(searchText, ignoreCase = true)
+                    }
+                }
+
+                if (filteredMeals.isEmpty()) {
+                    // Wyświetlanie komunikatu, gdy brak dań
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = "Brak dań w tej kategorii lub w wynikach wyszukiwania",
+                            fontSize = 18.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    // Wyświetlanie listy dań
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(filteredMeals) { meal ->
+                            MealCard(meal = meal, modifier = Modifier)
+                        }
+                    }
                 }
             }
-
-        }
     }
 }
-
-//@Composable
-//fun MealList(meals: List<Meal>){
-//    LazyColumn{
-//        items(meals){meal ->
-//            MealCard(meal = meal, modifier = Modifier)
-//        }
-//    }
-//
-//}
-
-
-//@Composable
-//fun MealList(meals: List<Meal>){
-//    LazyColumn {
-//        items(meals.size-1) { index->
-//            if(index%2==0){
-//                Row() {
-//                    MealCard(meal = meals[index], modifier = Modifier.weight(0.5f))
-//                    if(index!=meals.size-1)
-//                    MealCard(meal = meals[index + 1], modifier = Modifier.weight(0.5f))
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 @Composable
 fun MealCard(meal: Meal, modifier: Modifier) {
@@ -281,11 +307,6 @@ fun MealCard(meal: Meal, modifier: Modifier) {
             }
         }
     }
-}
-
-fun loginAction(): String{
-
-    return "sukces"
 }
 
 @Composable
