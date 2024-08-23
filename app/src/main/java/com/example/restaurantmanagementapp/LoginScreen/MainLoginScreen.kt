@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.restaurantmanagementapp.MealScreen.CartScreen
 import com.example.restaurantmanagementapp.MealScreen.MealList
 import com.example.restaurantmanagementapp.MealScreen.MealListPreview
 import com.example.restaurantmanagementapp.MealScreen.MealScreen
@@ -34,6 +36,7 @@ import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RegisterRequest
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,17 +76,21 @@ fun TestMainScreen(){
     val meals = TestData.mealListSample
     val categories = TestData.categories
     val images = TestData.imagesList
+    val orderViewModel: OrderViewModel = viewModel()
+
     NavHost(
         navController = navController, startDestination = "restaurantinfo"
     ){
         composable("restaurantinfo"){ RestaurantInfo(images = images, navController = navController)}
-        composable("meallist"){ MealList(meals,categories,navController)}
+        composable("meallist"){ MealList(meals,categories,navController,orderViewModel)}
         composable("meal/{mealId}"){ backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")
             val meal = meals.find{it.id.toString() == mealId}!!
-            MealScreen(meal,navController)
+            MealScreen(meal,navController,orderViewModel)
         }
         composable("loginscreen"){LoginScreen()}
+        composable("cart"){CartScreen(orderViewModel)}
+
     }
 }
 

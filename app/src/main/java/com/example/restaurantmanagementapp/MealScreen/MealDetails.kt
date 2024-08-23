@@ -54,6 +54,7 @@ import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.classes.OrderViewModel
 import kotlin.math.round
 
 @Preview(showBackground = true)
@@ -63,7 +64,7 @@ fun MealScreenPreview() {
 }
 
 @Composable
-fun MealScreen(meal: Meal, navController: NavController) {
+fun MealScreen(meal: Meal, navController: NavController, orderViewModel: OrderViewModel) {
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
 
@@ -80,7 +81,7 @@ fun MealScreen(meal: Meal, navController: NavController) {
 
     Scaffold(
         bottomBar = {
-            MealScreenFooter(meal)
+            MealScreenFooter(orderViewModel,meal, navController = navController)
         }
     ) { innerPadding ->
         Column(
@@ -147,7 +148,7 @@ fun MealScreen(meal: Meal, navController: NavController) {
 }
 
 @Composable
-fun MealScreenFooter(meal: Meal) {
+fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: NavController) {
     var quantity by remember { mutableIntStateOf(1) }
     Column(
         modifier = Modifier
@@ -213,15 +214,14 @@ fun MealScreenFooter(meal: Meal) {
             }
         }
 
-        Button(
-            onClick = { /* Handle add to order */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
-                .align(Alignment.End)
-                .height(60.dp)
-        ) {
-            Text(text = "Add to order (Total: \$${round(quantity * meal.price * 100) / 100})") // Example total price calculation
+        Row(modifier = Modifier.fillMaxWidth().height(72.dp).padding(start = 12.dp, end = 12.dp, bottom = 12.dp)){
+            Button(
+                onClick = {for(i in 1..quantity){orderViewModel.addToOrder(meal)} },
+            ) {
+                Text(text = "Add to order (Total: \$${round(quantity * meal.price * 100) / 100})") // Example total price calculation
+            }
+            Footer(orderViewModel = orderViewModel, onClearCart = {orderViewModel.clearOrder()},modifier=Modifier,navController)
         }
+
     }
 }

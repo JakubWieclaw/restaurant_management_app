@@ -47,11 +47,17 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -81,6 +87,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.coroutineScope
@@ -97,10 +104,9 @@ fun MealListPreview() {
         //MealList(TestData.mealListSample, listOf("Cat0", "Cat1", "Cat2", "Cat3", "Cat4", "Cat5"))
     }
 }
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MealList(meals: List<Meal>, categories: List<String>, navController: NavController) {
+fun MealList(meals: List<Meal>, categories: List<String>, navController: NavController, orderViewModel: OrderViewModel) {
 
     val pagerState = rememberPagerState(
         initialPage = 1,
@@ -108,12 +114,13 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
         pageCount = { categories.size })
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
-    val order = remember {mutableStateListOf<Meal>()}
     val footerHeight = 70.dp
 
     Box(modifier = Modifier.fillMaxWidth()){
 
-        Column(modifier = Modifier.fillMaxSize().padding(bottom=footerHeight)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = footerHeight)) {
             Header(navController = navController)
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
@@ -160,7 +167,9 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
                         items(filteredMeals) { meal ->
                             MealCard(
                                 meal = meal,
-                                onAddToOrder = { it -> order.add(it) },
+                                onAddToOrder = {
+                                    orderViewModel.addToOrder(meal)
+                                               },
                                 modifier = Modifier,
                                 navController = navController
                             )
@@ -169,7 +178,9 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
                 }
             }
         }
-        Footer(order = order, onClearCart = {order.clear()}, modifier = Modifier.align(Alignment.BottomCenter).height(footerHeight))
+        Footer(orderViewModel, onClearCart = {orderViewModel.clearOrder()}, modifier = Modifier
+            .align(Alignment.BottomCenter)
+            .height(footerHeight),navController)
     }
 }
 
@@ -342,19 +353,18 @@ fun SearchBar(
 
 @Composable
 fun Footer(
-    order: List<Meal>,
+    orderViewModel: OrderViewModel,
     onClearCart: () -> Unit,
-    modifier: Modifier = Modifier){
-    Row(modifier = Modifier.fillMaxWidth().then(modifier), horizontalArrangement = Arrangement.SpaceAround){
-        Button(onClick = {onClearCart()},
-            modifier = Modifier.padding(12.dp)){
-            Text("Wyczyść koszyk")
-        }
+    modifier: Modifier = Modifier,
+    navController: NavController){
 
-        val totalPrice = order.sumOf { it.price } // Oblicza łączną kwotę zamówienia
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .then(modifier), horizontalArrangement = Arrangement.End){
+
         Button(
             onClick = {
-                // Logika, gdy klikniesz koszyk
+                navController.navigate("cart")
             },
             modifier = modifier.padding(12.dp)
         ) {
@@ -368,7 +378,7 @@ fun Footer(
                         .align(Alignment.CenterVertically),
                     tint = Color.Black
                 )
-                Text("${order.size}: ${round(totalPrice * 100) / 100} ZŁ", textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterVertically))
+                Text("${orderViewModel.getSize()}: ${"%.2f".format(orderViewModel.getOrderTotal())} ZŁ", textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterVertically))
             }
 
         }
