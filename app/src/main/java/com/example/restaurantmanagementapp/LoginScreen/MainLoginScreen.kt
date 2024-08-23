@@ -20,7 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.restaurantmanagementapp.MealScreen.MealList
+import com.example.restaurantmanagementapp.MealScreen.MealListPreview
+import com.example.restaurantmanagementapp.MealScreen.MealScreen
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
+import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RegisterRequest
@@ -51,12 +60,33 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginScreen()
+                    TestMainScreen()
                 }
             }
         }
     }
 }
+
+@Composable
+fun TestMainScreen(){
+    val navController = rememberNavController()
+    val meals = TestData.mealListSample
+    val categories = TestData.categories
+    val images = TestData.imagesList
+    NavHost(
+        navController = navController, startDestination = "restaurantinfo"
+    ){
+        composable("restaurantinfo"){ RestaurantInfo(images = images, navController = navController)}
+        composable("meallist"){ MealList(meals,categories,navController)}
+        composable("meal/{mealId}"){ backStackEntry ->
+            val mealId = backStackEntry.arguments?.getString("mealId")
+            val meal = meals.find{it.id.toString() == mealId}!!
+            MealScreen(meal,navController)
+        }
+        composable("loginscreen"){LoginScreen()}
+    }
+}
+
 fun register(username:String, password:String){
     val registerRequest = RegisterRequest(0,username,"string","string","string",password)
     val call = RetrofitInstance.api.register(registerRequest)

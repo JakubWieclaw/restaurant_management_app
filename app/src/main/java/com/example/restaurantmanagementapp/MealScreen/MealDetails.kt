@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.Meal
@@ -58,11 +59,11 @@ import kotlin.math.round
 @Preview(showBackground = true)
 @Composable
 fun MealScreenPreview() {
-    MealScreen(TestData.mealListSample[0])
+    //MealScreen(TestData.mealListSample[0])
 }
 
 @Composable
-fun MealScreen(meal: Meal) {
+fun MealScreen(meal: Meal, navController: NavController) {
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
 

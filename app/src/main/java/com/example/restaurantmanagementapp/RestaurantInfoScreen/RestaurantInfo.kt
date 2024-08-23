@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,24 +28,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 
-@Preview
-@Composable
-fun RestaurantInfo2Preview(){
-    RestaurantInfo2(listOf(
-        R.drawable.test_meal_picture_1,
-        R.drawable.test_meal_picture_1,
-        R.drawable.test_meal_picture_1,
-        R.drawable.test_meal_picture_1,
-        R.drawable.test_meal_picture_1
-        ))
-}
+//@Preview
+//@Composable
+//fun RestaurantInfo2Preview(){
+//    RestaurantInfo2(listOf(
+//        R.drawable.test_meal_picture_1,
+//        R.drawable.test_meal_picture_1,
+//        R.drawable.test_meal_picture_1,
+//        R.drawable.test_meal_picture_1,
+//        R.drawable.test_meal_picture_1
+//        ))
+//}
 
 @Composable
-fun RestaurantInfo2(images: List<Int>){
+fun RestaurantInfo(images: List<Int>,navController: NavController){
     val colScrollState = rememberScrollState()
-    val rowScrollState = rememberScrollState()
+
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -59,6 +61,9 @@ fun RestaurantInfo2(images: List<Int>){
         )
 
         Column(modifier = Modifier.verticalScroll(colScrollState)){
+            Button(onClick = {navController.navigate("meallist")}){
+                Text(text="Kliknij mnie")
+            }
             Text("Restaurant name")
             Text("Who we are?")
             Text("blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ")

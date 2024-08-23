@@ -67,4 +67,20 @@ object TestData {
         Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",3),
         Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",2)
     )
+
+    val categories = listOf(
+        "Cat1",
+        "Cat2",
+        "Cat3",
+        "Cat4",
+        "Cat5"
+    )
+
+    val imagesList = listOf(
+        R.drawable.test_meal_picture_1,
+        R.drawable.test_meal_picture_1,
+        R.drawable.test_meal_picture_1,
+        R.drawable.test_meal_picture_1,
+        R.drawable.test_meal_picture_1,
+    )
 }

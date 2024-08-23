@@ -76,6 +76,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.Meal
@@ -92,13 +94,14 @@ import kotlin.math.round
 @Composable
 fun MealListPreview() {
     RestaurantManagementAppTheme {
-        MealList(TestData.mealListSample, listOf("Cat0", "Cat1", "Cat2", "Cat3", "Cat4", "Cat5"))
+        //MealList(TestData.mealListSample, listOf("Cat0", "Cat1", "Cat2", "Cat3", "Cat4", "Cat5"))
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MealList(meals: List<Meal>, categories: List<String>) {
+fun MealList(meals: List<Meal>, categories: List<String>, navController: NavController) {
+
     val pagerState = rememberPagerState(
         initialPage = 1,
         initialPageOffsetFraction = 0.0f,
@@ -111,7 +114,7 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
     Box(modifier = Modifier.fillMaxWidth()){
 
         Column(modifier = Modifier.fillMaxSize().padding(bottom=footerHeight)) {
-            Header()
+            Header(navController = navController)
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
             // Tabs
@@ -158,7 +161,8 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
                             MealCard(
                                 meal = meal,
                                 onAddToOrder = { it -> order.add(it) },
-                                modifier = Modifier
+                                modifier = Modifier,
+                                navController = navController
                             )
                         }
                     }
@@ -170,7 +174,7 @@ fun MealList(meals: List<Meal>, categories: List<String>) {
 }
 
 @Composable
-fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier) {
+fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navController: NavController) {
     Column(modifier = modifier.padding(all = 8.dp)) {
 
         val shape = RoundedCornerShape(30.dp)
@@ -245,7 +249,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier) {
                 )
             }
             Button(
-                onClick = {},
+                onClick = {navController.navigate("meal/${meal.id}")},
                 modifier = Modifier
                     .padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
                     .weight(0.3f),
@@ -266,7 +270,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier) {
 
 
 @Composable
-fun Header(){
+fun Header(navController: NavController){
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -285,7 +289,7 @@ fun Header(){
                 .align(Alignment.CenterVertically)
                 .weight(0.40f)
         ) {
-            Button(onClick = {}) {
+            Button(onClick = {navController.navigate("loginscreen")}) {
                 Icon(
                     imageVector = Icons.Default.AccountBox,
                     contentDescription = null,
