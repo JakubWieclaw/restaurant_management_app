@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.MealScreen
+package com.example.restaurantmanagementapp.CartScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,15 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.classes.OrderViewModel
-import kotlin.math.round
 
 
 @Composable
@@ -30,14 +28,12 @@ fun MealCartCard(
     index: Int,
 ) {
     val cartItem = orderViewModel.orderItems[index]
-
-    var quantity by remember { mutableStateOf(cartItem.quantity) }
+    var quantity by remember { mutableIntStateOf(cartItem.quantity) }
 
     Row(
         modifier = Modifier
-            .padding(start = 10.dp, end = 10.dp, top = 6.dp)
             .fillMaxWidth()
-            .background(Color.Gray, RoundedCornerShape(8.dp))
+            .background(Color.LightGray, RoundedCornerShape(8.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -58,12 +54,12 @@ fun MealCartCard(
             Text(text = cartItem.name, fontSize = 20.sp)
 
             // Rating stars
-            StarRating(rating = 2)
+            StarRating(rating = 2, size=16.dp)
 
             Spacer(modifier = Modifier.height(8.dp))
 
             // Total price
-            Text(text = "Total price: $${String.format("%.2f", cartItem.price * quantity)}", fontSize = 16.sp)
+            Text(text = "Total: ${String.format("%.2f", cartItem.price * quantity)} zł", fontSize = 16.sp)
         }
 
         Spacer(modifier = Modifier.width(12.dp))

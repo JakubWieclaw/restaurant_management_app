@@ -15,7 +15,7 @@
         android:theme="@style/Theme.RestaurantManagementApp"
         tools:targetApi="31">
         <activity
-            android:name=".LoginScreen.MainActivity"
+            android:name=".HomeScreen.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.RestaurantManagementApp">

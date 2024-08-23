@@ -1,11 +1,8 @@
-package com.example.restaurantmanagementapp.MealScreen
+package com.example.restaurantmanagementapp.MealDetailsScreen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.TestData
@@ -48,7 +46,7 @@ fun ReviewListPrev() {
 }
 
 @Composable
-fun StarRating(rating: Int) {
+fun StarRating(rating: Int, size: Dp) {
     Row {
         for (i in 1..5) {
             // TODO: być może zmienić ilość gwiazdek na 10
@@ -60,7 +58,7 @@ fun StarRating(rating: Int) {
             Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(size),
                 tint = starColor
             )
         }
@@ -79,7 +77,7 @@ fun ReviewCard(review: Opinion) {
 
     ) {
         Row() {
-            StarRating(rating = review.stars)
+            StarRating(rating = review.stars,size=24.dp)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = review.customerName,

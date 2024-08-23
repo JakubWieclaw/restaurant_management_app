@@ -1,75 +1,41 @@
-package com.example.restaurantmanagementapp.MealScreen
+package com.example.restaurantmanagementapp.MealListScreen
 
-import android.graphics.Paint.Align
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -83,17 +49,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.restaurantmanagementapp.R
-import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
-import com.example.restaurantmanagementapp.ui.theme.Typography
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlin.math.round
 
 @Preview(
     showBackground = true
@@ -178,106 +137,10 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
                 }
             }
         }
-        Footer(orderViewModel, onClearCart = {orderViewModel.clearOrder()}, modifier = Modifier
-            .align(Alignment.BottomCenter)
-            .height(footerHeight),navController)
+        Footer(orderViewModel, modifier = Modifier.align(Alignment.BottomCenter).height(footerHeight),navController)
     }
 }
 
-@Composable
-fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navController: NavController) {
-    Column(modifier = modifier.padding(all = 8.dp)) {
-
-        val shape = RoundedCornerShape(30.dp)
-        Box(
-            modifier = Modifier
-                .height(160.dp)
-                .fillMaxWidth()
-                .background(Color.White, shape = shape),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.test_meal_picture_1),
-                contentDescription = "Picture",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp, start = 24.dp, end = 24.dp)
-            ) {
-                OutlinedText(
-                    text = meal.name,
-                    fillColor = Color.Black,
-                    outlineColor = Color.White,
-                    style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                OutlinedText(
-                    text = meal.price.toString() + " ZŁ",
-                    fillColor = Color.Black,
-                    outlineColor = Color.White,
-                    style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-
-//                Text(meal.name,
-//                    color = Color.White,
-//                    modifier = Modifier.background(color=Color.Black),
-//                    style = Typography.titleLarge)
-                //Text(meal.price.toString(), color = Color.White, modifier = Modifier.background(color=Color.Black), style = Typography.titleLarge)
-            }
-
-        }
-
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Color.LightGray,
-                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-                )
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(start = 8.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(0.20f)
-            ) {
-                Text("2/5", fontSize = 24.sp)
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterVertically),
-                    tint = Color.Yellow
-                )
-            }
-            Button(
-                onClick = {navController.navigate("meal/${meal.id}")},
-                modifier = Modifier
-                    .padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                    .weight(0.3f),
-            ) {
-                Text("details")
-            }
-            Button(
-                onClick = {onAddToOrder(meal)},
-                modifier = Modifier
-                    .padding(start = 4.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
-                    .weight(0.5f),
-            ) {
-                Text("add to order", maxLines = 1)
-            }
-        }
-    }
-}
 
 
 @Composable
@@ -351,39 +214,7 @@ fun SearchBar(
     )
 }
 
-@Composable
-fun Footer(
-    orderViewModel: OrderViewModel,
-    onClearCart: () -> Unit,
-    modifier: Modifier = Modifier,
-    navController: NavController){
 
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .then(modifier), horizontalArrangement = Arrangement.End){
-
-        Button(
-            onClick = {
-                navController.navigate("cart")
-            },
-            modifier = modifier.padding(12.dp)
-        ) {
-            Row(modifier = Modifier.align(Alignment.CenterVertically)){
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(32.dp)
-                        .align(Alignment.CenterVertically),
-                    tint = Color.Black
-                )
-                Text("${orderViewModel.getSize()}: ${"%.2f".format(orderViewModel.getOrderTotal())} ZŁ", textAlign = TextAlign.Center, modifier = Modifier.align(Alignment.CenterVertically))
-            }
-
-        }
-    }
-}
 @Composable
 fun OutlinedText(
     text: String,
