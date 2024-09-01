@@ -8,6 +8,7 @@ import com.example.restaurantmanagementapp.CartScreen.CartScreen
 import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
+import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
@@ -28,6 +29,9 @@ fun SetupNavGraph(
         }
         composable("loginscreen") {
             LoginScreen()
+        }
+        composable("userpanel"){
+            SettingsScreen()
         }
 
 
