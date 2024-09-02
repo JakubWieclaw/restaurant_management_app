@@ -11,7 +11,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,8 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -39,13 +46,12 @@ import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 
-data class SettingItemData(val label: String, val value: String, val editable: Boolean = false)
+data class SettingItemData(val label: String, val value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
 val settingItems = listOf(
-    SettingItemData(label = "Full name", value = "Michael E. Quinn"),
-    SettingItemData(label = "Email", value = "admin@demo.com"),
-    SettingItemData(label = "Phone", value = "+136 226 5660",editable=true),
-    SettingItemData(label = "Address", value = "569 Braxton Street Cortl..."),
-    SettingItemData(label = "About", value = "Faucibus ornare suspendi...")
+    SettingItemData(label = "Full name", value = "Ron Weasley"),
+    SettingItemData(label = "Email", value = "email@poczta.com"),
+    SettingItemData(label = "Phone", value = "+48 293 329 923",editable=true),
+    SettingItemData(label = "Address", value = "The Burrow"),
 )
 
 val settingItems2 = listOf(
@@ -53,7 +59,7 @@ val settingItems2 = listOf(
     )
 
 val settingItems3 = listOf(
-    SettingItemData(label = "Language", value = "English"),
+    SettingItemData(label = "Language", value = "English", isDropDown = true, dropDownList = listOf("Polish","English","Spanish")),
 )
 
 
@@ -68,13 +74,7 @@ fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
         TopAppBar(
             title = {
                 Text(text = "Profile info", color = Color.Black, modifier = Modifier.align(Alignment.CenterHorizontally))
-            },
-            navigationIcon = {
-                IconButton(onClick = { navigateToScreen("meallist",navController) }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                }
-            },
-
+            }
         )
 
         Column(){
@@ -88,7 +88,7 @@ fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
 
 
 @Composable
-fun SettingItem(label: String, value: String, editable: Boolean) {
+fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boolean, dropDownList: List<String>) {
     var editMode by remember { mutableStateOf(false) }
     var itemValue by remember { mutableStateOf(value) }
     var itemValueOld by remember { mutableStateOf(value) }
@@ -102,7 +102,7 @@ fun SettingItem(label: String, value: String, editable: Boolean) {
         Text(text = label, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterVertically))
 
         Row() {
-            if (editMode && editable) {
+            if (editMode && editable && !isDropDown) {
                 TextField(
                     value = itemValue,
                     onValueChange = {itemValue = it  },
@@ -129,15 +129,18 @@ fun SettingItem(label: String, value: String, editable: Boolean) {
 
                 )
             } else {
-                Text(text = itemValue, color = Color.Gray, modifier = Modifier.align(Alignment.CenterVertically))
-                if(editable){
-                    IconButton(onClick = { editMode = !editMode }, modifier = Modifier.align(Alignment.CenterVertically)) {
-                        Icon(imageVector = Icons.Default.Create, contentDescription = null)
-                    }  
+                if(isDropDown){
+                    ExposedDropdownMenuBox(dropDownList, onValueChange = {selected -> itemValue = selected})
                 }else{
-                    Spacer(modifier = Modifier.width(40.dp))
+                    Text(text = itemValue, color = Color.Gray, modifier = Modifier.align(Alignment.CenterVertically))
+                    if(editable){
+                        IconButton(onClick = { editMode = !editMode }, modifier = Modifier.align(Alignment.CenterVertically)) {
+                            Icon(imageVector = Icons.Default.Create, contentDescription = null)
+                        }
+                    }else{
+                        Spacer(modifier = Modifier.width(40.dp))
+                    }
                 }
-
             }
         }
     }
@@ -195,12 +198,56 @@ fun SettingList(
             ) {
                 Divider(modifier = Modifier.height(2.dp), color = Color.Black)
                 settingItemsData.forEach { item ->
-                    SettingItem(label = item.label, value = item.value, editable = item.editable)
+                    SettingItem(label = item.label, value = item.value, editable = item.editable, isDropDown = item.isDropDown, dropDownList = item.dropDownList)
                 }
             }
         }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(itemList[0]) }
+
+    Box(
+        modifier = Modifier.width(180.dp)
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            OutlinedTextField(
+                value = selectedText,
+                onValueChange = {onValueChange(it)},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor().background(color = Color.White),
+                maxLines = 1
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                itemList.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+
 
 //@Preview(showBackground = true)
 //@Composable

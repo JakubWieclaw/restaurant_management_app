@@ -61,7 +61,7 @@ fun RestaurantInfo(images: List<Int>,navController: NavController){
                 .alpha(0.2f)
         )
 
-        Column(modifier = Modifier.verticalScroll(colScrollState)){
+        Column(modifier = Modifier.verticalScroll(colScrollState).padding(10.dp)){
             Text("Restaurant name")
             Text("Who we are?")
             Text("blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ")
@@ -73,7 +73,7 @@ fun RestaurantInfo(images: List<Int>,navController: NavController){
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
+
             )
         }
 
