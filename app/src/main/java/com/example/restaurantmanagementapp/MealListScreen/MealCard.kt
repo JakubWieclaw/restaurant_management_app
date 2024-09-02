@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.ui.theme.Typography
@@ -108,7 +109,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 )
             }
             Button(
-                onClick = {navController.navigate("meal/${meal.id}")},
+                onClick = { navigateToScreen("meal/${meal.id}",navController)},
                 modifier = Modifier
                     .padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
                     .weight(0.3f),

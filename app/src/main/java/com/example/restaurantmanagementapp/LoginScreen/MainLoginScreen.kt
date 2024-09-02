@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.LoginRequest
@@ -50,7 +51,7 @@ fun register(name:String,surname:String,email:String,phone:String,password:Strin
             onSuccess = { responseBody ->
                 println("Odpowiedź: $responseBody")
                 authViewModel.login(responseBody)
-                navController.navigate("meallist")
+                navigateToScreen("meallist",navController)
             },
             onError = { code, errorBody ->
                 println("Błąd: $code")
@@ -71,7 +72,7 @@ fun login(email:String,password:String,navController: NavController,authViewMode
             onSuccess = { responseBody ->
                 println("Odpowiedź: $responseBody")
                 authViewModel.login(responseBody)
-                navController.navigate("meallist")
+                navigateToScreen("meallist",navController)
             },
             onError = { code, errorBody ->
                 println("Błąd: $code")

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
 @Composable
@@ -32,7 +33,7 @@ fun Footer(
 
         Button(
             onClick = {
-                navController.navigate("cart")
+                navigateToScreen("cart",navController)
             },
             modifier = modifier.padding(12.dp)
         ) {

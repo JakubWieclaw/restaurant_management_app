@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 
 //@Preview
@@ -61,9 +62,6 @@ fun RestaurantInfo(images: List<Int>,navController: NavController){
         )
 
         Column(modifier = Modifier.verticalScroll(colScrollState)){
-            Button(onClick = {navController.navigate("meallist")}){
-                Text(text="Kliknij mnie")
-            }
             Text("Restaurant name")
             Text("Who we are?")
             Text("blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ")

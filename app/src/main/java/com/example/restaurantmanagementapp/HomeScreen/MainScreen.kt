@@ -64,7 +64,7 @@ fun TestMainScreen(){
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController,orderViewModel)
+            BottomNavigationBar(navController,orderViewModel, authViewModel)
         }
     ){innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)){

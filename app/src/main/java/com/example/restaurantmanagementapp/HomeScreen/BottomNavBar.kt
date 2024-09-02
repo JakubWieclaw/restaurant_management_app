@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
@@ -36,7 +37,7 @@ sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: 
     object Cart: BottomNavItem("Koszyk", Icons.Default.ShoppingCart, "cart")
 }
 @Composable
-fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewModel) {
+fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
     val items = listOf(
         BottomNavItem.GeneralInfo,
         BottomNavItem.DishSearch,
@@ -67,13 +68,14 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
                 selected = currentRoute == item.route,
                 onClick = {
                     if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            // Zapobiega zduplikowaniu stacka
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                        if(item == BottomNavItem.UserProfile){
+                            if(authViewModel.isLogged){
+                                navigateToScreen("userpanel",navController)
+                            }else{
+                                navigateToScreen("loginscreen",navController)
                             }
-                            restoreState = true
-                            launchSingleTop = true
+                        }else{
+                            navigateToScreen(item.route,navController)
                         }
                     }
                 }

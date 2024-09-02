@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 
 data class SettingItemData(val label: String, val value: String, val editable: Boolean = false)
@@ -69,7 +70,7 @@ fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
                 Text(text = "Profile info", color = Color.Black, modifier = Modifier.align(Alignment.CenterHorizontally))
             },
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("meallist") }) {
+                IconButton(onClick = { navigateToScreen("meallist",navController) }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },

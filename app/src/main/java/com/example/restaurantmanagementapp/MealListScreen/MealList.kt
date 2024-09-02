@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
@@ -81,14 +82,12 @@ fun MealList(
         pageCount = { categories.size })
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
-    val footerHeight = 70.dp
 
     Box(modifier = Modifier.fillMaxWidth()){
 
         Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = footerHeight)) {
-            Header(navController = navController,authViewModel)
+            .fillMaxSize()) {
+            Text(text = "App name", fontSize = 24.sp, modifier = Modifier.padding(top=10.dp,start = 10.dp))
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
             // Tabs
@@ -142,60 +141,6 @@ fun MealList(
                             )
                         }
                     }
-                }
-            }
-        }
-        Footer(orderViewModel, modifier = Modifier.align(Alignment.BottomCenter).height(footerHeight),navController)
-    }
-}
-
-
-
-@Composable
-fun Header(navController: NavController, authViewModel: AuthViewModel){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .padding(top = 10.dp)
-    ) {
-
-        Text(
-            text = "App name", fontSize = 24.sp, modifier = Modifier
-                .padding(start = 10.dp)
-                .align(Alignment.CenterVertically)
-                .weight(0.60f)
-        )
-        Row(
-            horizontalArrangement = Arrangement.Center, modifier = Modifier
-                .padding(end = 10.dp)
-                .align(Alignment.CenterVertically)
-                .weight(0.40f)
-        ) {
-            if(authViewModel.isLogged){
-                Button(onClick = {navController.navigate("userpanel")}) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(24.dp)
-                            .align(Alignment.CenterVertically),
-                        tint = Color.Black
-                    )
-                    Text("Profil", fontSize = 20.sp)
-                }
-            }else{
-                Button(onClick = {navController.navigate("loginscreen")}) {
-                    Icon(
-                        imageVector = Icons.Default.AccountBox,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(24.dp)
-                            .align(Alignment.CenterVertically),
-                        tint = Color.Black
-                    )
-                    Text("Zaloguj", fontSize = 20.sp)
                 }
             }
         }

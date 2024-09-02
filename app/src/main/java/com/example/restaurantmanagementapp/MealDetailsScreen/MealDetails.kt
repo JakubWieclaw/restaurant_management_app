@@ -21,7 +21,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -158,70 +162,81 @@ fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: N
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.padding(all = 12.dp)
-        ) {
-            OutlinedButton(
-                onClick = { if (quantity > 1) quantity-- },
-                border = BorderStroke(1.dp, Color.Red),
-                //shape = RoundedCornerShape(50), // = 50% percent
-                shape = CircleShape,
-                modifier = Modifier.size(50.dp)
-            ) {
-                Text(
-                    text = "-",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-            }
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(all=10.dp).fillMaxWidth()
+        ){
 
-            BasicTextField(
-                value = TextFieldValue(quantity.toString()),
-                onValueChange = { newValue ->
-                    newValue.text.toIntOrNull()?.let {
-                        quantity = if (it < 1) 1 else if (it > 999) 999 else it
-                    }
-                },
-                textStyle = LocalTextStyle.current.copy(
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 50.sp
-                ),
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(50.dp)
-                    .background(
-                        color = Color.LightGray,
-                        shape = RoundedCornerShape(20.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                //modifier = Modifier.padding(all = 12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { if (quantity > 1) quantity-- },
+                    border = BorderStroke(1.dp, Color.Red),
+                    //shape = RoundedCornerShape(50), // = 50% percent
+                    shape = CircleShape,
+                    modifier = Modifier.size(50.dp)
+                ) {
+                    Text(
+                        text = "-",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
                     )
-                    .padding(8.dp)
-            )
+                }
 
-            OutlinedButton(
-                onClick = { if (quantity < 999) quantity++ },
-                border = BorderStroke(1.dp, Color.Red),
-                //shape = RoundedCornerShape(50), // = 50% percent
-                shape = CircleShape,
-                modifier = Modifier.size(50.dp)
-            ) {
-                Text(
-                    text = "+",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                BasicTextField(
+                    value = TextFieldValue(quantity.toString()),
+                    onValueChange = { newValue ->
+                        newValue.text.toIntOrNull()?.let {
+                            quantity = if (it < 1) 1 else if (it > 999) 999 else it
+                        }
+                    },
+                    textStyle = LocalTextStyle.current.copy(
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 50.sp
+                    ),
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(50.dp)
+                        .background(
+                            color = Color.LightGray,
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .padding(8.dp)
                 )
+
+                OutlinedButton(
+                    onClick = { if (quantity < 999) quantity++ },
+                    border = BorderStroke(1.dp, Color.Red),
+                    //shape = RoundedCornerShape(50), // = 50% percent
+                    shape = CircleShape,
+                    modifier = Modifier.size(50.dp)
+                ) {
+                    Text(
+                        text = "+",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Favorite,contentDescription = null)
             }
         }
 
-        Row(modifier = Modifier.fillMaxWidth().height(72.dp).padding(start = 12.dp, end = 12.dp, bottom = 12.dp)){
-            Button(
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(start = 12.dp, end = 12.dp),
                 onClick = {for(i in 1..quantity){orderViewModel.addToOrder(meal)} },
             ) {
                 Text(text = "Add to order (Total: \$${round(quantity * meal.price * 100) / 100})") // Example total price calculation
             }
-            Footer(orderViewModel = orderViewModel,modifier=Modifier,navController)
-        }
+
 
     }
 }
