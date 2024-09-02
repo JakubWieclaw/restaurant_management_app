@@ -9,6 +9,7 @@ import com.example.restaurantmanagementapp.CartScreen.CartScreen
 import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
+import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.Meal
@@ -36,6 +37,9 @@ fun SetupNavGraph(
         composable("userpanel"){
             SettingsScreen(navController = navController, authViewModel = authViewModel)
         }
+        composable("tablereservation"){
+            TableReservation()
+        }
 
 
         composable("meallist") {
@@ -50,5 +54,15 @@ fun SetupNavGraph(
             CartScreen(orderViewModel = orderViewModel,authViewModel = authViewModel)
         }
 
+    }
+}
+
+fun navigateToScreen(route: String, navController: NavController) {
+    navController.navigate(route) {
+        popUpTo(navController.graph.startDestinationId) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }
