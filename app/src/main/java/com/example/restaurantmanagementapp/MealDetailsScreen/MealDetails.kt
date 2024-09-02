@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,9 +50,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.restaurantmanagementapp.MealListScreen.Footer
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
+import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import kotlin.math.round
@@ -67,7 +68,8 @@ fun MealScreen(
     meal: Meal,
     navController: NavController,
     orderViewModel: OrderViewModel,
-    authViewModel: Any
+    authViewModel: Any,
+    favMealsViewModel: FavMealsViewModel
 ) {
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
@@ -85,7 +87,7 @@ fun MealScreen(
 
     Scaffold(
         bottomBar = {
-            MealScreenFooter(orderViewModel,meal, navController = navController)
+            MealScreenFooter(orderViewModel,meal, navController = navController, favMealsViewModel = favMealsViewModel)
         }
     ) { innerPadding ->
         Column(
@@ -152,7 +154,7 @@ fun MealScreen(
 }
 
 @Composable
-fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: NavController) {
+fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: NavController, favMealsViewModel: FavMealsViewModel) {
     var quantity by remember { mutableIntStateOf(1) }
     Column(
         modifier = Modifier
@@ -223,9 +225,20 @@ fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: N
                     )
                 }
             }
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Favorite,contentDescription = null)
+            if(favMealsViewModel.findMeal(meal)){
+                IconButton(onClick = {
+                    favMealsViewModel.removeFromFav(meal)
+                }) {
+                    Icon(imageVector =  Icons.Default.Favorite ,contentDescription = null)
+                }
+            }else{
+                IconButton(onClick = {
+                    favMealsViewModel.addToFav(meal)
+                }) {
+                    Icon(imageVector =  Icons.Default.FavoriteBorder ,contentDescription = null)
+                }
             }
+
         }
 
         Button(modifier = Modifier

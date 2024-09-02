@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -87,7 +88,7 @@ fun MealList(
 
         Column(modifier = Modifier
             .fillMaxSize()) {
-            Text(text = "App name", fontSize = 24.sp, modifier = Modifier.padding(top=10.dp,start = 10.dp))
+            Header(navController = navController)
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
             // Tabs
@@ -142,6 +143,43 @@ fun MealList(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+
+
+@Composable
+fun Header(navController: NavController){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(1f)
+            .padding(top = 10.dp)
+    ) {
+        Text(
+            text = "App name", fontSize = 24.sp, modifier = Modifier
+                .padding(start = 10.dp)
+                .align(Alignment.CenterVertically)
+                .weight(0.50f)
+        )
+        Row(
+            horizontalArrangement = Arrangement.Center, modifier = Modifier
+                .padding(end = 10.dp)
+                .align(Alignment.CenterVertically)
+                .weight(0.50f)
+        ) {
+            Button(onClick = {navigateToScreen("favourites",navController)}) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp)
+                        .align(Alignment.CenterVertically),
+                    tint = Color.Black
+                )
+                Text("Ulubione", fontSize = 20.sp)
             }
         }
     }

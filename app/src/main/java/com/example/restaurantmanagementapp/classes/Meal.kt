@@ -13,7 +13,7 @@ data class Meal(
     val opinionID: Int,
     val ingredientID: Int,
     val picture: String,
-    val quantity2:Int = 1
+    val quantity2:Int = 1,
 ) {
     var quantity by mutableIntStateOf(quantity2)
 }

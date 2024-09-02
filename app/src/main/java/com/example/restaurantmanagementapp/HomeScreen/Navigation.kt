@@ -6,12 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.restaurantmanagementapp.LoginScreen.LoginScreen
 import com.example.restaurantmanagementapp.CartScreen.CartScreen
+import com.example.restaurantmanagementapp.FavouriteMealsScreen.FavouriteMeals
 import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
+import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
@@ -22,7 +24,8 @@ fun SetupNavGraph(
     meals: List<Meal>,
     categories: List<String>,
     orderViewModel: OrderViewModel,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    favMealsViewModel: FavMealsViewModel
 ) {
     NavHost(
         navController = navController,
@@ -40,6 +43,9 @@ fun SetupNavGraph(
         composable("tablereservation"){
             TableReservation()
         }
+        composable("favourites"){
+            FavouriteMeals(favMealsViewModel = favMealsViewModel)
+        }
 
 
         composable("meallist") {
@@ -48,7 +54,7 @@ fun SetupNavGraph(
         composable("meal/{mealId}") { backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")
             val meal = meals.find { it.id.toString() == mealId }!!
-            MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel)
+            MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel, favMealsViewModel = favMealsViewModel)
         }
         composable("cart") {
             CartScreen(orderViewModel = orderViewModel,authViewModel = authViewModel)

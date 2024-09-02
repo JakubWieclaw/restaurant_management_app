@@ -31,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.AuthViewModel
+import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 
@@ -60,6 +61,7 @@ fun TestMainScreen(){
     val images = TestData.imagesList
     val orderViewModel: OrderViewModel = viewModel()
     val authViewModel: AuthViewModel= viewModel()
+    val favMealsViewModel: FavMealsViewModel = viewModel()
 
 
     Scaffold(
@@ -74,7 +76,8 @@ fun TestMainScreen(){
                 meals = meals,
                 categories = categories,
                 orderViewModel = orderViewModel,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                favMealsViewModel = favMealsViewModel
             )
         }
     }
