@@ -59,7 +59,12 @@ fun MealScreenPreview() {
 }
 
 @Composable
-fun MealScreen(meal: Meal, navController: NavController, orderViewModel: OrderViewModel) {
+fun MealScreen(
+    meal: Meal,
+    navController: NavController,
+    orderViewModel: OrderViewModel,
+    authViewModel: Any
+) {
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
 

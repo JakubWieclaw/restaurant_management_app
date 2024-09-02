@@ -24,22 +24,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RegisterRequest
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 
-@Preview
-@Composable
-fun LoginScreenPreview(){
-    RestaurantManagementAppTheme {
-        LoginScreen()
-    }
-}
+//@Preview
+//@Composable
+//fun LoginScreenPreview(){
+//    RestaurantManagementAppTheme {
+//        LoginScreen()
+//    }
+//}
 
-fun register(name:String,surname:String,email:String,phone:String,password:String){
+fun register(name:String,surname:String,email:String,phone:String,password:String,navController: NavController, authViewModel:AuthViewModel){
     val registerRequest = RegisterRequest(0,name,surname,email,phone,password)
     val call = RetrofitInstance.api.register(registerRequest)
 
@@ -47,6 +49,8 @@ fun register(name:String,surname:String,email:String,phone:String,password:Strin
         CallbackHandler(
             onSuccess = { responseBody ->
                 println("Odpowiedź: $responseBody")
+                authViewModel.login(responseBody)
+                navController.navigate("meallist")
             },
             onError = { code, errorBody ->
                 println("Błąd: $code")
@@ -58,7 +62,7 @@ fun register(name:String,surname:String,email:String,phone:String,password:Strin
         )
     )
 }
-fun login(email:String,password:String){
+fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel){
     val loginRequest = LoginRequest(email,password)
     val call = RetrofitInstance.api.login(loginRequest)
 
@@ -66,6 +70,8 @@ fun login(email:String,password:String){
         CallbackHandler(
             onSuccess = { responseBody ->
                 println("Odpowiedź: $responseBody")
+                authViewModel.login(responseBody)
+                navController.navigate("meallist")
             },
             onError = { code, errorBody ->
                 println("Błąd: $code")
@@ -79,7 +85,7 @@ fun login(email:String,password:String){
 }
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier){
+fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, authViewModel: AuthViewModel){
     var name by remember { mutableStateOf("")}
     var surname by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
@@ -122,7 +128,7 @@ fun LoginScreen(modifier: Modifier = Modifier){
                         onValueChange = { password1 = it},
                         label = { Text("password") }
                     )
-                    Button(onClick= {register(name,surname,email,phone,password1)}){
+                    Button(onClick= {register(name,surname,email,phone,password1,navController,authViewModel)}){
                         Text("register")
                     }
                 }
@@ -138,7 +144,7 @@ fun LoginScreen(modifier: Modifier = Modifier){
                         onValueChange = { password2 = it},
                         label = { Text("password") }
                     )
-                    Button(onClick= {login(email,password2)}){
+                    Button(onClick= {login(email,password2,navController,authViewModel)}){
                         Text("login")
                     }
                 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
@@ -65,7 +67,13 @@ fun MealListPreview() {
 }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MealList(meals: List<Meal>, categories: List<String>, navController: NavController, orderViewModel: OrderViewModel) {
+fun MealList(
+    meals: List<Meal>,
+    categories: List<String>,
+    navController: NavController,
+    orderViewModel: OrderViewModel,
+    authViewModel: AuthViewModel
+) {
 
     val pagerState = rememberPagerState(
         initialPage = 1,
@@ -80,7 +88,7 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(bottom = footerHeight)) {
-            Header(navController = navController)
+            Header(navController = navController,authViewModel)
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
             // Tabs
@@ -144,7 +152,7 @@ fun MealList(meals: List<Meal>, categories: List<String>, navController: NavCont
 
 
 @Composable
-fun Header(navController: NavController){
+fun Header(navController: NavController, authViewModel: AuthViewModel){
     Row(
         modifier = Modifier
             .fillMaxWidth(1f)
@@ -163,17 +171,32 @@ fun Header(navController: NavController){
                 .align(Alignment.CenterVertically)
                 .weight(0.40f)
         ) {
-            Button(onClick = {navController.navigate("loginscreen")}) {
-                Icon(
-                    imageVector = Icons.Default.AccountBox,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(24.dp)
-                        .align(Alignment.CenterVertically),
-                    tint = Color.Black
-                )
-                Text("Zaloguj", fontSize = 20.sp)
+            if(authViewModel.isLogged){
+                Button(onClick = {navController.navigate("userpanel")}) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(24.dp)
+                            .align(Alignment.CenterVertically),
+                        tint = Color.Black
+                    )
+                    Text("Profil", fontSize = 20.sp)
+                }
+            }else{
+                Button(onClick = {navController.navigate("loginscreen")}) {
+                    Icon(
+                        imageVector = Icons.Default.AccountBox,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(24.dp)
+                            .align(Alignment.CenterVertically),
+                        tint = Color.Black
+                    )
+                    Text("Zaloguj", fontSize = 20.sp)
+                }
             }
         }
     }

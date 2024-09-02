@@ -1,5 +1,6 @@
 package com.example.restaurantmanagementapp.HomeScreen
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
+import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
@@ -18,7 +20,8 @@ fun SetupNavGraph(
     images: List<Int>,
     meals: List<Meal>,
     categories: List<String>,
-    orderViewModel: OrderViewModel
+    orderViewModel: OrderViewModel,
+    authViewModel: AuthViewModel
 ) {
     NavHost(
         navController = navController,
@@ -28,23 +31,23 @@ fun SetupNavGraph(
             RestaurantInfo(images = images, navController = navController)
         }
         composable("loginscreen") {
-            LoginScreen()
+            LoginScreen(navController = navController ,authViewModel = authViewModel)
         }
         composable("userpanel"){
-            SettingsScreen()
+            SettingsScreen(navController = navController, authViewModel = authViewModel)
         }
 
 
         composable("meallist") {
-            MealList(meals = meals, categories = categories, navController = navController, orderViewModel = orderViewModel)
+            MealList(meals = meals, categories = categories, navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel)
         }
         composable("meal/{mealId}") { backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")
             val meal = meals.find { it.id.toString() == mealId }!!
-            MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel)
+            MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel)
         }
         composable("cart") {
-            CartScreen(orderViewModel = orderViewModel)
+            CartScreen(orderViewModel = orderViewModel,authViewModel = authViewModel)
         }
 
     }

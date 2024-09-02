@@ -1,21 +1,16 @@
 package com.example.restaurantmanagementapp.UserPanelScreen
 
-import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,15 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.classes.AuthViewModel
 
 data class SettingItemData(val label: String, val value: String, val editable: Boolean = false)
 val settingItems = listOf(
@@ -67,7 +58,7 @@ val settingItems3 = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +69,7 @@ fun SettingsScreen() {
                 Text(text = "Profile info", color = Color.Black, modifier = Modifier.align(Alignment.CenterHorizontally))
             },
             navigationIcon = {
-                IconButton(onClick = { /* Handle back navigation */ }) {
+                IconButton(onClick = { navController.navigate("meallist") }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },
@@ -90,8 +81,6 @@ fun SettingsScreen() {
             SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
         }
-
-
     }
 }
 
@@ -212,9 +201,8 @@ fun SettingList(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSettingList() {
-    SettingsScreen()
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSettingList() {
+//    SettingsScreen(authViewModel)
+//}
