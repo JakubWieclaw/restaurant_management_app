@@ -16,6 +16,7 @@ import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
+import com.example.restaurantmanagementapp.classes.Table
 
 @Composable
 fun SetupNavGraph(
@@ -25,7 +26,8 @@ fun SetupNavGraph(
     categories: List<String>,
     orderViewModel: OrderViewModel,
     authViewModel: AuthViewModel,
-    favMealsViewModel: FavMealsViewModel
+    favMealsViewModel: FavMealsViewModel,
+    tables: List<Table>
 ) {
     NavHost(
         navController = navController,
@@ -41,7 +43,7 @@ fun SetupNavGraph(
             SettingsScreen(navController = navController, authViewModel = authViewModel)
         }
         composable("tablereservation"){
-            TableReservation()
+            TableReservation(tables = tables)
         }
         composable("favourites"){
             FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)

@@ -130,7 +130,7 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
                 )
             } else {
                 if(isDropDown){
-                    ExposedDropdownMenuBox(dropDownList, onValueChange = {selected -> itemValue = selected})
+                    ExposedDropdownMenuBox(dropDownList, onValueChange = {selected -> itemValue = selected}, modifier = Modifier.width(180.dp))
                 }else{
                     Text(text = itemValue, color = Color.Gray, modifier = Modifier.align(Alignment.CenterVertically))
                     if(editable){
@@ -206,12 +206,12 @@ fun SettingList(
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit) {
+fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit, modifier: Modifier) {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(itemList[0]) }
 
     Box(
-        modifier = Modifier.width(180.dp)
+        modifier = Modifier.then(modifier)
     ) {
         ExposedDropdownMenuBox(
             expanded = expanded,
@@ -221,7 +221,7 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit)
         ) {
             OutlinedTextField(
                 value = selectedText,
-                onValueChange = {onValueChange(it)},
+                onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor().background(color = Color.White),
@@ -238,6 +238,7 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit)
                         onClick = {
                             selectedText = item
                             expanded = false
+                            onValueChange(selectedText)
                         }
                     )
                 }

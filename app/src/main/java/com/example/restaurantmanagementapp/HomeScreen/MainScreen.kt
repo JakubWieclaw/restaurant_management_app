@@ -62,7 +62,7 @@ fun TestMainScreen(){
     val orderViewModel: OrderViewModel = viewModel()
     val authViewModel: AuthViewModel= viewModel()
     val favMealsViewModel: FavMealsViewModel = viewModel()
-
+    val tables = TestData.tablesList
 
     Scaffold(
         bottomBar = {
@@ -77,7 +77,8 @@ fun TestMainScreen(){
                 categories = categories,
                 orderViewModel = orderViewModel,
                 authViewModel = authViewModel,
-                favMealsViewModel = favMealsViewModel
+                favMealsViewModel = favMealsViewModel,
+                tables = tables
             )
         }
     }

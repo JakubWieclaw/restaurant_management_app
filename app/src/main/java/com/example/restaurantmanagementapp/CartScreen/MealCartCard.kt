@@ -39,7 +39,7 @@ fun MealCartCard(
     index: Int,
 ) {
     val cartItem = orderViewModel.orderItems[index]
-    var quantity by remember { mutableIntStateOf(cartItem.quantity) }
+    //var quantity by remember { mutableIntStateOf(cartItem.quantity) }
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
@@ -51,7 +51,7 @@ fun MealCartCard(
             .background(Color.Red,RoundedCornerShape(8.dp))
     ) {
         IconButton(
-            onClick = { orderViewModel.deleteFromOrder(orderViewModel.orderItems[index]) },
+            onClick = { orderViewModel.deleteFromOrder(cartItem) },
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp)
@@ -110,7 +110,7 @@ fun MealCartCard(
                     Text(text = cartItem.name, fontSize = 20.sp)
                     StarRating(rating = 2, size = 16.dp)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Total: ${String.format("%.2f", cartItem.price * quantity)} zł", fontSize = 16.sp)
+                    Text(text = "Total: ${String.format("%.2f", cartItem.price * cartItem.quantity)} zł", fontSize = 16.sp)
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -124,8 +124,7 @@ fun MealCartCard(
                 ) {
                     IconButton(
                         onClick = {
-                            quantity = (quantity - 1).coerceAtLeast(1)
-                            orderViewModel.updateQuantity(index, quantity)
+                            orderViewModel.updateQuantity(index, cartItem.quantity-1)
                         },
                         modifier = Modifier
                             .size(32.dp)
@@ -135,12 +134,11 @@ fun MealCartCard(
                         Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Decrease Quantity")
                     }
 
-                    Text(text = quantity.toString(), fontSize = 32.sp)
+                    Text(text = cartItem.quantity.toString(), fontSize = 32.sp)
 
                     IconButton(
                         onClick = {
-                            quantity = (quantity + 1).coerceAtMost(999)
-                            orderViewModel.updateQuantity(index, quantity)
+                            orderViewModel.updateQuantity(index, cartItem.quantity+1)
                         },
                         modifier = Modifier
                             .size(32.dp)

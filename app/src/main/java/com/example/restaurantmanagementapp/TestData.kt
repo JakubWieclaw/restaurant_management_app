@@ -2,6 +2,7 @@ package com.example.restaurantmanagementapp
 
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.Opinion
+import com.example.restaurantmanagementapp.classes.Table
 
 object TestData {
     val mealListSample = listOf(
@@ -83,4 +84,18 @@ object TestData {
         R.drawable.test_meal_picture_1,
         R.drawable.test_meal_picture_1,
     )
+
+    val tablesList = listOf(
+        Table(1,2,"00:00","24:00"),
+        Table(1,4,"00:00","24:00"),
+        Table(1,6,"00:00","24:00"),
+        Table(1,2,"12:00","24:00"),
+        Table(1,4,"12:00","24:00"),
+        Table(1,6,"12:00","24:00"),
+        Table(1,2,"12:00","18:00"),
+        Table(1,4,"12:00","18:00"),
+        Table(1,6,"12:00","18:00"),
+    )
+
+
 }

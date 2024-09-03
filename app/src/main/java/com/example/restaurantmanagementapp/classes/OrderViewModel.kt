@@ -19,7 +19,7 @@ class OrderViewModel : ViewModel() {
         }
 
     }
-    //TODO: Przy usuwaniu z koszyka, jeśli usuwa się produkt, to produkt pod nim przyjmuje jego quantity, dodatkowo nie jest aktualizowana cena jako cena*quantity
+
     fun deleteFromOrder(meal:Meal){
         _orderItems.remove(meal)
     }
@@ -44,7 +44,7 @@ class OrderViewModel : ViewModel() {
     }
 
     fun updateQuantity(index:Int,value:Int){
-        _orderItems[index].quantity = value
+        _orderItems[index].quantity = value.coerceAtLeast(1).coerceAtMost(999)
     }
 
 }
