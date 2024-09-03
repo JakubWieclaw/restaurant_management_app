@@ -19,6 +19,10 @@ class OrderViewModel : ViewModel() {
         }
 
     }
+    //TODO: Przy usuwaniu z koszyka, jeśli usuwa się produkt, to produkt pod nim przyjmuje jego quantity, dodatkowo nie jest aktualizowana cena jako cena*quantity
+    fun deleteFromOrder(meal:Meal){
+        _orderItems.remove(meal)
+    }
     fun removeFromOrder(meal: Meal) {
         val tmeal = _orderItems.find{item -> item.id==meal.id}
         if(tmeal!=null){

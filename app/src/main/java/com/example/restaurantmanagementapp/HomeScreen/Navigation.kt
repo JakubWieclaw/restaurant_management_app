@@ -44,7 +44,7 @@ fun SetupNavGraph(
             TableReservation()
         }
         composable("favourites"){
-            FavouriteMeals(favMealsViewModel = favMealsViewModel)
+            FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)
         }
 
 

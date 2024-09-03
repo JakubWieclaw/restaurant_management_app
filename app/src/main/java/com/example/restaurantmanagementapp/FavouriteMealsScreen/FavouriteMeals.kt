@@ -17,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.CartScreen.MealCartCard
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
+import com.example.restaurantmanagementapp.classes.OrderViewModel
 
 @Composable
-fun FavouriteMeals(favMealsViewModel: FavMealsViewModel){
+fun FavouriteMeals(orderViewModel: OrderViewModel, favMealsViewModel: FavMealsViewModel){
     Column(
         modifier = Modifier
         .fillMaxSize()
@@ -37,7 +38,9 @@ fun FavouriteMeals(favMealsViewModel: FavMealsViewModel){
         ) {
             items(favMealsViewModel.favItems.size) {index ->
                 FavouriteMealCard(
-                    meal = favMealsViewModel.favItems[index]
+                    meal = favMealsViewModel.favItems[index],
+                    onAddToCart = {meal -> orderViewModel.addToOrder(meal)},
+                    onDelete = {meal -> favMealsViewModel.removeFromFav(meal)}
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
