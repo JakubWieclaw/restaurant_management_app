@@ -30,7 +30,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.restaurantmanagementapp.TestData
+import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.classes.AuthViewModel
+import com.example.restaurantmanagementapp.classes.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
@@ -57,11 +59,11 @@ class MainActivity : ComponentActivity() {
 fun TestMainScreen(){
     val navController = rememberNavController()
     val meals = TestData.mealListSample
-    val categories = TestData.categories
     val images = TestData.imagesList
     val orderViewModel: OrderViewModel = viewModel()
     val authViewModel: AuthViewModel= viewModel()
     val favMealsViewModel: FavMealsViewModel = viewModel()
+    val categoriesViewModel: CategoriesViewModel = viewModel()
     val tables = TestData.tablesList
 
     Scaffold(
@@ -74,11 +76,11 @@ fun TestMainScreen(){
                 navController = navController,
                 images = images,
                 meals = meals,
-                categories = categories,
                 orderViewModel = orderViewModel,
                 authViewModel = authViewModel,
                 favMealsViewModel = favMealsViewModel,
-                tables = tables
+                tables = tables,
+                categoriesViewModel = categoriesViewModel
             )
         }
     }

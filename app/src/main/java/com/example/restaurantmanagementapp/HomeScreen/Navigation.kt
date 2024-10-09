@@ -13,6 +13,7 @@ import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
+import com.example.restaurantmanagementapp.classes.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.OrderViewModel
@@ -23,15 +24,15 @@ fun SetupNavGraph(
     navController: NavHostController,
     images: List<Int>,
     meals: List<Meal>,
-    categories: List<String>,
     orderViewModel: OrderViewModel,
     authViewModel: AuthViewModel,
     favMealsViewModel: FavMealsViewModel,
+    categoriesViewModel: CategoriesViewModel,
     tables: List<Table>
 ) {
     NavHost(
         navController = navController,
-        startDestination = "restaurantinfo"
+        startDestination = "splashscreen"
     ) {
         composable("restaurantinfo") {
             RestaurantInfo(images = images, navController = navController)
@@ -51,7 +52,7 @@ fun SetupNavGraph(
 
 
         composable("meallist") {
-            MealList(meals = meals, categories = categories, navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel)
+            MealList(meals = meals,navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel, categoriesViewModel = categoriesViewModel)
         }
         composable("meal/{mealId}") { backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")
@@ -62,6 +63,10 @@ fun SetupNavGraph(
             CartScreen(orderViewModel = orderViewModel,authViewModel = authViewModel)
         }
 
+
+        composable("splashscreen"){
+            SplashScreen(categoriesViewModel = categoriesViewModel,navController = navController)
+        }
     }
 }
 

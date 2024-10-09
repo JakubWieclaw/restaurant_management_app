@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,15 +36,14 @@ import com.example.restaurantmanagementapp.ui.theme.Typography
 
 @Composable
 fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navController: NavController) {
-    Column(modifier = modifier.padding(all = 8.dp)) {
+    Column(modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 12.dp)) {
 
         val shape = RoundedCornerShape(30.dp)
         Box(
             modifier = Modifier
                 .height(160.dp)
                 .fillMaxWidth()
-                .background(Color.White, shape = shape),
-            contentAlignment = Alignment.BottomCenter
+                .background(Color.White, shape = shape)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.test_meal_picture_1),
@@ -57,6 +57,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
                     .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
                     .padding(bottom = 8.dp, start = 24.dp, end = 24.dp)
             ) {
                 OutlinedText(
@@ -81,6 +82,25 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 //Text(meal.price.toString(), color = Color.White, modifier = Modifier.background(color=Color.Black), style = Typography.titleLarge)
             }
 
+            Row(
+                horizontalArrangement = Arrangement.Start, modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(start = 24.dp, top = 10.dp)
+                    .background(color = Color.LightGray, shape = RoundedCornerShape(8.dp))
+                    .padding(start = 3.dp, top = 3.dp, bottom = 3.dp, end = 3.dp)
+                    .alpha(0.8f)
+            ) {
+                Text("2/5", fontSize = 16.sp)
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .align(Alignment.CenterVertically),
+                    tint = Color.Yellow
+                )
+            }
+
         }
 
 
@@ -92,35 +112,21 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                 )
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(start = 8.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                    .align(Alignment.CenterVertically)
-                    .weight(0.20f)
-            ) {
-                Text("2/5", fontSize = 24.sp)
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterVertically),
-                    tint = Color.Yellow
-                )
-            }
             Button(
+                shape = RoundedCornerShape(bottomStart = 28.dp),
                 onClick = { navigateToScreen("meal/${meal.id}",navController)},
                 modifier = Modifier
-                    .padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(start = 4.dp, end = 2.dp, top = 2.dp, bottom = 2.dp)
                     .weight(0.3f),
             ) {
                 Text("details")
             }
             Button(
+                shape = RoundedCornerShape(bottomEnd = 28.dp),
                 onClick = {onAddToOrder(meal)},
                 modifier = Modifier
-                    .padding(start = 4.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
-                    .weight(0.5f),
+                    .padding(start = 2.dp, end = 4.dp, top = 2.dp, bottom = 2.dp)
+                    .weight(0.7f),
             ) {
                 Text("add to order", maxLines = 1)
             }
