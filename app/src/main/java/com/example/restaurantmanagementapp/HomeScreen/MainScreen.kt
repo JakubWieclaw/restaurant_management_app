@@ -34,6 +34,7 @@ import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
+import com.example.restaurantmanagementapp.classes.MealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TestMainScreen(){
     val navController = rememberNavController()
-    val meals = TestData.mealListSample
+    val mealsViewModel: MealsViewModel = viewModel()
     val images = TestData.imagesList
     val orderViewModel: OrderViewModel = viewModel()
     val authViewModel: AuthViewModel= viewModel()
@@ -75,7 +76,7 @@ fun TestMainScreen(){
             SetupNavGraph(
                 navController = navController,
                 images = images,
-                meals = meals,
+                mealsViewModel = mealsViewModel,
                 orderViewModel = orderViewModel,
                 authViewModel = authViewModel,
                 favMealsViewModel = favMealsViewModel,

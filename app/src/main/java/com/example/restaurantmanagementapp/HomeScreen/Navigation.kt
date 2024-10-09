@@ -16,6 +16,7 @@ import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.classes.MealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.example.restaurantmanagementapp.classes.Table
 
@@ -23,7 +24,7 @@ import com.example.restaurantmanagementapp.classes.Table
 fun SetupNavGraph(
     navController: NavHostController,
     images: List<Int>,
-    meals: List<Meal>,
+    mealsViewModel: MealsViewModel,
     orderViewModel: OrderViewModel,
     authViewModel: AuthViewModel,
     favMealsViewModel: FavMealsViewModel,
@@ -52,11 +53,11 @@ fun SetupNavGraph(
 
 
         composable("meallist") {
-            MealList(meals = meals,navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel, categoriesViewModel = categoriesViewModel)
+            MealList(meals = mealsViewModel.meals,navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel, categoriesViewModel = categoriesViewModel)
         }
         composable("meal/{mealId}") { backStackEntry ->
             val mealId = backStackEntry.arguments?.getString("mealId")
-            val meal = meals.find { it.id.toString() == mealId }!!
+            val meal = mealsViewModel.meals.find { it.id.toString() == mealId }!!
             MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel, favMealsViewModel = favMealsViewModel)
         }
         composable("cart") {
@@ -65,7 +66,7 @@ fun SetupNavGraph(
 
 
         composable("splashscreen"){
-            SplashScreen(categoriesViewModel = categoriesViewModel,navController = navController)
+            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel,navController = navController)
         }
     }
 }

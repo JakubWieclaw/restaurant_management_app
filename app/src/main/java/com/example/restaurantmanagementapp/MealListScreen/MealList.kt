@@ -116,7 +116,7 @@ fun MealList(
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { index ->
                 val filteredMeals = meals.filter {
                     if (searchText == "") {
-                        it.categoryID == index
+                        it.categoryId == index
                     } else {
                         it.name.contains(searchText, ignoreCase = true)
                     }

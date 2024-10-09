@@ -149,8 +149,8 @@ fun FavouriteMealCard(
     }
 }
 
-@Preview
-@Composable
-fun FavouriteMealCardPreview(){
-    FavouriteMealCard(meal = TestData.mealListSample[0], onAddToCart = {}, onDelete = {})
-}
+//@Preview
+//@Composable
+//fun FavouriteMealCardPreview(){
+//    FavouriteMealCard(meal = TestData.mealListSample[0], onAddToCart = {}, onDelete = {})
+//}

@@ -20,14 +20,17 @@ import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
+import com.example.restaurantmanagementapp.classes.MealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 
 @Composable
-fun SplashScreen(categoriesViewModel: CategoriesViewModel, navController: NavController) {
-    val totalItems = 1
+fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, navController: NavController) {
+    val totalItems = 2
     var completed by remember { mutableIntStateOf(0) }
 
     categoriesViewModel.fetchCategories(onComplete={completed++})
+    mealsViewModel.fetchMeals(onComplete={completed++})
+
     val progress = completed.toFloat() / totalItems.toFloat()
 
     if (completed >= totalItems) {
@@ -58,6 +61,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, navController: NavCon
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Pobrano: ${(progress * 100).toInt()}%")
+
         }
     }
 }

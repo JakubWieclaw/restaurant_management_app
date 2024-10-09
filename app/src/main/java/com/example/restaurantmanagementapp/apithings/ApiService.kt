@@ -12,4 +12,11 @@ interface ApiService {
 
     @GET("api/categories/all")
     fun getCategories(): Call<ResponseBody>
+    @GET("api/meals/all")
+    fun getMeals(): Call<ResponseBody>
+    @GET("api/opinions/average-rating/{mealId}")
+    fun getAvgRating(): Call<ResponseBody>
+    @GET("api/photos/controller")
+    fun getPhoto(): Call<ResponseBody>
+
 }
