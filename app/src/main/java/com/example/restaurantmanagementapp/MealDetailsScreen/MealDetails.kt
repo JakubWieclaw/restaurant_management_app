@@ -18,9 +18,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -82,7 +85,7 @@ fun MealScreen(
     )
     val elementsModifier = Modifier
         .fillMaxWidth()
-        .padding(16.dp)
+        .padding(start = 16.dp, end = 16.dp, top = 4.dp)
 
 
     Scaffold(
@@ -115,6 +118,7 @@ fun MealScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
             Row(
                 modifier = elementsModifier,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -126,13 +130,28 @@ fun MealScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Meal description meal description meal description",
+                text = "Ingredients:",
                 modifier = elementsModifier
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Allergens and caloric value", modifier = elementsModifier)
+            ListElements(meal.ingredients,modifier = elementsModifier)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Allergens:",
+                modifier = elementsModifier
+            )
+            ListElements(names = meal.allergens, modifier = elementsModifier)
+
+            Row(modifier = elementsModifier){
+                Text(
+                    text = meal.weightOrVolume.toString() + if(meal.unitType=="GRAMY") " g" else " ml",
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = meal.calories.toString() +" kcal",
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
 
             Button(
                 onClick = {
@@ -165,7 +184,9 @@ fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: N
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(all=10.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(all = 10.dp)
+                .fillMaxWidth()
         ){
 
             Row(
@@ -250,6 +271,39 @@ fun MealScreenFooter(orderViewModel: OrderViewModel,meal: Meal, navController: N
                 Text(text = "Add to order (Total: \$${round(quantity * meal.price * 100) / 100})") // Example total price calculation
             }
 
+
+    }
+}
+
+@Composable
+fun ListElements(names:List<String>, modifier:Modifier){
+    Column(modifier = Modifier.then(modifier)){
+        for(i in 1..<names.size){
+            if(i%2==1){
+                Row(horizontalArrangement = Arrangement.SpaceAround){
+                    Row(modifier = Modifier.weight(0.5f)){
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text("-", fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(names[i-1])
+                    }
+                    Row(modifier = Modifier.weight(0.5f)){
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Text("-", fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(names[i])
+                    }
+                }
+            }
+        }
+        if(names.size%2==1){
+            Row(){
+                Spacer(modifier = Modifier.width(20.dp))
+                Text("-", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(names[names.size-1])
+            }
+        }
 
     }
 }

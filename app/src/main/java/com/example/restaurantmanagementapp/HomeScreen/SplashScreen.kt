@@ -112,6 +112,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
         completed++
     }
 
+
     val progress = completed.toFloat() / totalItems.toFloat()
 
     val progress2 = if(mealSize>0)completed2.toFloat() / mealSize.toFloat() else 0.0f

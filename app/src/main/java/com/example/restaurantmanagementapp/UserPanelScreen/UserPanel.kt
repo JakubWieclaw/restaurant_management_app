@@ -3,10 +3,13 @@ package com.example.restaurantmanagementapp.UserPanelScreen
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -48,10 +51,10 @@ import com.example.restaurantmanagementapp.classes.AuthViewModel
 
 data class SettingItemData(val label: String, val value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
 val settingItems = listOf(
-    SettingItemData(label = "Full name", value = "Ron Weasley"),
+    SettingItemData(label = "Name", value = "Ron"),
+    SettingItemData(label = "Surname", value = "Weasley"),
     SettingItemData(label = "Email", value = "email@poczta.com"),
-    SettingItemData(label = "Phone", value = "+48 293 329 923",editable=true),
-    SettingItemData(label = "Address", value = "The Burrow"),
+    SettingItemData(label = "Phone", value = "+48 293 329 923",editable=true)
 )
 
 val settingItems2 = listOf(
@@ -71,15 +74,12 @@ fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        TopAppBar(
-            title = {
-                Text(text = "Profile info", color = Color.Black, modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-        )
 
+        
         Column(){
+            LoyaltyHeader(points = 10)
             SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false)
-            SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
+            //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
         }
     }
@@ -96,10 +96,10 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(top = 14.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, fontWeight = FontWeight.Bold, modifier = Modifier.align(Alignment.CenterVertically))
+        Text(text = label, fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
 
         Row() {
             if (editMode && editable && !isDropDown) {
@@ -132,7 +132,7 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
                 if(isDropDown){
                     ExposedDropdownMenuBox(dropDownList, onValueChange = {selected -> itemValue = selected}, modifier = Modifier.width(180.dp))
                 }else{
-                    Text(text = itemValue, color = Color.Gray, modifier = Modifier.align(Alignment.CenterVertically))
+                    Text(text = itemValue, color = Color.Gray, fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
                     if(editable){
                         IconButton(onClick = { editMode = !editMode }, modifier = Modifier.align(Alignment.CenterVertically)) {
                             Icon(imageVector = Icons.Default.Create, contentDescription = null)
@@ -179,7 +179,7 @@ fun SettingList(
             )
 
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = label, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(text = label, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(1f))
             if(foldable){
                 Icon(
@@ -194,7 +194,7 @@ fun SettingList(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp)
+                    .padding(start = 12.dp, end = 12.dp,bottom=12.dp)
             ) {
                 Divider(modifier = Modifier.height(2.dp), color = Color.Black)
                 settingItemsData.forEach { item ->
@@ -224,7 +224,9 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor().background(color = Color.White),
+                modifier = Modifier
+                    .menuAnchor()
+                    .background(color = Color.White),
                 maxLines = 1
             )
 
@@ -247,6 +249,51 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit,
     }
 }
 
+@Composable
+fun LoyaltyHeader(points: Int) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start=16.dp,end=16.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Left line
+            Column(modifier = Modifier.weight(1f)){
+                Text(text = "Your profile", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Divider(thickness = 2.dp)
+                Text(text = " ", fontSize = 18.sp)
+            }
+
+
+            // User icon in the center
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "User Icon",
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(horizontal = 16.dp),
+                tint = Color.Black
+            )
+
+            // Right line
+            Column(modifier = Modifier.weight(1f)){
+                Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Divider(thickness = 2.dp)
+                Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+        }
+
+
+
+
+    }
+}
 
 
 
