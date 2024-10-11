@@ -17,7 +17,9 @@ data class Meal(
     override val allergens: List<String>,
     override val calories: Int,
     override val unitTypeMandatory: Boolean,
-    val quantity2: Int = 1
+    val quantity2: Int = 1,
+    var avgRating: Double = 0.0,
+    var opinions: List<Opinion> = emptyList()
 ) : MealServer(
     id = id,
     name = name,

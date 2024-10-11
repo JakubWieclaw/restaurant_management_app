@@ -145,7 +145,7 @@ fun MealScreen(
             }
 
             if (showReviews) {
-                ReviewList(reviews = TestData.opinionsListSample)
+                ReviewList(reviews = meal.opinions)
             }
 
             Spacer(modifier = Modifier.height(16.dp))

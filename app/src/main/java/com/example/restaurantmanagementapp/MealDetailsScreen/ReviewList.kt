@@ -77,17 +77,17 @@ fun ReviewCard(review: Opinion) {
 
     ) {
         Row() {
-            StarRating(rating = review.stars,size=24.dp)
+            StarRating(rating = review.rating,size=24.dp)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = review.customerName,
+                text = review.customerId.toString(),
                 fontSize = 20.sp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = review.opinionBody, fontSize = 16.sp)
+        Text(text = review.comment, fontSize = 16.sp)
     }
 }
 

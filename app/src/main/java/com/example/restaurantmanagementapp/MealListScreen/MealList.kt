@@ -86,7 +86,7 @@ fun MealList(
     val pagerState = rememberPagerState(
         initialPage = 1,
         initialPageOffsetFraction = 0.0f,
-        pageCount = { 10 })
+        pageCount = { categoriesViewModel.categoriesState!!.size })
     val coroutineScope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
 

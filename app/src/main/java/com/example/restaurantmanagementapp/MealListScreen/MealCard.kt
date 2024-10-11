@@ -90,7 +90,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     .padding(start = 3.dp, top = 3.dp, bottom = 3.dp, end = 3.dp)
                     .alpha(0.8f)
             ) {
-                Text("2/5", fontSize = 16.sp)
+                Text(meal.avgRating.toString(), fontSize = 16.sp)
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,

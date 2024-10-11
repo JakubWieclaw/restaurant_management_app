@@ -63,10 +63,10 @@ object TestData {
 //    )
 
     val opinionsListSample = listOf(
-        Opinion("Geralt z Rivii",  "Bardzo dobre danie, zawsze gdy jestem w Wyzimie odwiedzam to miejsce i próbuję tej potrawy.",5),
-        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",4),
-        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",3),
-        Opinion("USERNAME",  "opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion",2)
+        Opinion(2,5,  "Bardzo dobre danie, zawsze gdy jestem w Wyzimie odwiedzam to miejsce i próbuję tej potrawy."),
+        Opinion(3,  4,"opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion"),
+        Opinion(4,  3,"opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion"),
+        Opinion(5,  2,"opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion opinion")
     )
 
     val categories = listOf(
