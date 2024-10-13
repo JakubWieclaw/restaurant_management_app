@@ -6,7 +6,20 @@
         <State />
       </entry>
       <entry key="MainActivity (1)">
-        <State />
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="118063d4" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-10-13T21:58:03.395427600Z" />
+        </State>
       </entry>
       <entry key="PreviewSettingList">
         <State />

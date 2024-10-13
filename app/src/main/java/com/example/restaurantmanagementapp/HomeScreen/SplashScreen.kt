@@ -117,7 +117,9 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     val progress2 = if(mealSize>0)completed2.toFloat() / mealSize.toFloat() else 0.0f
 
-    if (completed >= totalItems) {
+
+    //if (completed >= totalItems) {
+    if(true){
         navigateToScreen("restaurantinfo", navController)
     }
 

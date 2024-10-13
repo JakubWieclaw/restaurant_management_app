@@ -12,16 +12,69 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.model.Customer
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.rememberPaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
+import org.json.JSONArray
+import org.json.JSONObject
 
-
+/*TODO: W android studio na urządzeniu aplikacja się crashuje przy próbie dokonania płatności (jakiś
+    problem z getResource dot. animacji?
+    W przypadku użycia na rzeczywistym telefonie działa poprawnie
+*/
 @Composable
 fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
     var promoCode by remember { mutableStateOf("") }
+
+    val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
+
+    val context = LocalContext.current
+    var customerConfig by remember { mutableStateOf<PaymentSheet.CustomerConfiguration?>(null) }
+    var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
+
+    val mock2Instance = remember { mock2() }
+
+    LaunchedEffect(Unit) { // Trigger on composition
+        // Call the go method and handle the result
+        try {
+            val responseJson0 = mock2Instance.go(object : mock2.Callback<String> {
+                override fun onSuccess(result: String) {
+                    val responseJson = JSONObject(result)
+
+                    paymentIntentClientSecret = responseJson.getString("paymentIntent")
+                    customerConfig = PaymentSheet.CustomerConfiguration(
+                        id = responseJson.getString("customer"),
+                        ephemeralKeySecret = responseJson.getString("ephemeralKey")
+                    )
+                    val publishableKey = responseJson.getString("publishableKey")
+                    PaymentConfiguration.init(context, publishableKey)
+                }
+
+                override fun onError(e: Exception) {
+                    // Handle the error here
+                    e.printStackTrace()
+                    // Optionally show an error message to the user
+                }
+            }) // Now a suspend function
+
+        } catch (e: Exception) {
+            // Handle any exceptions (optional)
+            e.printStackTrace()
+            // You may want to show an error message or handle the error gracefully
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -53,7 +106,7 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(16.dp))
-                .background(color= Color.LightGray, shape = RoundedCornerShape(16.dp)),
+                .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             BasicTextField(
@@ -61,13 +114,22 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
                 onValueChange = { promoCode = it },
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start=8.dp,end=8.dp)
-                    .background(color= Color.LightGray, shape = MaterialTheme.shapes.small),
+                    .padding(start = 8.dp, end = 8.dp)
+                    .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
                 textStyle = TextStyle(fontSize = 18.sp)
             )
             Button(
                 onClick = { /* Handle apply promo code */ },
-                modifier = Modifier.background(color = Color.Yellow).clip(RoundedCornerShape(topStart=0.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 16.dp)),
+                modifier = Modifier
+                    .background(color = Color.Yellow)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 0.dp,
+                            topEnd = 16.dp,
+                            bottomStart = 0.dp,
+                            bottomEnd = 16.dp
+                        )
+                    ),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow),
             ) {
                 Text(text = "Apply", style = TextStyle(color= Color.Black), fontSize = 20.sp)
@@ -97,6 +159,20 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
             )
             CartSummaryItem(label = "Total", price = itemprice+addons-discount, isTotal = true)
         }
+
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            onClick={
+                val currentConfig = customerConfig
+                val currentClientSecret = paymentIntentClientSecret
+
+                if (currentConfig != null && currentClientSecret != null) {
+                    presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
+                }
+            }
+        ){
+            Text("Przejdź do płatności")
+        }
     }
 }
 @Composable
@@ -115,5 +191,36 @@ fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
             fontSize = if (isTotal) 20.sp else 16.sp,
             color = if (isTotal) Color.Black else Color.Gray
         )
+    }
+}
+private fun presentPaymentSheet(
+    paymentSheet: PaymentSheet,
+    customerConfig: PaymentSheet.CustomerConfiguration,
+    paymentIntentClientSecret: String
+) {
+    paymentSheet.presentWithPaymentIntent(
+        paymentIntentClientSecret,
+        PaymentSheet.Configuration(
+            merchantDisplayName = "My merchant name",
+            customer = customerConfig,
+            // Set `allowsDelayedPaymentMethods` to true if your business handles
+            // delayed notification payment methods like US bank accounts.
+            allowsDelayedPaymentMethods = true
+        )
+    )
+}
+
+private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+    when(paymentSheetResult) {
+        is PaymentSheetResult.Canceled -> {
+            print("Canceled")
+        }
+        is PaymentSheetResult.Failed -> {
+            print("Error: ${paymentSheetResult.error}")
+        }
+        is PaymentSheetResult.Completed -> {
+            // Display for example, an order confirmation screen
+            print("Completed")
+        }
     }
 }
