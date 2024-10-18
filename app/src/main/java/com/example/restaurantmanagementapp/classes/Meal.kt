@@ -2,8 +2,10 @@ package com.example.restaurantmanagementapp.classes
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 data class Meal(
     override val id: Int,
@@ -19,7 +21,8 @@ data class Meal(
     override val unitTypeMandatory: Boolean,
     val quantity2: Int = 1,
     var avgRating: Double = 0.0,
-    var opinions: List<Opinion> = emptyList()
+    var opinions: List<Opinion> = emptyList(),
+    var removedIngredients: SnapshotStateList<String> = mutableStateListOf(),
 ) : MealServer(
     id = id,
     name = name,
@@ -34,4 +37,5 @@ data class Meal(
     unitTypeMandatory = unitTypeMandatory
 ) {
     var quantity by mutableIntStateOf(quantity2)
+
 }

@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
+import com.example.restaurantmanagementapp.apithings.Category
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.AvgRating

@@ -3,9 +3,16 @@ package com.example.restaurantmanagementapp.CartScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +33,8 @@ import com.stripe.android.model.Customer
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.rememberPaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -33,6 +42,7 @@ import org.json.JSONObject
     problem z getResource dot. animacji?
     W przypadku użycia na rzeczywistym telefonie działa poprawnie
 */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
     var promoCode by remember { mutableStateOf("") }
@@ -44,6 +54,10 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
 
     val mock2Instance = remember { mock2() }
+
+    val sheetState = rememberBottomSheetScaffoldState(bottomSheetState = SheetState(initialValue = SheetValue.Hidden, skipPartiallyExpanded = false))
+    val scope = rememberCoroutineScope()
+    var selectedMealIdx by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(Unit) { // Trigger on composition
         // Call the go method and handle the result
@@ -75,103 +89,116 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
+    BottomSheetScaffold(
+        scaffoldState = sheetState,
+        sheetContent = {
+            mealEditSheet(orderViewModel,selectedMealIdx,scope,sheetState)
+        },
+        sheetPeekHeight = 0.dp
     ) {
-        Text(text="Twój koszyk: ",modifier = Modifier.height(24.dp), fontSize = 20.sp)
-        Divider(
-            color = Color.Gray,
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
-        // MealCartCard list
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-        ) {
-            itemsIndexed(orderViewModel.orderItems) { index, cartItem ->
-                MealCartCard(
-                    orderViewModel = orderViewModel,
-                    index = index,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Promo code section
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            BasicTextField(
-                value = promoCode,
-                onValueChange = { promoCode = it },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp, end = 8.dp)
-                    .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
-                textStyle = TextStyle(fontSize = 18.sp)
-            )
-            Button(
-                onClick = { /* Handle apply promo code */ },
-                modifier = Modifier
-                    .background(color = Color.Yellow)
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 16.dp,
-                            bottomStart = 0.dp,
-                            bottomEnd = 16.dp
-                        )
-                    ),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow),
-            ) {
-                Text(text = "Apply", style = TextStyle(color= Color.Black), fontSize = 20.sp)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Cart summary
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
         ) {
-            val itemprice = orderViewModel.getOrderTotal()
-            val addons = 20.0
-            val discount = 20.0
-            CartSummaryItem(label = "Item Price", price = itemprice)
-            CartSummaryItem(label = "Addons", price = addons)
+            Text(text = "Twój koszyk: ", modifier = Modifier.height(24.dp), fontSize = 20.sp)
             Divider(
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            CartSummaryItem(label = "Subtotal", price = itemprice+addons)
-            CartSummaryItem(label = "Discount", price = -discount)
-            Divider(
-                color = Color.Gray,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-            CartSummaryItem(label = "Total", price = itemprice+addons-discount, isTotal = true)
-        }
-
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick={
-                val currentConfig = customerConfig
-                val currentClientSecret = paymentIntentClientSecret
-
-                if (currentConfig != null && currentClientSecret != null) {
-                    presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
+            // MealCartCard list
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                itemsIndexed(orderViewModel.orderItems) { index, cartItem ->
+                    MealCartCard(
+                        orderViewModel = orderViewModel,
+                        index = index,
+                        onEditClick = {selectedMealIdx = index;scope.launch { sheetState.bottomSheetState.expand()};println("Klik!")},
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-        ){
-            Text("Przejdź do płatności")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Promo code section
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BasicTextField(
+                    value = promoCode,
+                    onValueChange = { promoCode = it },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp, end = 8.dp)
+                        .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
+                    textStyle = TextStyle(fontSize = 18.sp)
+                )
+                Button(
+                    onClick = { /* Handle apply promo code */ },
+                    modifier = Modifier
+                        .background(color = Color.Yellow)
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 0.dp,
+                                topEnd = 16.dp,
+                                bottomStart = 0.dp,
+                                bottomEnd = 16.dp
+                            )
+                        ),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow),
+                ) {
+                    Text(text = "Apply", style = TextStyle(color = Color.Black), fontSize = 20.sp)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Cart summary
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val itemprice = orderViewModel.getOrderTotal()
+                val addons = 20.0
+                val discount = 20.0
+                CartSummaryItem(label = "Item Price", price = itemprice)
+                CartSummaryItem(label = "Addons", price = addons)
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                CartSummaryItem(label = "Subtotal", price = itemprice + addons)
+                CartSummaryItem(label = "Discount", price = -discount)
+                Divider(
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+                CartSummaryItem(
+                    label = "Total",
+                    price = itemprice + addons - discount,
+                    isTotal = true
+                )
+            }
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    val currentConfig = customerConfig
+                    val currentClientSecret = paymentIntentClientSecret
+
+                    if (currentConfig != null && currentClientSecret != null) {
+                        presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
+                    }
+                }
+            ) {
+                Text("Przejdź do płatności")
+            }
         }
     }
 }
@@ -221,6 +248,39 @@ private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         is PaymentSheetResult.Completed -> {
             // Display for example, an order confirmation screen
             print("Completed")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun mealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineScope, sheetState: BottomSheetScaffoldState ){
+    if(index!=null && index < orderViewModel.orderItems.size) {
+        val tmeal = orderViewModel.orderItems[index]
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            tmeal.ingredients.forEach { ingredient ->
+                Row() {
+                    IconButton(onClick = { scope.launch { sheetState.bottomSheetState.hide() } }) {
+                        Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
+                    }
+                    Text("- $ingredient")
+                    IconButton(
+                        onClick = { orderViewModel.addIngredient(index, ingredient) },
+                        enabled = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
+                    ) {
+                        Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                    }
+                    IconButton(
+                        onClick = { orderViewModel.removeIngredient(index, ingredient) },
+                        enabled = tmeal.removedIngredients.find { item -> item == ingredient } == null
+                    ) {
+                        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    }
+                }
+
+            }
         }
     }
 }

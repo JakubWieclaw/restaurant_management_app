@@ -12,9 +12,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.classes.OrderViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -37,6 +42,7 @@ import kotlin.math.roundToInt
 fun MealCartCard(
     orderViewModel: OrderViewModel,
     index: Int,
+    onEditClick: () -> Unit,
 ) {
     val cartItem = orderViewModel.orderItems[index]
     //var quantity by remember { mutableIntStateOf(cartItem.quantity) }
@@ -110,6 +116,9 @@ fun MealCartCard(
                     Text(text = cartItem.name, fontSize = 20.sp)
                     StarRating(rating = 2, size = 16.dp)
                     Spacer(modifier = Modifier.height(8.dp))
+                    cartItem.removedIngredients.forEach { rIngredient ->
+                        Text(" - $rIngredient")
+                    }
                     Text(text = "Total: ${String.format("%.2f", cartItem.price * cartItem.quantity)} zł", fontSize = 16.sp)
                 }
 
@@ -120,7 +129,6 @@ fun MealCartCard(
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .width(120.dp)
                 ) {
                     IconButton(
                         onClick = {
@@ -146,6 +154,9 @@ fun MealCartCard(
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Increase Quantity")
+                    }
+                    IconButton(onClick={onEditClick()}){
+                        Icon(Icons.Default.List, contentDescription = "Edit")
                     }
                 }
             }
