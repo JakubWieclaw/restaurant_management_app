@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 
 class OrderViewModel : ViewModel() {
@@ -11,11 +12,16 @@ class OrderViewModel : ViewModel() {
     val orderItems: SnapshotStateList<Meal> = _orderItems
 
     fun addToOrder(meal: Meal) {
-        val tmeal = _orderItems.find{item -> item.id==meal.id}
+        val tmeal = _orderItems.find{it.id == meal.id && it.removedIngredients.toSet() == meal.removedIngredients.toSet()}
         if(tmeal!=null){
+            println("tmeal: " +tmeal.removedIngredients.toSet())
+            println("meal:"+ meal.removedIngredients.toSet())
             updateQuantity(_orderItems.indexOf(tmeal),tmeal.quantity+1)
         }else{
-            _orderItems.add(meal)
+            val newMeal = meal.copy(
+                removedIngredients = meal.removedIngredients.toMutableStateList()
+            )
+            _orderItems.add(newMeal)
         }
 
     }
@@ -47,4 +53,19 @@ class OrderViewModel : ViewModel() {
         _orderItems[index].quantity = value.coerceAtLeast(1).coerceAtMost(999)
     }
 
+    fun removeIngredient(index: Int, ingredient:String){
+//        val tmeal = _orderItems.find{item -> item.id==meal.id}
+//        if(tmeal!=null){
+//            tmeal.removedIngredients.add(ingredient)
+//        }
+        _orderItems[index].removedIngredients.add(ingredient)
+    }
+
+    fun addIngredient(index: Int, ingredient:String){
+//        val tmeal = _orderItems.find{item -> item.id==meal.id}
+//        if(tmeal!=null){
+//            tmeal.removedIngredients.remove(ingredient)
+//        }
+        _orderItems[index].removedIngredients.remove(ingredient)
+    }
 }

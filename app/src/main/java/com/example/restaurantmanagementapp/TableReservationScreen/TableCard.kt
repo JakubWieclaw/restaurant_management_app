@@ -69,7 +69,7 @@ fun TableCart(table: Table, isChoosen: Boolean = false, onChoose:(Int) -> Unit, 
             verticalArrangement =  Arrangement.SpaceBetween){
             Text("Table nr: ${table.nr}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             Text("${table.sits} sits", fontSize = 16.sp)
-            Text("21.03.2024 18:00-19:00", fontSize = 14.sp)
+            Text("21.03.2024 " + table.startHour +"-"+table.endHour, fontSize = 14.sp)
         }
     }
 }
