@@ -24,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.classes.AuthViewModel
+import com.example.restaurantmanagementapp.classes.CouponsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -44,9 +45,9 @@ import org.json.JSONObject
 */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
-    var promoCode by remember { mutableStateOf("") }
-
+fun CartScreen(orderViewModel: OrderViewModel,couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel) {
+    var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
+    var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
     val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
 
     val context = LocalContext.current
@@ -114,6 +115,7 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
                 itemsIndexed(orderViewModel.orderItems) { index, cartItem ->
                     MealCartCard(
                         orderViewModel = orderViewModel,
+                        couponsViewModel = couponsViewModel,
                         index = index,
                         onEditClick = {selectedMealIdx = index;scope.launch { sheetState.bottomSheetState.expand()};println("Klik!")},
                     )
@@ -133,7 +135,7 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
             ) {
                 BasicTextField(
                     value = promoCode,
-                    onValueChange = { promoCode = it },
+                    onValueChange = {promoCode = it; selectedCoupon = null },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp, end = 8.dp)
@@ -141,7 +143,9 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
                     textStyle = TextStyle(fontSize = 18.sp)
                 )
                 Button(
-                    onClick = { /* Handle apply promo code */ },
+                    onClick = {
+                        couponsViewModel.selectCoupon(promoCode)
+                    },
                     modifier = Modifier
                         .background(color = Color.Yellow)
                         .clip(
@@ -165,8 +169,9 @@ fun CartScreen(orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 val itemprice = orderViewModel.getOrderTotal()
-                val addons = 20.0
-                val discount = 20.0
+                val addons = 0.0
+                val discount = itemprice - orderViewModel.getOrderTotal(mealId = couponsViewModel.selectedCoupon?.meal?.id, discount = couponsViewModel.selectedCoupon?.discountPercentage)
+
                 CartSummaryItem(label = "Item Price", price = itemprice)
                 CartSummaryItem(label = "Addons", price = addons)
                 Divider(
@@ -279,7 +284,6 @@ fun mealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
                         Icon(imageVector = Icons.Default.Clear, contentDescription = null)
                     }
                 }
-
             }
         }
     }

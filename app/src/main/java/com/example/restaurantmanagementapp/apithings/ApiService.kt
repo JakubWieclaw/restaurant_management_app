@@ -22,5 +22,7 @@ interface ApiService {
     fun getOpinionsForMeal(@Path("mealId") mealId:Int): Call<ResponseBody>
     @GET("api/photos/controller")
     fun getPhoto(): Call<ResponseBody>
+    @GET("api/coupons/customer/{customerId}")
+    fun getCustomerCoupons(@Path("customerId") customerId:Int): Call<ResponseBody>
 
 }

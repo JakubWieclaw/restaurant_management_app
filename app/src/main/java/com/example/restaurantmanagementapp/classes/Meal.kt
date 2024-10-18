@@ -10,7 +10,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 data class Meal(
     override val id: Int,
     override val name: String,
-    override val price: Double,
+    override var price: Double,
     override val photographUrl: String,
     override val ingredients: List<String>,
     override val weightOrVolume: Int,

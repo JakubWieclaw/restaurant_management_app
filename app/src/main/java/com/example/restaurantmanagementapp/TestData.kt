@@ -145,5 +145,10 @@ object TestData {
         Table(9,6,"12:00","18:00"),
     )
 
+    val restaurantDescription = "Odkryj kulinarną podróż w sercu miasta w restauracji Słoneczne Smaki! Serwujemy dania inspirowane kuchnią śródziemnomorską, z naciskiem na świeżość i najwyższą jakość składników. W naszym menu znajdziesz zarówno klasyczne włoskie makarony, jak i wykwintne owoce morza, soczyste steki oraz aromatyczne sałatki.\n" +
+            "\n" +
+            "Nasza przytulna atmosfera, klimatyczne wnętrze i przyjazna obsługa sprawią, że poczujesz się jak na wakacjach nad Morzem Śródziemnym. Każdego dnia oferujemy również specjalne menu lunchowe oraz unikalne propozycje sezonowe, które zaskoczą nawet najbardziej wymagających smakoszy.\n" +
+            "\n" +
+            "Zapraszamy na niezapomniany wieczór pełen smaków i aromatów!"
 
 }

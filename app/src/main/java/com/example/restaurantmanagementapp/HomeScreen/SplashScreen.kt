@@ -23,16 +23,18 @@ import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.AvgRating
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
+import com.example.restaurantmanagementapp.classes.CouponsViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.MealsViewModel
 import com.example.restaurantmanagementapp.classes.Opinion
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlin.math.min
 
 @Composable
-fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, navController: NavController) {
-    var totalItems by remember { mutableIntStateOf(3) }
+fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, navController: NavController) {
+    var totalItems by remember { mutableIntStateOf(4) }
     var completed by remember { mutableIntStateOf(0) }
 
     var mealSize by remember {mutableIntStateOf(0)}
@@ -46,6 +48,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
         if(!viewModelsReady) {
             categoriesViewModel.fetchCategories(onComplete = { completed++ })
             mealsViewModel.fetchMeals(onComplete = { completed++;mealsReady = true })
+            couponsViewModel.fetchCoupons(onComplete = {completed++})
         }
         viewModelsReady = true
     }
@@ -116,11 +119,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     val progress = completed.toFloat() / totalItems.toFloat()
 
-    val progress2 = if(mealSize>0)completed2.toFloat() / mealSize.toFloat() else 0.0f
-
-
-    //if (completed >= totalItems) {
-    if(true){
+    if (completed >= totalItems) {
         navigateToScreen("restaurantinfo", navController)
     }
 
@@ -146,19 +145,8 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
                     .padding(16.dp)
                     .height(8.dp)
             )
-            //if(mealSize in 1..completed2-1){
-            if(false){
-                LinearProgressIndicator(
-                    progress = progress2,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(8.dp)
-                )
-            }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Pobrano: ${(progress * 100).toInt()}%")
-
+            Text(text = "Pobrano: ${min((progress * 100).toInt(),100)}%")
         }
     }
 }

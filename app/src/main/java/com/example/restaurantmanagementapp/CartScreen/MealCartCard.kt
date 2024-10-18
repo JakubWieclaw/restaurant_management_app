@@ -28,11 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.classes.CouponServer
+import com.example.restaurantmanagementapp.classes.CouponsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -41,6 +45,7 @@ import kotlin.math.roundToInt
 @Composable
 fun MealCartCard(
     orderViewModel: OrderViewModel,
+    couponsViewModel: CouponsViewModel,
     index: Int,
     onEditClick: () -> Unit,
 ) {
@@ -49,6 +54,10 @@ fun MealCartCard(
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
+
+    val selectedCoupon = couponsViewModel.selectedCoupon
+    val isDiscount = selectedCoupon!=null && selectedCoupon.meal.id == cartItem.id
+
 
     Box(
         modifier = Modifier
@@ -119,7 +128,11 @@ fun MealCartCard(
                     cartItem.removedIngredients.forEach { rIngredient ->
                         Text(" - $rIngredient")
                     }
-                    Text(text = "Total: ${String.format("%.2f", cartItem.price * cartItem.quantity)} zł", fontSize = 16.sp)
+                    Text(text = "Total: ${String.format("%.2f", cartItem.price * cartItem.quantity)} zł", fontSize = 16.sp, textDecoration = if(isDiscount) TextDecoration.LineThrough else TextDecoration.None,  color = if(isDiscount) Color.Red else Color.Black)
+                    if(isDiscount&&selectedCoupon!=null){
+                        Text(text = String.format("%.2f", cartItem.price * cartItem.quantity* (100.0-selectedCoupon.discountPercentage)/100.0))
+                    }
+
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))

@@ -14,6 +14,7 @@ import com.example.restaurantmanagementapp.TableReservationScreen.TableReservati
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
+import com.example.restaurantmanagementapp.classes.CouponsViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.MealsViewModel
@@ -29,6 +30,7 @@ fun SetupNavGraph(
     authViewModel: AuthViewModel,
     favMealsViewModel: FavMealsViewModel,
     categoriesViewModel: CategoriesViewModel,
+    couponsViewModel: CouponsViewModel,
     tables: List<Table>
 ) {
     NavHost(
@@ -36,7 +38,7 @@ fun SetupNavGraph(
         startDestination = "splashscreen"
     ) {
         composable("restaurantinfo") {
-            RestaurantInfo(images = images, navController = navController)
+            RestaurantInfo(images = images, couponsViewModel = couponsViewModel,navController = navController)
         }
         composable("loginscreen") {
             LoginScreen(navController = navController ,authViewModel = authViewModel)
@@ -61,12 +63,12 @@ fun SetupNavGraph(
             MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel, favMealsViewModel = favMealsViewModel)
         }
         composable("cart") {
-            CartScreen(orderViewModel = orderViewModel,authViewModel = authViewModel)
+            CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel)
         }
 
 
         composable("splashscreen"){
-            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel,navController = navController)
+            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel ,navController = navController)
         }
     }
 }

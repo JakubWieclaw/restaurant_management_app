@@ -2,7 +2,11 @@ package com.example.restaurantmanagementapp.classes
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
@@ -42,8 +46,13 @@ class OrderViewModel : ViewModel() {
     fun clearOrder() {
         _orderItems.clear()
     }
-    fun getOrderTotal(): Double {
-        return _orderItems.sumOf { it.price * it.quantity }
+    fun getOrderTotal(mealId:Int? =null,discount:Double? = null): Double {
+        return if(mealId!=null&&discount!=null){
+            _orderItems.sumOf {if(it.id==mealId) (1.0-discount/100.0) * it.price * it.quantity else  it.price * it.quantity}
+        }else{
+            _orderItems.sumOf {it.price * it.quantity }
+        }
+
     }
     fun getSize(): Int{
         return _orderItems.sumOf{it.quantity}
@@ -68,4 +77,5 @@ class OrderViewModel : ViewModel() {
 //        }
         _orderItems[index].removedIngredients.remove(ingredient)
     }
+
 }

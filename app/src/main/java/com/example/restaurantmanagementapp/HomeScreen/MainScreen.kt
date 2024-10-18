@@ -33,6 +33,7 @@ import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.classes.AuthViewModel
 import com.example.restaurantmanagementapp.classes.CategoriesViewModel
+import com.example.restaurantmanagementapp.classes.CouponsViewModel
 import com.example.restaurantmanagementapp.classes.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.MealsViewModel
 import com.example.restaurantmanagementapp.classes.OrderViewModel
@@ -65,6 +66,7 @@ fun TestMainScreen(){
     val authViewModel: AuthViewModel= viewModel()
     val favMealsViewModel: FavMealsViewModel = viewModel()
     val categoriesViewModel: CategoriesViewModel = viewModel()
+    val couponsViewModel:CouponsViewModel = viewModel()
     val tables = TestData.tablesList
 
     Scaffold(
@@ -81,7 +83,8 @@ fun TestMainScreen(){
                 authViewModel = authViewModel,
                 favMealsViewModel = favMealsViewModel,
                 tables = tables,
-                categoriesViewModel = categoriesViewModel
+                categoriesViewModel = categoriesViewModel,
+                couponsViewModel = couponsViewModel
             )
         }
     }
