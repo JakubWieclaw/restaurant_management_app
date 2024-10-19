@@ -107,21 +107,22 @@ fun MealCartCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.LightGray, RoundedCornerShape(8.dp))
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(8.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.test_meal_picture_1),
                     contentDescription = "Meal Image",
                     modifier = Modifier
-                        .size(80.dp)
+                        .width(80.dp)
+                        .height(100.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopStart
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Column {
+                Column() {
                     Text(text = cartItem.name, fontSize = 20.sp)
                     StarRating(rating = 2, size = 16.dp)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -141,33 +142,37 @@ fun MealCartCard(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().height(100.dp)
                 ) {
-                    IconButton(
-                        onClick = {
-                            orderViewModel.updateQuantity(index, cartItem.quantity-1)
-                        },
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Decrease Quantity")
-                    }
+
 
                     Text(text = cartItem.quantity.toString(), fontSize = 32.sp)
 
-                    IconButton(
-                        onClick = {
-                            orderViewModel.updateQuantity(index, cartItem.quantity+1)
-                        },
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Increase Quantity")
+                    Column(){
+                        IconButton(
+                            onClick = {
+                                orderViewModel.updateQuantity(index, cartItem.quantity+1)
+                            },
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5))
+                                .background(MaterialTheme.colorScheme.surface)
+                        ) {
+                            Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Increase Quantity")
+                        }
+                        IconButton(
+                            onClick = {
+                                orderViewModel.updateQuantity(index, cartItem.quantity-1)
+                            },
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5))
+                                .background(MaterialTheme.colorScheme.surface)
+                        ) {
+                            Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Decrease Quantity")
+                        }
+
+
                     }
+
                     IconButton(onClick={onEditClick()}){
                         Icon(Icons.Default.List, contentDescription = "Edit")
                     }

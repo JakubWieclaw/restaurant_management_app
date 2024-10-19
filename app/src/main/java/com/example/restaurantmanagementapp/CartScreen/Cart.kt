@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.classes.AuthViewModel
@@ -93,7 +94,7 @@ fun CartScreen(orderViewModel: OrderViewModel,couponsViewModel: CouponsViewModel
     BottomSheetScaffold(
         scaffoldState = sheetState,
         sheetContent = {
-            mealEditSheet(orderViewModel,selectedMealIdx,scope,sheetState)
+            MealEditSheet(orderViewModel,selectedMealIdx,scope,sheetState)
         },
         sheetPeekHeight = 0.dp
     ) {
@@ -259,29 +260,34 @@ private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineScope, sheetState: BottomSheetScaffoldState ){
+fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineScope, sheetState: BottomSheetScaffoldState ){
     if(index!=null && index < orderViewModel.orderItems.size) {
         val tmeal = orderViewModel.orderItems[index]
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text("Usuń składniki z: "+ tmeal.name,modifier = Modifier.padding(bottom = 16.dp))
             tmeal.ingredients.forEach { ingredient ->
-                Row() {
-                    IconButton(onClick = { scope.launch { sheetState.bottomSheetState.hide() } }) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
-                    }
-                    Text("- $ingredient")
-                    IconButton(
-                        onClick = { orderViewModel.addIngredient(index, ingredient) },
-                        enabled = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
-                    ) {
-                        Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                    }
-                    IconButton(
-                        onClick = { orderViewModel.removeIngredient(index, ingredient) },
-                        enabled = tmeal.removedIngredients.find { item -> item == ingredient } == null
-                    ) {
-                        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                val isRemoved = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, fontSize = 20.sp)
+                    Row(){
+                        IconButton(
+                            onClick = { orderViewModel.addIngredient(index, ingredient) },
+                            enabled = isRemoved,
+                            modifier = Modifier.size(40.dp).background(color = if(isRemoved) Color.Green else Color.Gray, shape = RoundedCornerShape(50))
+                        ) {
+                            Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                        }
+                        Spacer(modifier = Modifier.width(20.dp))
+                        IconButton(
+                            onClick = { orderViewModel.removeIngredient(index, ingredient) },
+                            enabled = !isRemoved,
+                            modifier = Modifier.size(40.dp).background(color = if(!isRemoved) Color.Red else Color.Gray, shape = RoundedCornerShape(50))
+                        ) {
+                            Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                        }
                     }
                 }
             }

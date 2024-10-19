@@ -7,6 +7,13 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
+//    //order-controller
+//    @POST("api/orders/add")
+//    fun addNewOrder(@Body request: NewOrderRequest): Call<ResponseBody>
+//    @GET("api/orders/get/customer/{customerId}")
+//    fun getCustomerOrders(@Path("customerId") customerId: Int): Call<ResponseBody>
+//
+
     @POST("auth/login")
     fun login(@Body request: LoginRequest): Call<ResponseBody>
     @POST("auth/register")
