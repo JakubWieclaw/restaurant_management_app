@@ -45,12 +45,8 @@ import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 data class SettingItemData(val label: String, val value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
-val settingItems = listOf(
-    SettingItemData(label = "Name", value = "Ron"),
-    SettingItemData(label = "Surname", value = "Weasley"),
-    SettingItemData(label = "Email", value = "email@poczta.com"),
-    SettingItemData(label = "Phone", value = "+48 293 329 923",editable=true)
-)
+
+
 
 val settingItems2 = listOf(
     SettingItemData(label = "card number", value = "1323 1233 1233 1233"),
@@ -64,6 +60,13 @@ val settingItems3 = listOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHistoryViewModel,authViewModel: AuthViewModel) {
+    val customer = authViewModel.customerData!!
+    val settingItems = listOf(
+        SettingItemData(label = "Name", value = customer.customerName),
+        SettingItemData(label = "Surname", value = customer.customerSurname),
+        SettingItemData(label = "Email", value = customer.customerEmail),
+        SettingItemData(label = "Phone", value = "None",editable=true)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,8 +75,7 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
         LoyaltyHeader(points = 10)
         Button(
             onClick={
-            //TODO: Poprawne ustawienie customerId
-            orderHistoryViewModel.fetchOrderHistory(1, onComplete = {})
+            orderHistoryViewModel.fetchOrderHistory(customer.customerId, onComplete = {})
             navigateToScreen("orderhistory",navController)
         },
             colors = ButtonDefaults.buttonColors(Color.Blue),

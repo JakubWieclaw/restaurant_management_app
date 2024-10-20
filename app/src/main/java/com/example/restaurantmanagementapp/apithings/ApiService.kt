@@ -67,5 +67,4 @@ interface ApiService {
     //customer-controller
     @GET("api/customer/get/{id}")
     fun getCustomerData(@Path("id") id:Int):Call<ResponseBody>
-
 }

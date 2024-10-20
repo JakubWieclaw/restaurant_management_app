@@ -40,6 +40,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
         if(!viewModelsReady) {
             categoriesViewModel.fetchCategories(onComplete = { completed++ })
             mealsViewModel.fetchMeals(onComplete = { completed++;mealsReady = true })
+            //TODO: Poprawić customer id
             couponsViewModel.fetchCoupons(customerId = 1,onComplete = {completed++})
         }
         viewModelsReady = true

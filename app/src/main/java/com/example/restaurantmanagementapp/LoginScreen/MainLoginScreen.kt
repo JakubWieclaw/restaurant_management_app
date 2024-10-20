@@ -1,5 +1,6 @@
 package com.example.restaurantmanagementapp.LoginScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,8 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
@@ -48,51 +54,24 @@ import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 //}
 
 fun register(name:String,surname:String,email:String,phone:String,password:String,navController: NavController, authViewModel: AuthViewModel){
-    val registerRequest = RegisterRequest(0,name,surname,email,phone,password)
-    val call = RetrofitInstance.api.register(registerRequest)
-
-    call.enqueue(
-        CallbackHandler(
-            onSuccess = { responseBody ->
-                println("Odpowiedź: $responseBody")
-                authViewModel.login(responseBody)
-                navigateToScreen("meallist",navController)
-            },
-            onError = { code, errorBody ->
-                println("Błąd: $code")
-                println("Treść błędu: $errorBody")
-            },
-            onFailure = { throwable ->
-                println("Request failed: ${throwable.message}")
-            }
-        )
-    )
+    val registerRequest = RegisterRequest(name,surname,email,phone,password)
+    authViewModel.register(registerRequest)
+    navigateToScreen("meallist",navController)
 }
+
 fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel){
     val loginRequest = LoginRequest(email,password)
-    val call = RetrofitInstance.api.login(loginRequest)
-
-    call.enqueue(
-        CallbackHandler(
-            onSuccess = { responseBody ->
-                println("Odpowiedź: $responseBody")
-                authViewModel.login(responseBody)
-                navigateToScreen("meallist",navController)
-            },
-            onError = { code, errorBody ->
-                println("Błąd: $code")
-                println("Treść błędu: $errorBody")
-            },
-            onFailure = { throwable ->
-                println("Request failed: ${throwable.message}")
-            }
-        )
-    )
+    authViewModel.login(loginRequest)
+    navigateToScreen("meallist",navController)
 }
 
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, authViewModel: AuthViewModel){
     var isLoginSelected by remember { mutableStateOf(true) }
+    var isForgotSelected by remember { mutableStateOf(false) }
+    var emailForgot by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
 
     Surface(color = MaterialTheme.colorScheme.background){
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)){
@@ -100,7 +79,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                 painter = painterResource(id = R.drawable.tmpimg),
                 contentDescription = stringResource(id = R.string.logo_image_description),
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(140.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
@@ -140,6 +119,51 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
             } else {
                 RegisterFields(navController, authViewModel)
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val annotatedString = buildAnnotatedString {
+                append("Zapomniałem hasła")
+                addStyle(
+                    style = SpanStyle(
+                        color = Color.Blue, // Kolor linku
+                        textDecoration = TextDecoration.Underline // Podkreślenie
+                    ),
+                    start = 0,
+                    end = this.length
+                )
+            }
+            ClickableText(text=annotatedString, onClick={isForgotSelected=!isForgotSelected}, modifier = Modifier.align(Alignment.CenterHorizontally))
+            if(isForgotSelected){
+                Row(horizontalArrangement = Arrangement.Center){
+                    OutlinedTextField(
+                        modifier = Modifier.weight(0.5f),
+                        value = emailForgot,
+                        onValueChange = {emailForgot = it},
+                        label = {Text("E-mail")},
+                        maxLines = 2
+                    )
+                    Button(onClick = {
+                        val call = RetrofitInstance.api.forgotPassword(email = emailForgot)
+                        call.enqueue(
+                            CallbackHandler(
+                                onSuccess = { _ ->
+                                    isForgotSelected=false
+                                    Toast.makeText(context,"Wysłano maila",Toast.LENGTH_LONG).show()
+                                },
+                                onError = { _, _->
+                                    Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
+                                },
+                                onFailure = { _ ->
+                                    Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
+                                }
+                            )
+                        )
+
+                    }){
+                        Text("Reset")
+                    }
+                }
+            }
         }
     }
 }
@@ -148,7 +172,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
 fun LoginFields(navController: NavController,authViewModel: AuthViewModel){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.SpaceBetween){
+    Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)) {
             OutlinedTextField(
@@ -183,7 +207,7 @@ fun RegisterFields(navController: NavController,authViewModel: AuthViewModel){
     var email by remember { mutableStateOf("")}
     var phone by remember { mutableStateOf("")}
     var password by remember { mutableStateOf("")}
-    Column(modifier = Modifier.fillMaxSize(),verticalArrangement = Arrangement.SpaceBetween){
+    Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
