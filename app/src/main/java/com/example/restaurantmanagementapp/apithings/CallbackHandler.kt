@@ -8,7 +8,6 @@ class CallbackHandler(
     private val onError: (Int, String?) -> Unit,
     private val onFailure: (Throwable) -> Unit
 ) : Callback<ResponseBody> {
-
     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
         try {
             if (response.isSuccessful) {

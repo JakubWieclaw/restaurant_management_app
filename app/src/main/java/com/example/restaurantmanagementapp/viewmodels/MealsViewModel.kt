@@ -1,19 +1,18 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
-import com.example.restaurantmanagementapp.apithings.Category
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.apithings.schemasclasses.MealServer
+import com.example.restaurantmanagementapp.classes.Meal
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 
 class MealsViewModel : ViewModel() {

@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.apithings.schemasclasses
 
 class Opinion(
     val customerId: Int,

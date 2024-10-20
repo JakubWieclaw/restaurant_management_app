@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.apithings.schemasclasses
 
 data class CustomerServer (
     val id: Int,
@@ -6,7 +6,7 @@ data class CustomerServer (
     val surname: String,
     val email: String,
     val phone: String,
-    val privilege: PrivilegeServer,
+    val privilege: Privilege,
     val resetToken: String,
     val resetTokenExpiry: String
 )

@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.apithings.schemasclasses
 
 open class MealServer(
     open val id: Int,

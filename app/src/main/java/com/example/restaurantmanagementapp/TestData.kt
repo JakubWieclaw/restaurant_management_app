@@ -1,7 +1,6 @@
 package com.example.restaurantmanagementapp
 
-import com.example.restaurantmanagementapp.classes.Meal
-import com.example.restaurantmanagementapp.classes.Opinion
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
 import com.example.restaurantmanagementapp.classes.Table
 
 object TestData {

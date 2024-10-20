@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.TestData
-import com.example.restaurantmanagementapp.classes.Opinion
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
 import kotlinx.coroutines.delay
 
 

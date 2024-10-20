@@ -1,9 +1,6 @@
 package com.example.restaurantmanagementapp.CartScreen;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -18,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class mock2 {
+public class stripeServerMock {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public void  go(Callback<String> callback) {

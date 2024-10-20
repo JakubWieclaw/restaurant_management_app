@@ -12,13 +12,12 @@ import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
-import com.example.restaurantmanagementapp.classes.AuthViewModel
-import com.example.restaurantmanagementapp.classes.CategoriesViewModel
-import com.example.restaurantmanagementapp.classes.CouponsViewModel
-import com.example.restaurantmanagementapp.classes.FavMealsViewModel
-import com.example.restaurantmanagementapp.classes.Meal
-import com.example.restaurantmanagementapp.classes.MealsViewModel
-import com.example.restaurantmanagementapp.classes.OrderViewModel
+import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
+import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
+import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
+import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
+import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
+import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.classes.Table
 
 @Composable

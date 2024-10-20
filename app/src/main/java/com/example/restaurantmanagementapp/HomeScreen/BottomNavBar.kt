@@ -2,7 +2,6 @@ package com.example.restaurantmanagementapp.HomeScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.restaurantmanagementapp.classes.AuthViewModel
-import com.example.restaurantmanagementapp.classes.OrderViewModel
+import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
+import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
     object GeneralInfo : BottomNavItem("Aktualności", Icons.Default.Info, "restaurantinfo")

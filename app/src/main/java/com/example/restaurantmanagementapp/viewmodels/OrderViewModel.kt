@@ -1,15 +1,10 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.viewmodels
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import com.example.restaurantmanagementapp.classes.Meal
 
 class OrderViewModel : ViewModel() {
     private val _orderItems = mutableStateListOf<Meal>()
@@ -30,7 +25,7 @@ class OrderViewModel : ViewModel() {
 
     }
 
-    fun deleteFromOrder(meal:Meal){
+    fun deleteFromOrder(meal: Meal){
         _orderItems.remove(meal)
     }
     fun removeFromOrder(meal: Meal) {

@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.apithings
+package com.example.restaurantmanagementapp.apithings.RequestClasses
 
 data class RegisterRequest(
     val id: Int,

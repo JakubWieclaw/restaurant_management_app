@@ -3,16 +3,12 @@ package com.example.restaurantmanagementapp.CartScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,20 +20,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.restaurantmanagementapp.classes.AuthViewModel
-import com.example.restaurantmanagementapp.classes.CouponsViewModel
-import com.example.restaurantmanagementapp.classes.OrderViewModel
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
+import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
+import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
+import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.stripe.android.PaymentConfiguration
-import com.stripe.android.model.Customer
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.rememberPaymentSheet
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 import org.json.JSONObject
 
 /*TODO: W android studio na urządzeniu aplikacja się crashuje przy próbie dokonania płatności (jakiś
@@ -46,7 +37,7 @@ import org.json.JSONObject
 */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(orderViewModel: OrderViewModel,couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel) {
+fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel) {
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
     val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
@@ -55,7 +46,7 @@ fun CartScreen(orderViewModel: OrderViewModel,couponsViewModel: CouponsViewModel
     var customerConfig by remember { mutableStateOf<PaymentSheet.CustomerConfiguration?>(null) }
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
 
-    val mock2Instance = remember { mock2() }
+    val stripeServerMockInstance = remember { stripeServerMock() }
 
     val sheetState = rememberBottomSheetScaffoldState(bottomSheetState = SheetState(initialValue = SheetValue.Hidden, skipPartiallyExpanded = false))
     val scope = rememberCoroutineScope()
@@ -64,7 +55,7 @@ fun CartScreen(orderViewModel: OrderViewModel,couponsViewModel: CouponsViewModel
     LaunchedEffect(Unit) { // Trigger on composition
         // Call the go method and handle the result
         try {
-            val responseJson0 = mock2Instance.go(object : mock2.Callback<String> {
+            val responseJson0 = stripeServerMockInstance.go(object : stripeServerMock.Callback<String> {
                 override fun onSuccess(result: String) {
                     val responseJson = JSONObject(result)
 

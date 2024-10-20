@@ -1,8 +1,9 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.example.restaurantmanagementapp.classes.Meal
 
 class FavMealsViewModel:ViewModel() {
         private val _favItems = mutableStateListOf<Meal>()
@@ -14,14 +15,14 @@ class FavMealsViewModel:ViewModel() {
                 _favItems.add(meal)
             }
         }
-        fun removeFromFav(meal:Meal){
+        fun removeFromFav(meal: Meal){
             val tmpMeal = _favItems.find{item -> item.id==meal.id}
                 if(tmpMeal!=null){
                     _favItems.remove(meal)
                 }
         }
 
-        fun findMeal(meal:Meal):Boolean{
+        fun findMeal(meal: Meal):Boolean{
             val tmpMeal = _favItems.find{item -> item.id==meal.id}
             return tmpMeal!=null
         }
