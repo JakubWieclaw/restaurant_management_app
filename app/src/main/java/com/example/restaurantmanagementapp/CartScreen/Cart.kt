@@ -186,6 +186,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+
                     val currentConfig = customerConfig
                     val currentClientSecret = paymentIntentClientSecret
 

@@ -4,6 +4,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import com.example.restaurantmanagementapp.apithings.CallbackHandler
+import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.apithings.schemasclasses.MealQuantity
+import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
+import com.example.restaurantmanagementapp.apithings.schemasclasses.UnwantedIngredient
 import com.example.restaurantmanagementapp.classes.Meal
 
 class OrderViewModel : ViewModel() {
@@ -71,6 +76,49 @@ class OrderViewModel : ViewModel() {
 //            tmeal.removedIngredients.remove(ingredient)
 //        }
         _orderItems[index].removedIngredients.remove(ingredient)
+    }
+
+    //TODO: Sprawdzić potem czy działa
+    fun finalizeOrder(customerId:Int, orderType:String, orderStatus:String, deliveryAddress:String, deliveryDistance:Double){
+        val mealQuantities = orderItems.map { meal->
+            MealQuantity(mealId = meal.id, quantity = meal.quantity)
+        }
+        val unwantedIngredients = orderItems.mapIndexedNotNull { index, meal ->
+            if(meal.removedIngredients.isNotEmpty()){
+                UnwantedIngredient(mealIndex = index, ingredients = meal.removedIngredients)
+            }else{
+                null
+            }
+        }
+
+       val orderAddCommand = OrderAddCommand(
+           mealIds = mealQuantities,
+           customerId = customerId,
+           type = orderType,
+           status = orderStatus,
+           unwantedIngredients = unwantedIngredients,
+           deliveryAddress = deliveryAddress,
+           deliveryDistance = deliveryDistance
+       )
+
+        val call = RetrofitInstance.api.addNewOrder(orderAddCommand)
+        call.enqueue(
+            CallbackHandler(
+                onSuccess = { responseBody ->
+                    println("Odpowiedź: $responseBody")
+
+                },
+                onError = { code, errorBody ->
+                    println("Błąd: $code")
+                    println("Treść błędu: $errorBody")
+                },
+                onFailure = { throwable ->
+                    println("Request failed: ${throwable.message}")
+                }
+            )
+        )
+
+
     }
 
 }
