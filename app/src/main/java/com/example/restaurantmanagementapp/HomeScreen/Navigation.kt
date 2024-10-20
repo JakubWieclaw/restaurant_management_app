@@ -11,6 +11,7 @@ import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
+import com.example.restaurantmanagementapp.UserPanelScreen.OrderHistory
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
@@ -19,6 +20,7 @@ import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.classes.Table
+import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -30,6 +32,7 @@ fun SetupNavGraph(
     favMealsViewModel: FavMealsViewModel,
     categoriesViewModel: CategoriesViewModel,
     couponsViewModel: CouponsViewModel,
+    orderHistoryViewModel: OrderHistoryViewModel,
     tables: List<Table>
 ) {
     NavHost(
@@ -43,7 +46,10 @@ fun SetupNavGraph(
             LoginScreen(navController = navController ,authViewModel = authViewModel)
         }
         composable("userpanel"){
-            SettingsScreen(navController = navController, authViewModel = authViewModel)
+            SettingsScreen(navController = navController, orderHistoryViewModel = orderHistoryViewModel, authViewModel = authViewModel)
+        }
+        composable("orderhistory"){
+            OrderHistory(orderHistoryViewModel = orderHistoryViewModel, mealsViewModel = mealsViewModel)
         }
         composable("tablereservation"){
             TableReservation(tables = tables)
@@ -69,6 +75,8 @@ fun SetupNavGraph(
         composable("splashscreen"){
             SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel ,navController = navController)
         }
+
+
     }
 }
 

@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
@@ -38,7 +40,9 @@ import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
+import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 data class SettingItemData(val label: String, val value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
 val settingItems = listOf(
@@ -59,16 +63,26 @@ val settingItems3 = listOf(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController,authViewModel: AuthViewModel) {
+fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHistoryViewModel,authViewModel: AuthViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-
-        
+        LoyaltyHeader(points = 10)
+        Button(
+            onClick={
+            //TODO: Poprawne ustawienie customerId
+            orderHistoryViewModel.fetchOrderHistory(1, onComplete = {})
+            navigateToScreen("orderhistory",navController)
+        },
+            colors = ButtonDefaults.buttonColors(Color.Blue),
+            shape = RoundedCornerShape(18.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ){
+            Text("Moje zamówienia")
+        }
         Column(){
-            LoyaltyHeader(points = 10)
             SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false)
             //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
@@ -273,11 +287,12 @@ fun LoyaltyHeader(points: Int) {
             )
 
             // Right line
-            Column(modifier = Modifier.weight(1f)){
-                Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
-                Divider(thickness = 2.dp)
-                Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
+            //TODO: uncomment after loyalty points functionality will be added
+//            Column(modifier = Modifier.weight(1f)){
+//                Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+//                Divider(thickness = 2.dp)
+//                Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+//            }
         }
 
 

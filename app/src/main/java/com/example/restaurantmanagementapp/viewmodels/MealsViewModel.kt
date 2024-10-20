@@ -75,4 +75,8 @@ class MealsViewModel : ViewModel() {
             }
         }
     }
+
+    fun findMeal(mealId:Int):Meal?{
+        return meals.find{it.id == mealId}
+    }
 }

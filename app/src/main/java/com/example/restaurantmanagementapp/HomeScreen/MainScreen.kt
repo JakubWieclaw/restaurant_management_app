@@ -21,6 +21,7 @@ import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
+import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +51,7 @@ fun TestMainScreen(){
     val favMealsViewModel: FavMealsViewModel = viewModel()
     val categoriesViewModel: CategoriesViewModel = viewModel()
     val couponsViewModel: CouponsViewModel = viewModel()
+    val orderHistoryViewModel: OrderHistoryViewModel = viewModel()
     val tables = TestData.tablesList
 
     Scaffold(
@@ -67,7 +69,8 @@ fun TestMainScreen(){
                 favMealsViewModel = favMealsViewModel,
                 tables = tables,
                 categoriesViewModel = categoriesViewModel,
-                couponsViewModel = couponsViewModel
+                couponsViewModel = couponsViewModel,
+                orderHistoryViewModel =orderHistoryViewModel
             )
         }
     }

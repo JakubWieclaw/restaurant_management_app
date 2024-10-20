@@ -8,41 +8,42 @@ import androidx.lifecycle.viewModelScope
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RequestClasses.CouponServer
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Order
+import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CouponsViewModel: ViewModel() {
-    var coupons by mutableStateOf<List<CouponServer>?>(null)
-    var selectedCoupon by mutableStateOf<CouponServer?>( null)
-    var isLoading by mutableStateOf(false)
+class OrderHistoryViewModel: ViewModel() {
+    var orderHistory by mutableStateOf<List<Order>>(emptyList())
+    var isLoading by mutableStateOf(true)
     var errorMessage by mutableStateOf<String?>(null)
 
-    fun fetchCoupons(customerId:Int,onComplete:() ->Unit){
+    fun fetchOrderHistory(customerId:Int,onComplete:() ->Unit){
         isLoading = true
         errorMessage = null
 
         viewModelScope.launch(Dispatchers.IO){
             try{
-                val response = RetrofitInstance.api.getCustomerCoupons(customerId)
+                val response = RetrofitInstance.api.getCustomerOrders(customerId)
                 response.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->
                             println("Odpowiedz: $responseBody")
                             try{
                                 val gson = Gson()
-                                val objectType = object : TypeToken<List<CouponServer>>() {}.type
-                                coupons = gson.fromJson(responseBody,objectType)
-                                coupons?.forEach{ coupon->
-                                    println("Coupon ${coupon.id}: code ${coupon.code}")
+                                val objectType = object : TypeToken<List<Order>>() {}.type
+                                orderHistory = gson.fromJson(responseBody,objectType)
+                                orderHistory?.forEach{ order->
+                                    println("Order ${order.id}: price ${order.orderPrice}")
                                 }
                                 isLoading = false
                                 onComplete()
                             }catch (e:Exception){
                                 errorMessage = "Error: ${e.message}"
                                 println("Parsing error: ${e.message}")
-                                coupons = emptyList()
+                                orderHistory = emptyList()
                             }
                         },
                         onError = {code, errorBody ->
@@ -57,11 +58,6 @@ class CouponsViewModel: ViewModel() {
                 println(errorMessage)
             }
         }
-    }
-
-    fun selectCoupon(code:String){
-        val tcoupon = coupons?.find{ coupon-> coupon.code.lowercase()==code.lowercase()}
-        selectedCoupon = tcoupon
     }
 
 }

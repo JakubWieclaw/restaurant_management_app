@@ -18,4 +18,5 @@ class AuthViewModel() : ViewModel() {
         _token.value = null
         isLogged = false
     }
+
 }
