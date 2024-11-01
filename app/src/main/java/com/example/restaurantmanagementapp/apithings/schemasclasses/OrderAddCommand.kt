@@ -7,5 +7,8 @@ class OrderAddCommand(
     val status: String,
     val unwantedIngredients: List<UnwantedIngredient>,
     val deliveryAddress: String,
-    val deliveryDistance: Double
+    val deliveryDistance: Double,
+    val tableId: String,
+    val people: Int,
+    val minutesForReservation: Int
 )

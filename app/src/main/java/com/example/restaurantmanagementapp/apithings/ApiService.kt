@@ -55,10 +55,7 @@ interface ApiService {
     fun forgotPassword(@Body email: String): Call<ResponseBody>
 
     //table-reservation-controller
-    @POST("api/table-reservation/make")
-    fun makeReservation(@Body request: ReservationRequest): Call<ResponseBody>
-    @POST("api/table-reservation/available-hours/day")
-    fun availableHours(@Body request: PossibleReservationHoursForDay): Call<ResponseBody>
+
 
     //photo-controller
     @GET("api/photos/download")

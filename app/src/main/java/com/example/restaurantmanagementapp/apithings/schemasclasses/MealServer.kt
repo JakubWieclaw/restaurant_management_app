@@ -6,10 +6,10 @@ open class MealServer(
     open val price: Double,
     open val photographUrl: String,
     open val ingredients: List<String>,
-    open val weightOrVolume: Int,
+    open val weightOrVolume: Double,
     open val unitType: String,
     open val categoryId: Int,
     open val allergens: List<String>,
     open val calories: Int,
-    open val unitTypeMandatory: Boolean,
+    //open val unitTypeMandatory: Boolean,
 )

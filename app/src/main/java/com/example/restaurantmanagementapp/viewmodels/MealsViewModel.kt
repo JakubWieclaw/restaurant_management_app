@@ -46,7 +46,7 @@ class MealsViewModel : ViewModel() {
                                         categoryId = mealServer.categoryId,
                                         allergens = mealServer.allergens,
                                         calories = mealServer.calories,
-                                        unitTypeMandatory = mealServer.unitTypeMandatory,
+                                        //unitTypeMandatory = mealServer.unitTypeMandatory,
                                         quantity2 = 1
                                     )
                                 }

@@ -98,7 +98,11 @@ class OrderViewModel : ViewModel() {
            status = orderStatus,
            unwantedIngredients = unwantedIngredients,
            deliveryAddress = deliveryAddress,
-           deliveryDistance = deliveryDistance
+           deliveryDistance = deliveryDistance,
+
+           tableId = "",
+           minutesForReservation = 0,
+           people = 0
        )
 
         val call = RetrofitInstance.api.addNewOrder(orderAddCommand)

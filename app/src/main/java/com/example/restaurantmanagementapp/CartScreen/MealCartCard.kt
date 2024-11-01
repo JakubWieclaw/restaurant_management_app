@@ -24,15 +24,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.round
 import kotlin.math.roundToInt
 
 @Composable
@@ -56,7 +59,7 @@ fun MealCartCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min) // Zapewnia, że Box dopasuje się do wysokości zawartości
-            .background(Color.Red,RoundedCornerShape(8.dp))
+            .background(Color.Red, RoundedCornerShape(8.dp))
     ) {
         IconButton(
             onClick = { orderViewModel.deleteFromOrder(cartItem) },
@@ -80,7 +83,7 @@ fun MealCartCard(
                             coroutineScope.launch {
                                 if (offsetX.value > maxOffsetX / 2) {
                                     offsetX.animateTo(0f, tween(durationMillis = 300))
-                                }else{
+                                } else {
                                     offsetX.animateTo(maxOffsetX, tween(durationMillis = 300))
                                 }
                             }
@@ -106,42 +109,38 @@ fun MealCartCard(
                     painter = painterResource(id = R.drawable.test_meal_picture_1),
                     contentDescription = "Meal Image",
                     modifier = Modifier
-                        .width(80.dp)
-                        .height(100.dp)
-                        .clip(RoundedCornerShape(8.dp)),
+                        .height(120.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .weight(0.2f),
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.TopStart
                 )
 
-                Spacer(modifier = Modifier.width(12.dp))
-
-                Column() {
-                    Text(text = cartItem.name, fontSize = 20.sp)
-                    StarRating(rating = 2, size = 16.dp)
+                Column(modifier = Modifier.weight(0.45f).padding(horizontal=10.dp)) {
+                    Text(text = cartItem.name, style = Typography.labelLarge, maxLines = 2)
+                    StarRating(rating = round(cartItem.avgRating).roundToInt(), size = 18.dp)
                     Spacer(modifier = Modifier.height(8.dp))
                     cartItem.removedIngredients.forEach { rIngredient ->
-                        Text(" - $rIngredient")
+                        Text(" - $rIngredient", style = Typography.bodySmall)
                     }
-                    Text(text = "Total: ${String.format("%.2f", cartItem.price * cartItem.quantity)} zł", fontSize = 16.sp, textDecoration = if(isDiscount) TextDecoration.LineThrough else TextDecoration.None,  color = if(isDiscount) Color.Red else Color.Black)
+                    Text(text = stringResource(id = R.string.total) +" ${String.format("%.2f", cartItem.price * cartItem.quantity)}" + stringResource(id = R.string.currency), style = Typography.bodyMedium, textDecoration = if(isDiscount) TextDecoration.LineThrough else TextDecoration.None,  color = if(isDiscount) Color.Red else Color.Black)
                     if(isDiscount&&selectedCoupon!=null){
-                        Text(text = String.format("%.2f", cartItem.price * cartItem.quantity* (100.0-selectedCoupon.discountPercentage)/100.0))
+                        Text(text = String.format("%.2f", cartItem.price * cartItem.quantity* (100.0-selectedCoupon.discountPercentage)/100.0), style = Typography.bodyMedium)
                     }
 
                 }
 
-                Spacer(modifier = Modifier.width(12.dp))
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .fillMaxWidth().height(100.dp)
+                        .height(120.dp)
+                        .weight(0.35f)
                 ) {
 
+                    Text(text = cartItem.quantity.toString(), style = Typography.titleMedium)
 
-                    Text(text = cartItem.quantity.toString(), fontSize = 32.sp)
-
-                    Column(){
+                    Column(verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxHeight()){
                         IconButton(
                             onClick = {
                                 orderViewModel.updateQuantity(index, cartItem.quantity+1)

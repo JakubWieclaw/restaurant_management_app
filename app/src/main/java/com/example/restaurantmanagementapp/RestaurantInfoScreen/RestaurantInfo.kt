@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 
 //@Preview
@@ -68,6 +71,7 @@ fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navCon
         Column(
             modifier = Modifier.verticalScroll(colScrollState).padding(10.dp))
         {
+            TypographyPreview()
             Text("Restauracja: Słoneczne Smaki")
             Text("About us")
             Text(text = TestData.restaurantDescription)
@@ -172,4 +176,34 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
             }
         }
     }
+}
+
+
+@Composable
+fun TypographyPreview() {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(text = "Display Large", style = Typography.displayLarge)
+                Text(text = "Display Medium", style = Typography.displayMedium)
+                Text(text = "Display Small", style = Typography.displaySmall)
+
+                Text(text = "Headline Large", style = Typography.headlineLarge)
+                Text(text = "Headline Medium", style = Typography.headlineMedium)
+                Text(text = "Headline Small", style = Typography.headlineSmall)
+
+                Text(text = "Title Large", style = Typography.titleLarge)
+                Text(text = "Title Medium", style = Typography.titleMedium)
+                Text(text = "Title Small", style = Typography.titleSmall)
+
+                Text(text = "Body Large", style = Typography.bodyLarge)
+                Text(text = "Body Medium", style = Typography.bodyMedium)
+                Text(text = "Body Small", style = Typography.bodySmall)
+
+                Text(text = "Label Large", style = Typography.labelLarge)
+                Text(text = "Label Medium", style = Typography.labelMedium)
+                Text(text = "Label Small", style = Typography.labelSmall)
+            }
 }

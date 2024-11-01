@@ -14,12 +14,12 @@ data class Meal(
     override var price: Double,
     override val photographUrl: String,
     override val ingredients: List<String>,
-    override val weightOrVolume: Int,
+    override val weightOrVolume: Double,
     override val unitType: String,
     override val categoryId: Int,
     override val allergens: List<String>,
     override val calories: Int,
-    override val unitTypeMandatory: Boolean,
+    //override val unitTypeMandatory: Boolean,
     val quantity2: Int = 1,
     var avgRating: Double = 0.0,
     var opinions: List<Opinion> = emptyList(),
@@ -35,7 +35,7 @@ data class Meal(
     categoryId = categoryId,
     allergens = allergens,
     calories = calories,
-    unitTypeMandatory = unitTypeMandatory
+   // unitTypeMandatory = unitTypeMandatory
 ) {
     var quantity by mutableIntStateOf(quantity2)
 

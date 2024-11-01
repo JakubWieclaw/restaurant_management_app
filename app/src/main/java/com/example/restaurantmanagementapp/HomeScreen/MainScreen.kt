@@ -21,6 +21,7 @@ import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 
@@ -29,13 +30,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             RestaurantManagementAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    TestMainScreen()
-                }
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        TestMainScreen()
+                    }
             }
         }
     }

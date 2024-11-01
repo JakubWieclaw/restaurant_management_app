@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">RestaurantManagementApp</string>
     <string name="logo_image_description">logo\n</string>
+    <string name="cart_heading">Twój koszyk:</string>
+    <string name="coupon_apply">Dodaj</string>
+    <string name="gotopayment">Przejdź do płatności</string>
+    <string name="mealeditheader">Usuń składniki z:</string>
+    <string name="total">Cena:</string>
+    <string name="currency">zł</string>
 </resources>

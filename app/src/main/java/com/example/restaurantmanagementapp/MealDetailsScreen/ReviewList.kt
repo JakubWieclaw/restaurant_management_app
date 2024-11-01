@@ -53,7 +53,7 @@ fun StarRating(rating: Int, size: Dp) {
             val starColor = if (i <= rating) {
                 Color.Yellow
             } else {
-                Color.LightGray
+                Color.Black
             }
             Icon(
                 imageVector = Icons.Default.Star,

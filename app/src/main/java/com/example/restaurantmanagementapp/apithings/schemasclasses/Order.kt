@@ -11,5 +11,6 @@ data class Order(
     val unwantedIngredients: List<UnwantedIngredient>,
     val deliveryAddress: String,
     val deliveryDistance: Double,
-    val deliveryPrice: Double
+    val deliveryPrice: Double,
+    val tableReservation: TableReservation
 )

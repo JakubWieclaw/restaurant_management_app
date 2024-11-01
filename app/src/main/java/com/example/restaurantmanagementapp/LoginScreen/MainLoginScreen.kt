@@ -72,7 +72,6 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
     var emailForgot by remember { mutableStateOf("") }
     val context = LocalContext.current
 
-
     Surface(color = MaterialTheme.colorScheme.background){
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)){
             Image(

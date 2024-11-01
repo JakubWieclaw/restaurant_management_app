@@ -16,10 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
@@ -95,7 +98,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
-            Text(text = "Twój koszyk: ", modifier = Modifier.height(24.dp), fontSize = 20.sp)
+            Text(text = stringResource(id = R.string.cart_heading), style = Typography.titleLarge)
             Divider(
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -150,7 +153,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                         ),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow),
                 ) {
-                    Text(text = "Apply", style = TextStyle(color = Color.Black), fontSize = 20.sp)
+                    Text(text = stringResource(id = R.string.coupon_apply), style = Typography.labelLarge)
                 }
             }
 
@@ -195,7 +198,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                     }
                 }
             ) {
-                Text("Przejdź do płatności")
+                Text(text = stringResource(id = R.string.gotopayment), style = Typography.labelLarge, color = Color.White)
             }
         }
     }
@@ -256,19 +259,26 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
     if(index!=null && index < orderViewModel.orderItems.size) {
         val tmeal = orderViewModel.orderItems[index]
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Usuń składniki z: "+ tmeal.name,modifier = Modifier.padding(bottom = 16.dp))
+            Text(text = stringResource(id = R.string.mealeditheader) +" "+ tmeal.name,style = Typography.titleSmall , modifier = Modifier.padding(bottom = 16.dp))
             tmeal.ingredients.forEach { ingredient ->
                 val isRemoved = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, fontSize = 20.sp)
+                    Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, style= Typography.labelMedium)
                     Row(){
                         IconButton(
                             onClick = { orderViewModel.addIngredient(index, ingredient) },
                             enabled = isRemoved,
-                            modifier = Modifier.size(40.dp).background(color = if(isRemoved) Color.Green else Color.Gray, shape = RoundedCornerShape(50))
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = if (isRemoved) Color.Green else Color.Gray,
+                                    shape = RoundedCornerShape(50)
+                                )
                         ) {
                             Icon(imageVector = Icons.Default.Check, contentDescription = null)
                         }
@@ -276,7 +286,12 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
                         IconButton(
                             onClick = { orderViewModel.removeIngredient(index, ingredient) },
                             enabled = !isRemoved,
-                            modifier = Modifier.size(40.dp).background(color = if(!isRemoved) Color.Red else Color.Gray, shape = RoundedCornerShape(50))
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = if (!isRemoved) Color.Red else Color.Gray,
+                                    shape = RoundedCornerShape(50)
+                                )
                         ) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = null)
                         }
