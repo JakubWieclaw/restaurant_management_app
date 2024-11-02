@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,17 +70,19 @@ fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navCon
         )
 
         Column(
-            modifier = Modifier.verticalScroll(colScrollState).padding(10.dp))
+            modifier = Modifier
+                .verticalScroll(colScrollState)
+                .padding(10.dp))
         {
             TypographyPreview()
-            Text("Restauracja: Słoneczne Smaki")
-            Text("About us")
-            Text(text = TestData.restaurantDescription)
-            Text("Galeria")
+            Text(text =stringResource(id = R.string.restaurant) +  stringResource(id = R.string.restaurant_name), style = Typography.titleLarge)
+            Text(text = stringResource(id = R.string.about_us), style = Typography.titleMedium)
+            Text(text = TestData.restaurantDescription, style = Typography.bodyMedium)
+            Text(text = stringResource(id = R.string.gallery), style = Typography.titleMedium)
             ImageCarousel(images = images, imageSize = 300.dp)
-            Text("Dzisiejsze kupowny")
+            Text(text = stringResource(id = R.string.today_coupons), style = Typography.titleMedium)
             CouponCarousel(couponsViewModel,imageSize =300.dp)
-            Text("localization")
+            Text(text = stringResource(id = R.string.localization), style = Typography.titleMedium)
             Image(
                 painter = painterResource(id = images[0]),
                 contentDescription = null,
@@ -132,9 +135,12 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
             items(couponsViewModel.coupons!!) { coupon ->
                 Box(
                     modifier = Modifier
-                        .size(imageSize).clickable {
+                        .size(imageSize)
+                        .clickable {
                             couponsViewModel.selectCoupon(coupon.code)
-                            Toast.makeText(context,"Skopiowano kod do koszyka!",Toast.LENGTH_LONG).show()
+                            Toast
+                                .makeText(context, "Skopiowano kod do koszyka!", Toast.LENGTH_LONG)
+                                .show()
                         }
                 ) {
                     Image(
@@ -144,27 +150,31 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
                         modifier = Modifier.fillMaxSize()
                     )
                     Column(
-                        modifier = Modifier.background(
-                            Color.White,
-                            shape = RoundedCornerShape(bottomEnd = 20.dp)
-                        ).align(Alignment.TopStart)
+                        modifier = Modifier
+                            .background(
+                                Color.White,
+                                shape = RoundedCornerShape(bottomEnd = 20.dp)
+                            )
+                            .align(Alignment.TopStart)
                     ) {
                         Text(
                             text = coupon.meal.name,
-                            fontSize = 22.sp,
+                            style = Typography.headlineMedium,
                             modifier = Modifier.padding(6.dp)
                         )
                         Text(
-                            text = "KOD: " + coupon.code,
-                            fontSize = 18.sp,
+                            text = stringResource(id = R.string.code) + coupon.code,
+                            style = Typography.headlineMedium,
                             modifier = Modifier.padding(6.dp)
                         )
                     }
                     Column(
-                        modifier = Modifier.background(
-                            Color.White,
-                            shape = RoundedCornerShape(topStart = 20.dp)
-                        ).align(Alignment.BottomEnd)
+                        modifier = Modifier
+                            .background(
+                                Color.White,
+                                shape = RoundedCornerShape(topStart = 20.dp)
+                            )
+                            .align(Alignment.BottomEnd)
                     ) {
                         Text(
                             text = "-" + coupon.discountPercentage + "%",

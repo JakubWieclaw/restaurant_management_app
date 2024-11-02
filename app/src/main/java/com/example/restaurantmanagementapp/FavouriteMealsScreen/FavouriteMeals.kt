@@ -11,8 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 
@@ -20,10 +23,10 @@ import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 fun FavouriteMeals(orderViewModel: OrderViewModel, favMealsViewModel: FavMealsViewModel){
     Column(
         modifier = Modifier
-        .fillMaxSize()
-        .padding(12.dp)){
+            .fillMaxSize()
+            .padding(12.dp)){
 
-        Text(text="Ulubione: ",modifier = Modifier.height(24.dp), fontSize = 20.sp)
+        Text(text= stringResource(id = R.string.favourite) , style = Typography.titleLarge)
 
         Divider(
             color = Color.Gray,

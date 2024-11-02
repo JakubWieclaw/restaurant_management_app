@@ -19,12 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -45,7 +47,7 @@ fun FavouriteMealCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min) // Zapewnia, że Box dopasuje się do wysokości zawartości
-            .background(Color.Red,RoundedCornerShape(8.dp))
+            .background(Color.Red, RoundedCornerShape(8.dp))
     ){
         IconButton(
             onClick = { onDelete(meal) },
@@ -68,7 +70,7 @@ fun FavouriteMealCard(
                             coroutineScope.launch {
                                 if (offsetX.value > maxOffsetX / 2) {
                                     offsetX.animateTo(0f, tween(durationMillis = 300))
-                                }else{
+                                } else {
                                     offsetX.animateTo(maxOffsetX, tween(durationMillis = 300))
                                 }
                             }
@@ -105,7 +107,7 @@ fun FavouriteMealCard(
 
                 Column {
                     // Item Name
-                    Text(text = meal.name, fontSize = 20.sp)
+                    Text(text = meal.name, style = Typography.labelLarge, maxLines = 2)
 
                     // Rating stars
                     StarRating(rating = 2, size=16.dp)
@@ -113,7 +115,9 @@ fun FavouriteMealCard(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Total price
-                    Text(text = "Price: ${String.format("%.2f", meal.price)} zł", fontSize = 16.sp)
+                    Text(text = stringResource(id =  R.string.total) +" ${String.format("%.2f", meal.price)} " + stringResource(
+                        id = R.string.currency
+                    ), style = Typography.bodyMedium)
                 }
 
                 Spacer(modifier = Modifier.width(24.dp))

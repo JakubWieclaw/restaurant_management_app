@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -53,6 +54,7 @@ import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import kotlin.math.round
 
@@ -119,20 +121,22 @@ fun MealScreen(
                 modifier = elementsModifier,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = meal.name, fontSize = 20.sp)
-                Text(text = meal.price.toString(), fontSize = 20.sp)
+                Text(text = meal.name, style = Typography.titleMedium)
+                Text(text = meal.price.toString(), style = Typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Ingredients:",
+                text = stringResource(id = R.string.ingredients) ,
+                style = Typography.labelLarge,
                 modifier = elementsModifier
             )
             ListElements(meal.ingredients,modifier = elementsModifier)
 
             Text(
-                text = "Allergens:",
+                text = stringResource(id = R.string.allergens) ,
+                style = Typography.labelLarge,
                 modifier = elementsModifier
             )
             ListElements(names = meal.allergens, modifier = elementsModifier)
@@ -140,10 +144,12 @@ fun MealScreen(
             Row(modifier = elementsModifier){
                 Text(
                     text = meal.weightOrVolume.toString() + if(meal.unitType=="GRAMY") " g" else " ml",
+                    style = Typography.labelLarge
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = meal.calories.toString() +" kcal",
+                    text = meal.calories.toString() +" KCAL",
+                    style = Typography.labelLarge
                 )
             }
 
@@ -156,7 +162,7 @@ fun MealScreen(
                 },
                 modifier = elementsModifier
             ) {
-                Text(text = if (showReviews) "Hide opinions" else "Show opinions")
+                Text(text = if (showReviews) stringResource(id = R.string.hide_opinions)  else stringResource(id = R.string.show_opinions), style = Typography.labelLarge)
             }
 
             if (showReviews) {
@@ -264,7 +270,7 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
             .padding(start = 12.dp, end = 12.dp),
                 onClick = {for(i in 1..quantity){orderViewModel.addToOrder(meal)} },
             ) {
-                Text(text = "Add to order (Total: \$${round(quantity * meal.price * 100) / 100})") // Example total price calculation
+                Text(text = stringResource(id = R.string.add_to_order) +" \$${round(quantity * meal.price * 100) / 100})", style = Typography.labelMedium) // Example total price calculation
             }
 
 
@@ -281,13 +287,13 @@ fun ListElements(names:List<String>, modifier:Modifier){
                         Spacer(modifier = Modifier.width(20.dp))
                         Text("-", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text(names[i-1])
+                        Text(names[i-1] ,style = Typography.labelMedium)
                     }
                     Row(modifier = Modifier.weight(0.5f)){
                         Spacer(modifier = Modifier.width(20.dp))
                         Text("-", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text(names[i])
+                        Text(names[i],style = Typography.labelMedium)
                     }
                 }
             }
@@ -297,7 +303,7 @@ fun ListElements(names:List<String>, modifier:Modifier){
                 Spacer(modifier = Modifier.width(20.dp))
                 Text("-", fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(names[names.size-1])
+                Text(names[names.size-1],style = Typography.labelMedium)
             }
         }
 

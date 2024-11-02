@@ -116,7 +116,7 @@ fun MealCartCard(
                     alignment = Alignment.TopStart
                 )
 
-                Column(modifier = Modifier.weight(0.45f).padding(horizontal=10.dp)) {
+                Column(modifier = Modifier.weight(0.4f).padding(horizontal=10.dp)) {
                     Text(text = cartItem.name, style = Typography.labelLarge, maxLines = 2)
                     StarRating(rating = round(cartItem.avgRating).roundToInt(), size = 18.dp)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -135,10 +135,10 @@ fun MealCartCard(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .height(120.dp)
-                        .weight(0.35f)
+                        .weight(0.4f)
                 ) {
 
-                    Text(text = cartItem.quantity.toString(), style = Typography.titleMedium)
+                    Text(text = cartItem.quantity.toString(), style = Typography.headlineLarge)
 
                     Column(verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxHeight()){
                         IconButton(

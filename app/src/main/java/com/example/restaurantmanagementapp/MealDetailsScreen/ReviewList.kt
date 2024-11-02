@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.delay
 
 
@@ -81,13 +82,13 @@ fun ReviewCard(review: Opinion) {
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = review.customerId.toString(),
-                fontSize = 20.sp,
+                style = Typography.labelLarge,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = review.comment, fontSize = 16.sp)
+        Text(text = review.comment, style = Typography.bodyMedium)
     }
 }
 

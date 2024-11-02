@@ -33,9 +33,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
@@ -43,6 +46,7 @@ import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 
 //@Preview
@@ -71,9 +75,12 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
     var isForgotSelected by remember { mutableStateOf(false) }
     var emailForgot by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val elementsStyle = Typography.bodyMedium
 
     Surface(color = MaterialTheme.colorScheme.background){
-        Column(modifier = Modifier.fillMaxWidth().padding(12.dp)){
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)){
             Image(
                 painter = painterResource(id = R.drawable.tmpimg),
                 contentDescription = stringResource(id = R.string.logo_image_description),
@@ -96,7 +103,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Logowanie", color = Color.White)
+                    Text(text = stringResource(id = R.string.loging), color = Color.White, style = Typography.titleMedium)
                 }
 
                 Spacer(modifier = Modifier.width(16.dp)) // Przestrzeń między przyciskami
@@ -108,24 +115,25 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Rejestracja", color = Color.White)
+                    Text(text =stringResource(id = R.string.registration), color = Color.White, style = Typography.titleMedium)
                 }
             }
             Spacer(modifier = Modifier.height(24.dp))
 
             if (isLoginSelected) {
-                LoginFields(navController, authViewModel)
+                LoginFields(navController, authViewModel, elementsStyle)
             } else {
-                RegisterFields(navController, authViewModel)
+                RegisterFields(navController, authViewModel, elementsStyle)
             }
             Spacer(modifier = Modifier.height(16.dp))
 
             val annotatedString = buildAnnotatedString {
-                append("Zapomniałem hasła")
+                append(stringResource(id = R.string.forgotpassword))
                 addStyle(
                     style = SpanStyle(
                         color = Color.Blue, // Kolor linku
-                        textDecoration = TextDecoration.Underline // Podkreślenie
+                        textDecoration = TextDecoration.Underline, // Podkreślenie
+                        fontSize = 20.sp
                     ),
                     start = 0,
                     end = this.length
@@ -138,7 +146,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                         modifier = Modifier.weight(0.5f),
                         value = emailForgot,
                         onValueChange = {emailForgot = it},
-                        label = {Text("E-mail")},
+                        label = {Text(text = stringResource(id = R.string.email), style = elementsStyle)},
                         maxLines = 2
                     )
                     Button(onClick = {
@@ -159,7 +167,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                         )
 
                     }){
-                        Text("Reset")
+                        Text(text = stringResource(id = R.string.reset), style = elementsStyle)
                     }
                 }
             }
@@ -168,7 +176,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
 }
 
 @Composable
-fun LoginFields(navController: NavController,authViewModel: AuthViewModel){
+fun LoginFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
@@ -178,29 +186,33 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel){
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("email") },
+                label = { Text(text = stringResource(id = R.string.email), style = elementsStyle) },
                 maxLines = 1
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("password") },
+                label = { Text(text = stringResource(id = R.string.password), style = elementsStyle) },
                 maxLines = 1
             )
 
         }
         Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally).width(160.dp).height(60.dp).padding(top=8.dp),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(160.dp)
+                .height(60.dp)
+                .padding(top = 8.dp),
             onClick = { login(email, password, navController, authViewModel) }) {
-            Text("log in")
+            Text(text = stringResource(id = R.string.log_in), style = Typography.titleMedium)
         }
     }
 }
 
 
 @Composable
-fun RegisterFields(navController: NavController,authViewModel: AuthViewModel){
+fun RegisterFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle){
     var name by remember { mutableStateOf("")}
     var surname by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
@@ -215,42 +227,46 @@ fun RegisterFields(navController: NavController,authViewModel: AuthViewModel){
                 modifier = Modifier.fillMaxWidth(),
                 value = name,
                 onValueChange = { name = it},
-                label = { Text("Name") },
+                label = { Text(text = stringResource(id = R.string.name), style = elementsStyle) },
                 maxLines = 1
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = surname,
                 onValueChange = { surname = it},
-                label = { Text("surname") },
+                label = { Text(text = stringResource(id = R.string.surname), style = elementsStyle) },
                 maxLines = 1
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it},
-                label = { Text("email") },
+                label = { Text(text = stringResource(id = R.string.email), style = elementsStyle) },
                 maxLines = 1
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = phone,
                 onValueChange = { phone = it},
-                label = { Text("phone") },
+                label = { Text(text = stringResource(id = R.string.phone), style = elementsStyle) },
                 maxLines = 1
             )
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { password = it},
-                label = { Text("password") },
+                label = { Text(text = stringResource(id = R.string.password), style = elementsStyle) },
                 maxLines = 1
             )
         }
         Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally).width(160.dp).height(60.dp).padding(top=8.dp),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(160.dp)
+                .height(60.dp)
+                .padding(top = 8.dp),
             onClick= {register(name,surname,email,phone,password,navController,authViewModel)}){
-            Text("register")
+            Text(text = stringResource(id = R.string.register), style = Typography.titleMedium)
         }
     }
 }

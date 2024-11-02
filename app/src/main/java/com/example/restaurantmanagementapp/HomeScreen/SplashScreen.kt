@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
@@ -20,6 +21,7 @@ import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.math.min
@@ -139,7 +141,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
                     .height(8.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Pobrano: ${min((progress * 100).toInt(),100)}%")
+            Text(text = stringResource(id =  R.string.downloaded) + " ${min((progress * 100).toInt(),100)}%", style = Typography.displayLarge)
         }
     }
 }

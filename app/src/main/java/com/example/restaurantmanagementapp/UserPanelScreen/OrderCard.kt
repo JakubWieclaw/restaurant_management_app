@@ -16,11 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Order
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -40,12 +43,14 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Typ: ${getOrderType(order.type)}",
-                    fontWeight = FontWeight.Bold
+                    text = stringResource(id = R.string.type) + getOrderType(order.type),
+                    fontWeight = FontWeight.Bold,
+                    style = Typography.labelMedium
                 )
                 Text(
                     text = formatDateTime(order.dateTime),
-                    color = Color.Gray  // Szary kolor dla mniej ważnej informacji
+                    color = Color.Gray,  // Szary kolor dla mniej ważnej informacji
+                    style = Typography.labelMedium
                 )
             }
 
@@ -53,8 +58,9 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
 
             // Lista posiłków i niechciane składniki
             Text(
-                text = "Zamówione dania:",
-                fontWeight = FontWeight.Bold
+                text = stringResource(id = R.string.ordered_meals),
+                fontWeight = FontWeight.Bold,
+                style = Typography.labelMedium
             )
             Spacer(modifier = Modifier.height(8.dp))  // Odstęp przed posiłkami
 
@@ -63,8 +69,8 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "\t${mealsViewModel.findMeal(meal.mealId)?.name ?: "Nieznane danie"}")
-                    Text(text = "Ilość: ${meal.quantity}")
+                    Text(text = "\t${mealsViewModel.findMeal(meal.mealId)?.name ?: stringResource(id = R.string.unknown_meal) }", style = Typography.labelMedium)
+                    Text(text = stringResource(id = R.string.number_of_meals)+" ${meal.quantity}", style = Typography.labelMedium)
                 }
 
                 order.unwantedIngredients.find { it.mealIndex == index }?.let { unwanted ->
@@ -114,7 +120,7 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 Text(
-                    text = "Koszt: ${order.orderPrice} zł",
+                    text = stringResource(id = R.string.price)+ order.orderPrice+ stringResource(id = R.string.currency),
                     fontWeight = FontWeight.Bold,
                 )
             }

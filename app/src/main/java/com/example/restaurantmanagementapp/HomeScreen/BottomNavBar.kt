@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 
@@ -62,7 +63,7 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
                     }
                 },
                 label = {
-                    Text(text = item.title)
+                    Text(text = item.title, style = Typography.displayMedium)
                 },
                 selected = currentRoute == item.route,
                 onClick = {

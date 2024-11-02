@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -49,11 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
+import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.launch
 
 @Preview(
@@ -101,7 +104,7 @@ fun MealList(
                                 pagerState.animateScrollToPage(index)
                                 searchText = ""
                             }
-                        }, text = { Text(text = category.name) })
+                        }, text = { Text(text = category.name, style = Typography.labelMedium) })
                     }
                 }
             }
@@ -122,8 +125,8 @@ fun MealList(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Text(
-                            text = "Brak dań w tej kategorii lub w wynikach wyszukiwania",
-                            fontSize = 18.sp,
+                            text = stringResource(id = R.string.no_meals_info) ,
+                            style = Typography.labelLarge,
                             color = Color.Gray,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -158,7 +161,7 @@ fun Header(navController: NavController){
             .padding(top = 10.dp)
     ) {
         Text(
-            text = "App name", fontSize = 24.sp, modifier = Modifier
+            text = stringResource(id = R.string.app_name), style = Typography.titleMedium, modifier = Modifier
                 .padding(start = 10.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.50f)
@@ -179,7 +182,7 @@ fun Header(navController: NavController){
                         .align(Alignment.CenterVertically),
                     tint = Color.Black
                 )
-                Text("Ulubione", fontSize = 20.sp)
+                Text(text = stringResource(id = R.string.favourite), style = Typography.labelLarge)
             }
         }
     }
@@ -194,7 +197,7 @@ fun SearchBar(
     TextField(
         value = searchText,
         onValueChange = onSearchTextChange, // Użycie lambda zamiast bezpośredniej zmiany wartości
-        label = { Text("Wyszukaj danie") },
+        label = { Text(text = stringResource(id = R.string.search_meal), style = Typography.labelMedium) },
         modifier = modifier
             .fillMaxWidth()
             .padding(10.dp),

@@ -37,10 +37,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
@@ -80,9 +82,12 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
         },
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(18.dp),
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
             ){
-            Text("Moje zamówienia")
+            //TODO: zmienić by vył R.string
+            Text(text=  "Moje zamówienia")
         }
         Column(){
             SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false)
@@ -106,7 +111,7 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
             .padding(top = 14.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
+        Text(text = label, fontWeight = FontWeight.Bold, fontSize = 18.sp,style = Typography.labelLarge, modifier = Modifier.align(Alignment.CenterVertically))
 
         Row() {
             if (editMode && editable && !isDropDown) {
@@ -139,7 +144,7 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
                 if(isDropDown){
                     ExposedDropdownMenuBox(dropDownList, onValueChange = {selected -> itemValue = selected}, modifier = Modifier.width(180.dp))
                 }else{
-                    Text(text = itemValue, color = Color.Gray, fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
+                    Text(text = itemValue, color = Color.Gray, style = Typography.labelLarge ,fontSize = 18.sp, modifier = Modifier.align(Alignment.CenterVertically))
                     if(editable){
                         IconButton(onClick = { editMode = !editMode }, modifier = Modifier.align(Alignment.CenterVertically)) {
                             Icon(imageVector = Icons.Default.Create, contentDescription = null)
@@ -186,7 +191,7 @@ fun SettingList(
             )
 
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = label, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(text = label, style = Typography.titleMedium)
             Spacer(modifier = Modifier.weight(1f))
             if(foldable){
                 Icon(
@@ -201,7 +206,7 @@ fun SettingList(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 12.dp, end = 12.dp,bottom=12.dp)
+                    .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
             ) {
                 Divider(modifier = Modifier.height(2.dp), color = Color.Black)
                 settingItemsData.forEach { item ->
@@ -243,7 +248,7 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit,
             ) {
                 itemList.forEach { item ->
                     DropdownMenuItem(
-                        text = { Text(text = item) },
+                        text = { Text(text = item, style = Typography.labelMedium) },
                         onClick = {
                             selectedText = item
                             expanded = false
@@ -262,7 +267,7 @@ fun LoyaltyHeader(points: Int) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start=16.dp,end=16.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Row(
             modifier = Modifier
@@ -272,7 +277,7 @@ fun LoyaltyHeader(points: Int) {
         ) {
             // Left line
             Column(modifier = Modifier.weight(1f)){
-                Text(text = "Your profile", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Text(text =  "Twój profil", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
                 Divider(thickness = 2.dp)
                 Text(text = " ", fontSize = 18.sp)
             }
