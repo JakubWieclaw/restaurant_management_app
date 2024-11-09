@@ -2,6 +2,7 @@ package com.example.restaurantmanagementapp.TableReservationScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.apithings.schemasclasses.LocalTime
 import com.example.restaurantmanagementapp.classes.Table
 
 
@@ -42,35 +44,26 @@ import com.example.restaurantmanagementapp.classes.Table
 //    TableCart()
 //}
 @Composable
-fun TableCart(table: Table, isChoosen: Boolean = false, onChoose:(Int) -> Unit, modifier:Modifier = Modifier){
+fun TableCart(time: String,selectedSits:String,index:Int, isChoosen: Boolean = false, onChoose:(String) -> Unit, modifier:Modifier = Modifier){
     Row(modifier = Modifier
-        .fillMaxWidth()
-        .background(color = if(isChoosen) Color.Green else Color.LightGray, RoundedCornerShape(8.dp))
+        .background(color = if(isChoosen) Color.Red else Color.Green, RoundedCornerShape(8.dp))
         .height(100.dp)
-        .clickable { onChoose(if(isChoosen) -1 else table.nr) }
+        .clickable { onChoose(if(isChoosen) "-1" else index.toString()) }
         .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.Center,
     ){
-        Image(
-            painter = if(table.sits==2) painterResource(id = R.drawable.table2) else if(table.sits==4) painterResource(id = R.drawable.table4) else painterResource(id = R.drawable.table6),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(10.dp)
-                .width(100.dp)
-                .height(80.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
-        )
-
-        Column(modifier = Modifier
-            .fillMaxHeight()
-            .padding(10.dp),
-            verticalArrangement =  Arrangement.SpaceBetween){
-            Text("Table nr: ${table.nr}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            Text("${table.sits} sits", fontSize = 16.sp)
-            Text("21.03.2024 " + table.startHour +"-"+table.endHour, fontSize = 14.sp)
-        }
+//        Image(
+//            painter = if(selectedSits.toInt()==2) painterResource(id = R.drawable.table2) else if(selectedSits.toInt()==4) painterResource(id = R.drawable.table4) else painterResource(id = R.drawable.table6),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .padding(10.dp)
+//                .width(100.dp)
+//                .height(80.dp)
+//                .clip(RoundedCornerShape(8.dp)),
+//            contentScale = ContentScale.Crop
+//        )
+            Text(text=time)
     }
 }
 

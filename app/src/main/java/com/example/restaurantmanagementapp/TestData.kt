@@ -132,17 +132,17 @@ object TestData {
         R.drawable.test_meal_picture_1,
     )
 
-    val tablesList = listOf(
-        Table(1,2,"00:00","24:00"),
-        Table(2,4,"00:00","24:00"),
-        Table(3,6,"00:00","24:00"),
-        Table(4,2,"12:00","24:00"),
-        Table(5,4,"12:00","24:00"),
-        Table(6,6,"12:00","24:00"),
-        Table(7,2,"12:00","18:00"),
-        Table(8,4,"12:00","18:00"),
-        Table(9,6,"12:00","18:00"),
-    )
+//    val tablesList = listOf(
+//        Table(1,2,"00:00","24:00"),
+//        Table(2,4,"00:00","24:00"),
+//        Table(3,6,"00:00","24:00"),
+//        Table(4,2,"12:00","24:00"),
+//        Table(5,4,"12:00","24:00"),
+//        Table(6,6,"12:00","24:00"),
+//        Table(7,2,"12:00","18:00"),
+//        Table(8,4,"12:00","18:00"),
+//        Table(9,6,"12:00","18:00"),
+//    )
 
     val restaurantDescription = "Odkryj kulinarną podróż w sercu miasta w restauracji Słoneczne Smaki! Serwujemy dania inspirowane kuchnią śródziemnomorską, z naciskiem na świeżość i najwyższą jakość składników. W naszym menu znajdziesz zarówno klasyczne włoskie makarony, jak i wykwintne owoce morza, soczyste steki oraz aromatyczne sałatki.\n" +
             "\n" +

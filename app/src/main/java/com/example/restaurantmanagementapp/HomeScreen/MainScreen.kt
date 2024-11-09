@@ -22,6 +22,7 @@ import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 
@@ -52,8 +53,7 @@ fun TestMainScreen(){
     val categoriesViewModel: CategoriesViewModel = viewModel()
     val couponsViewModel: CouponsViewModel = viewModel()
     val orderHistoryViewModel: OrderHistoryViewModel = viewModel()
-    val tables = TestData.tablesList
-
+    val hoursViewModel: HoursViewModel = viewModel()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController,orderViewModel, authViewModel)
@@ -67,10 +67,10 @@ fun TestMainScreen(){
                 orderViewModel = orderViewModel,
                 authViewModel = authViewModel,
                 favMealsViewModel = favMealsViewModel,
-                tables = tables,
                 categoriesViewModel = categoriesViewModel,
                 couponsViewModel = couponsViewModel,
-                orderHistoryViewModel =orderHistoryViewModel
+                orderHistoryViewModel =orderHistoryViewModel,
+                hoursViewModel = hoursViewModel
             )
         }
     }

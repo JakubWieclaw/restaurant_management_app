@@ -63,7 +63,7 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
                     }
                 },
                 label = {
-                    Text(text = item.title, style = Typography.displayMedium)
+                    Text(text = item.title, style = Typography.bodySmall)
                 },
                 selected = currentRoute == item.route,
                 onClick = {

@@ -20,6 +20,7 @@ import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.classes.Table
+import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 @Composable
@@ -33,7 +34,7 @@ fun SetupNavGraph(
     categoriesViewModel: CategoriesViewModel,
     couponsViewModel: CouponsViewModel,
     orderHistoryViewModel: OrderHistoryViewModel,
-    tables: List<Table>
+    hoursViewModel: HoursViewModel,
 ) {
     NavHost(
         navController = navController,
@@ -52,7 +53,7 @@ fun SetupNavGraph(
             OrderHistory(orderHistoryViewModel = orderHistoryViewModel, mealsViewModel = mealsViewModel)
         }
         composable("tablereservation"){
-            TableReservation(tables = tables)
+            TableReservation(hoursViewModel = hoursViewModel)
         }
         composable("favourites"){
             FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)

@@ -11,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     //order-controller
@@ -55,6 +56,13 @@ interface ApiService {
     fun forgotPassword(@Body email: String): Call<ResponseBody>
 
     //table-reservation-controller
+    @GET("/api/reservations/available-hours/{day}")
+    fun getAvailableHoursForDay(
+        @Path("day") day:String,
+        @Query("reservationDuration") reservationDuration:Int,
+        @Query("minutesToAdd") minutesToAdd:Int,
+        @Query("numberOfPeople") numberOfPeople:Int
+    ): Call<ResponseBody>
 
 
     //photo-controller
