@@ -28,7 +28,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -67,15 +69,19 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     text = meal.name,
                     fillColor = Color.Black,
                     outlineColor = Color.White,
-                    style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    style = Typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(0.65f),
+                    maxLines = 2
                 )
                 OutlinedText(
                     text = meal.price.toString() + " ZŁ",
                     fillColor = Color.Black,
                     outlineColor = Color.White,
-                    style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    style = Typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(0.35f),
+                    maxLines = 1
                 )
 
 //                Text(meal.name,
@@ -93,12 +99,12 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     .padding(start = 3.dp, top = 3.dp, bottom = 3.dp, end = 3.dp)
                     .alpha(0.8f)
             ) {
-                Text(meal.avgRating.toString(), style = Typography.labelMedium)
+                Text(meal.avgRating.toString(), style = Typography.labelLarge)
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(20.dp)
                         .align(Alignment.CenterVertically),
                     tint = Color.Yellow
                 )
@@ -116,22 +122,22 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 )
         ) {
             Button(
-                shape = RoundedCornerShape(bottomStart = 28.dp),
+                shape = RoundedCornerShape(bottomStart = 30.dp),
                 onClick = { navigateToScreen("meal/${meal.id}",navController)},
                 modifier = Modifier
-                    .padding(start = 4.dp, end = 2.dp, top = 2.dp, bottom = 2.dp)
-                    .weight(0.3f),
+                    .padding(start = 0.dp, end = 1.dp, top = 0.dp, bottom = 0.dp)
+                    .weight(0.35f),
             ) {
-                Text("details")
+                Text(text= stringResource(R.string.details),style= Typography.labelLarge,maxLines = 1)
             }
             Button(
-                shape = RoundedCornerShape(bottomEnd = 28.dp),
+                shape = RoundedCornerShape(bottomEnd = 30.dp),
                 onClick = {onAddToOrder(meal)},
                 modifier = Modifier
-                    .padding(start = 2.dp, end = 4.dp, top = 2.dp, bottom = 2.dp)
-                    .weight(0.7f)
+                    .padding(start = 1.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
+                    .weight(0.65f)
             ) {
-                Text("add to order", maxLines = 1)
+                Text(text= stringResource(R.string.add_to_order2),style= Typography.labelLarge, maxLines = 1)
             }
         }
     }

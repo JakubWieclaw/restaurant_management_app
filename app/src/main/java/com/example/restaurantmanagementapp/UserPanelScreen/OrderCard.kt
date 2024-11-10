@@ -33,8 +33,8 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)  // Tło dla karty
-                .border(1.5.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
+                .background(Color.White, shape = RoundedCornerShape(16.dp))  // Tło dla karty
+                .border(2.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
                 .padding(16.dp)  // Większy padding wewnętrzny
         ) {
             // Górna sekcja - Typ zamówienia i data

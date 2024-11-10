@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel

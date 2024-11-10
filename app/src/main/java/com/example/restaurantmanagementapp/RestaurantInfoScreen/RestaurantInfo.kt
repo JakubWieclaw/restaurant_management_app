@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.ui.theme.Typography
@@ -57,42 +61,38 @@ import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navController: NavController){
     val colScrollState = rememberScrollState()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color.White)){
+    Column(
+        modifier = Modifier
+            .verticalScroll(colScrollState)
+            .padding(10.dp))
+    {
+        //TypographyPreview()
+        Text(text =stringResource(id = R.string.restaurant) +  stringResource(id = R.string.restaurant_name), style = Typography.titleLarge)
+        Divider(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = stringResource(id = R.string.about_us), style = Typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = TestData.restaurantDescription, style = Typography.bodyLarge)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = stringResource(id = R.string.gallery), style = Typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        ImageCarousel(images = images, imageSize = 300.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = stringResource(id = R.string.today_coupons), style = Typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        CouponCarousel(couponsViewModel,imageSize =300.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = stringResource(id = R.string.localization), style = Typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
         Image(
-            painter = painterResource(id = R.drawable.test_meal_picture_1),
+            painter = painterResource(id = images[0]),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.2f)
+                .fillMaxWidth()
         )
-
-        Column(
-            modifier = Modifier
-                .verticalScroll(colScrollState)
-                .padding(10.dp))
-        {
-            TypographyPreview()
-            Text(text =stringResource(id = R.string.restaurant) +  stringResource(id = R.string.restaurant_name), style = Typography.titleLarge)
-            Text(text = stringResource(id = R.string.about_us), style = Typography.titleMedium)
-            Text(text = TestData.restaurantDescription, style = Typography.bodyMedium)
-            Text(text = stringResource(id = R.string.gallery), style = Typography.titleMedium)
-            ImageCarousel(images = images, imageSize = 300.dp)
-            Text(text = stringResource(id = R.string.today_coupons), style = Typography.titleMedium)
-            CouponCarousel(couponsViewModel,imageSize =300.dp)
-            Text(text = stringResource(id = R.string.localization), style = Typography.titleMedium)
-            Image(
-                painter = painterResource(id = images[0]),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
-
     }
 }
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -107,7 +107,7 @@ fun ImageCarousel(images: List<Int>, imageSize: Dp) {
         items(images) { imageRes ->
             Box(
                 modifier = Modifier
-                    .size(imageSize)
+                    .size(width = imageSize, height = imageSize.times(1.2f))
             ) {
                 Image(
                     painter = painterResource(id = imageRes),
@@ -135,7 +135,7 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
             items(couponsViewModel.coupons!!) { coupon ->
                 Box(
                     modifier = Modifier
-                        .size(imageSize)
+                        .size(width = imageSize, height = imageSize.times(1.2f))
                         .clickable {
                             couponsViewModel.selectCoupon(coupon.code)
                             Toast

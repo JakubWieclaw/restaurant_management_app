@@ -2,6 +2,7 @@ package com.example.restaurantmanagementapp.LoginScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
@@ -77,98 +81,96 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
     val context = LocalContext.current
     val elementsStyle = Typography.bodyMedium
 
-    Surface(color = MaterialTheme.colorScheme.background){
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)){
-            Image(
-                painter = painterResource(id = R.drawable.tmpimg),
-                contentDescription = stringResource(id = R.string.logo_image_description),
-                modifier = Modifier
-                    .size(140.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(12.dp)){
+        Image(
+            painter = painterResource(id = R.drawable.tmpimg),
+            contentDescription = stringResource(id = R.string.logo_image_description),
+            modifier = Modifier
+                .size(140.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+
+            Button(
+                onClick = { isLoginSelected = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isLoginSelected) Color.Blue else Color.Gray,
+                ),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text = stringResource(id = R.string.loging), color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.width(16.dp)) // Przestrzeń między przyciskami
+
+            Button(
+                onClick = { isLoginSelected = false },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (!isLoginSelected) Color.Blue else Color.Gray,
+                ),
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(text =stringResource(id = R.string.registration), color = Color.White)
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+
+        if (isLoginSelected) {
+            LoginFields(navController, authViewModel, elementsStyle)
+        } else {
+            RegisterFields(navController, authViewModel, elementsStyle)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val annotatedString = buildAnnotatedString {
+            append(stringResource(id = R.string.forgotpassword))
+            addStyle(
+                style = SpanStyle(
+                    color = Color.Blue, // Kolor linku
+                    textDecoration = TextDecoration.Underline, // Podkreślenie
+                    fontSize = 20.sp
+                ),
+                start = 0,
+                end = this.length
             )
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ){
-
-                Button(
-                    onClick = { isLoginSelected = true },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isLoginSelected) Color.Blue else Color.Gray,
-                    ),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(text = stringResource(id = R.string.loging), color = Color.White, style = Typography.titleMedium)
-                }
-
-                Spacer(modifier = Modifier.width(16.dp)) // Przestrzeń między przyciskami
-
-                Button(
-                    onClick = { isLoginSelected = false },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (!isLoginSelected) Color.Blue else Color.Gray,
-                    ),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(text =stringResource(id = R.string.registration), color = Color.White, style = Typography.titleMedium)
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-
-            if (isLoginSelected) {
-                LoginFields(navController, authViewModel, elementsStyle)
-            } else {
-                RegisterFields(navController, authViewModel, elementsStyle)
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val annotatedString = buildAnnotatedString {
-                append(stringResource(id = R.string.forgotpassword))
-                addStyle(
-                    style = SpanStyle(
-                        color = Color.Blue, // Kolor linku
-                        textDecoration = TextDecoration.Underline, // Podkreślenie
-                        fontSize = 20.sp
-                    ),
-                    start = 0,
-                    end = this.length
+        }
+        ClickableText(text=annotatedString, onClick={isForgotSelected=!isForgotSelected}, modifier = Modifier.align(Alignment.CenterHorizontally))
+        if(isForgotSelected){
+            Row(horizontalArrangement = Arrangement.Center){
+                TextField(
+                    modifier = Modifier.weight(0.5f),
+                    value = emailForgot,
+                    onValueChange = {emailForgot = it},
+                    label = {Text(text = stringResource(id = R.string.email), style = elementsStyle)},
+                    maxLines = 2,
                 )
-            }
-            ClickableText(text=annotatedString, onClick={isForgotSelected=!isForgotSelected}, modifier = Modifier.align(Alignment.CenterHorizontally))
-            if(isForgotSelected){
-                Row(horizontalArrangement = Arrangement.Center){
-                    OutlinedTextField(
-                        modifier = Modifier.weight(0.5f),
-                        value = emailForgot,
-                        onValueChange = {emailForgot = it},
-                        label = {Text(text = stringResource(id = R.string.email), style = elementsStyle)},
-                        maxLines = 2
-                    )
-                    Button(onClick = {
-                        val call = RetrofitInstance.api.forgotPassword(email = emailForgot)
-                        call.enqueue(
-                            CallbackHandler(
-                                onSuccess = { _ ->
-                                    isForgotSelected=false
-                                    Toast.makeText(context,"Wysłano maila",Toast.LENGTH_LONG).show()
-                                },
-                                onError = { _, _->
-                                    Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
-                                },
-                                onFailure = { _ ->
-                                    Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
-                                }
-                            )
+                Button(onClick = {
+                    val call = RetrofitInstance.api.forgotPassword(email = emailForgot)
+                    call.enqueue(
+                        CallbackHandler(
+                            onSuccess = { _ ->
+                                isForgotSelected=false
+                                Toast.makeText(context,"Wysłano maila",Toast.LENGTH_LONG).show()
+                            },
+                            onError = { _, _->
+                                Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
+                            },
+                            onFailure = { _ ->
+                                Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
+                            }
                         )
+                    )
 
-                    }){
-                        Text(text = stringResource(id = R.string.reset), style = elementsStyle)
-                    }
+                }){
+                    Text(text = stringResource(id = R.string.reset), style = elementsStyle)
                 }
             }
         }
@@ -182,14 +184,14 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel, eleme
     Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
                 label = { Text(text = stringResource(id = R.string.email), style = elementsStyle) },
                 maxLines = 1
             )
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { password = it },
@@ -200,12 +202,12 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel, eleme
         }
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .width(160.dp)
                 .height(60.dp)
-                .padding(top = 8.dp),
+                .padding(10.dp),
             onClick = { login(email, password, navController, authViewModel) }) {
-            Text(text = stringResource(id = R.string.log_in), style = Typography.titleMedium)
+            Text(text = stringResource(id = R.string.log_in), style = Typography.labelLarge)
         }
     }
 }
@@ -223,35 +225,35 @@ fun RegisterFields(navController: NavController,authViewModel: AuthViewModel, el
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ){
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = name,
                 onValueChange = { name = it},
                 label = { Text(text = stringResource(id = R.string.name), style = elementsStyle) },
                 maxLines = 1
             )
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = surname,
                 onValueChange = { surname = it},
                 label = { Text(text = stringResource(id = R.string.surname), style = elementsStyle) },
                 maxLines = 1
             )
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it},
                 label = { Text(text = stringResource(id = R.string.email), style = elementsStyle) },
                 maxLines = 1
             )
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = phone,
                 onValueChange = { phone = it},
                 label = { Text(text = stringResource(id = R.string.phone), style = elementsStyle) },
                 maxLines = 1
             )
-            OutlinedTextField(
+            TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { password = it},
@@ -261,12 +263,12 @@ fun RegisterFields(navController: NavController,authViewModel: AuthViewModel, el
         }
         Button(
             modifier = Modifier
+                .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .width(160.dp)
                 .height(60.dp)
-                .padding(top = 8.dp),
+                .padding(10.dp),
             onClick= {register(name,surname,email,phone,password,navController,authViewModel)}){
-            Text(text = stringResource(id = R.string.register), style = Typography.titleMedium)
+            Text(text = stringResource(id = R.string.register), style = Typography.labelLarge)
         }
     }
 }

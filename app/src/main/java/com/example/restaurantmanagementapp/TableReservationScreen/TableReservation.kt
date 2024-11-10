@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -56,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.UserPanelScreen.ExposedDropdownMenuBox
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
@@ -63,6 +65,7 @@ import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.LocalTime
 import com.example.restaurantmanagementapp.classes.Table
+import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -70,6 +73,7 @@ import java.util.Calendar
 
 @Composable
 fun TableReservation(hoursViewModel: HoursViewModel) {
+
     var selectedDate by remember { mutableStateOf("1990/1/1") }
     var selectedSits by remember { mutableStateOf("0") }
     var choosenCard by remember { mutableStateOf("-1") }
@@ -123,7 +127,7 @@ fun TableReservation(hoursViewModel: HoursViewModel) {
                 }
             }
         }else{
-            Text("Pusta lista")
+            Text("Pusta lista",modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
         }
     }
 
@@ -150,19 +154,24 @@ fun FilterOptions(
         onDateChange(selectedDate)
     }
 
-    Column(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 10.dp)){
-        Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceAround){
-            Column(modifier = Modifier.padding(start=10.dp)){
+    Column(modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 10.dp)){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text("Dzień")
-                OutlinedButton(modifier = Modifier
+                Button(modifier = Modifier
                     .height(50.dp)
-                    .width(140.dp),
+                    .width(150.dp),
                     shape = RoundedCornerShape(8.dp),
                     onClick = {
                         val datePickerDialog = android.app.DatePickerDialog(
                             context,
                             { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-                                selectedDate = "$selectedYear-${selectedMonth + 1}-${String.format("%02d", selectedDayOfMonth)}"
+                                selectedDate = "$selectedYear-${selectedMonth + 1}-${
+                                    String.format(
+                                        "%02d",
+                                        selectedDayOfMonth
+                                    )
+                                }"
                             },
                             year,
                             month,
@@ -173,27 +182,24 @@ fun FilterOptions(
                 ) {
                     Text(selectedDate)
                 }
-            }
-            Column(modifier = Modifier.padding(start=10.dp)) {
-                Text("Liczba osób")
-                ExposedDropdownMenuBox(
-                    itemList = sitsNum,
-                    onValueChange = { selected -> onSitsChange(selected) },
-                    modifier = Modifier
-                        .height(50.dp)
-                        .width(80.dp)
-                )
-            }
-
-            Column(){
-                Button(onClick = onSearchClick){
-                    Text("Szukaj")
+}
+                Column(modifier = Modifier.padding(start = 10.dp)) {
+                    Text("Liczba osób")
+                    ExposedDropdownMenuBox(
+                        itemList = sitsNum,
+                        onValueChange = { selected -> onSitsChange(selected) },
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(80.dp)
+                    )
                 }
 
-                Button(onClick = {}){
-                    Text("Rezerwuj")
+        }
+            Row(modifier = Modifier.fillMaxWidth().padding(10.dp)){
+                Button(onClick = onSearchClick,modifier= Modifier.fillMaxWidth()){
+                    Text("Szukaj ",style = Typography.labelLarge)
+                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
                 }
-            }
         }
     }
 }

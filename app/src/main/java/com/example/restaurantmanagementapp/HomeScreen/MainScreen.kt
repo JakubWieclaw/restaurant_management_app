@@ -3,6 +3,10 @@ package com.example.restaurantmanagementapp.HomeScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -10,9 +14,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
@@ -60,6 +69,7 @@ fun TestMainScreen(){
         }
     ){innerPadding ->
         Surface(modifier = Modifier.padding(innerPadding)){
+            CustomBackground()
             SetupNavGraph(
                 navController = navController,
                 images = images,
@@ -73,6 +83,22 @@ fun TestMainScreen(){
                 hoursViewModel = hoursViewModel
             )
         }
+    }
+}
+
+@Composable
+fun CustomBackground(){
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.White)){
+        Image(
+            painter = painterResource(id = R.drawable.wood_background2),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.2f)
+        )
     }
 }
 

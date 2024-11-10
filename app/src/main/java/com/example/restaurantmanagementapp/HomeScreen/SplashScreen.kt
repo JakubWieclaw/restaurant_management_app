@@ -28,6 +28,7 @@ import kotlin.math.min
 
 @Composable
 fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, navController: NavController) {
+
     var totalItems by remember { mutableIntStateOf(4) }
     var completed by remember { mutableIntStateOf(0) }
 
@@ -120,8 +121,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(

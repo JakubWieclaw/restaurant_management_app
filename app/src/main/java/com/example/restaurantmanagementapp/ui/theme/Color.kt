@@ -2,8 +2,8 @@ package com.example.restaurantmanagementapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val light_primary = Color(0xFF825500)
-val light_onPrimary = Color(0xFFFFFFFF)
+val light_primary = Color(0xF0FFA001)
+val light_onPrimary = Color(0xFF000000) // Na nim? w sensie np. kolor tekstu
 val light_primaryContainer = Color(0xFFFFDDB3)
 val light_onPrimaryContainer = Color(0xFF291800)
 val light_secondary = Color(0xFF6F5B40)
@@ -33,8 +33,8 @@ val light_surfaceTint = Color(0xFF825500)
 val light_outlineVariant = Color(0xFFD3C4B4)
 val light_scrim = Color(0xFF000000)
 
-val dark_primary = Color(0xFFFFB951)
-val dark_onPrimary = Color(0xFF452B00)
+val dark_primary = Color(0xFF553600)
+val dark_onPrimary = Color(0xFFF8F8F8)
 val dark_primaryContainer = Color(0xFF633F00)
 val dark_onPrimaryContainer = Color(0xFFFFDDB3)
 val dark_secondary = Color(0xFFDDC2A1)

@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
@@ -72,6 +73,7 @@ fun MealScreen(
     authViewModel: Any,
     favMealsViewModel: FavMealsViewModel
 ) {
+
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
 
@@ -89,8 +91,10 @@ fun MealScreen(
     Scaffold(
         bottomBar = {
             MealScreenFooter(orderViewModel,meal, navController = navController, favMealsViewModel = favMealsViewModel)
-        }
+        },
+        containerColor = Color.Transparent
     ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -196,9 +200,9 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 //modifier = Modifier.padding(all = 12.dp)
             ) {
-                OutlinedButton(
+                Button(
                     onClick = { if (quantity > 1) quantity-- },
-                    border = BorderStroke(1.dp, Color.Red),
+                    border = BorderStroke(1.dp, Color.Black),
                     //shape = RoundedCornerShape(50), // = 50% percent
                     shape = CircleShape,
                     modifier = Modifier.size(50.dp)
@@ -233,9 +237,9 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
                         .padding(8.dp)
                 )
 
-                OutlinedButton(
+                Button(
                     onClick = { if (quantity < 999) quantity++ },
-                    border = BorderStroke(1.dp, Color.Red),
+                    border = BorderStroke(1.dp, Color.Black),
                     //shape = RoundedCornerShape(50), // = 50% percent
                     shape = CircleShape,
                     modifier = Modifier.size(50.dp)
@@ -270,7 +274,7 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
             .padding(start = 12.dp, end = 12.dp),
                 onClick = {for(i in 1..quantity){orderViewModel.addToOrder(meal)} },
             ) {
-                Text(text = stringResource(id = R.string.add_to_order) +" \$${round(quantity * meal.price * 100) / 100})", style = Typography.labelMedium) // Example total price calculation
+                Text(text = stringResource(id = R.string.add_to_order) +" ${round(quantity * meal.price * 100) / 100}"+ stringResource(id=R.string.currency)+") ", style = Typography.labelMedium)
             }
 
 
@@ -285,15 +289,11 @@ fun ListElements(names:List<String>, modifier:Modifier){
                 Row(horizontalArrangement = Arrangement.SpaceAround){
                     Row(modifier = Modifier.weight(0.5f)){
                         Spacer(modifier = Modifier.width(20.dp))
-                        Text("-", fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(names[i-1] ,style = Typography.labelMedium)
+                        Text(text = "- ${names[i-1]}" ,style = Typography.labelLarge)
                     }
                     Row(modifier = Modifier.weight(0.5f)){
                         Spacer(modifier = Modifier.width(20.dp))
-                        Text("-", fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(names[i],style = Typography.labelMedium)
+                        Text(text = "- ${names[i]}",style = Typography.labelLarge)
                     }
                 }
             }
@@ -301,9 +301,7 @@ fun ListElements(names:List<String>, modifier:Modifier){
         if(names.size%2==1){
             Row(){
                 Spacer(modifier = Modifier.width(20.dp))
-                Text("-", fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(names[names.size-1],style = Typography.labelMedium)
+                Text(text = "- ${names[names.size-1]}",style = Typography.labelLarge)
             }
         }
 

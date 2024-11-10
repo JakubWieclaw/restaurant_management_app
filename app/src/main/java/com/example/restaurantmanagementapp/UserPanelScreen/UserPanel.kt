@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
@@ -72,7 +73,6 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         LoyaltyHeader(points = 10)
         Button(
@@ -80,11 +80,10 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
             orderHistoryViewModel.fetchOrderHistory(customer.customerId, onComplete = {})
             navigateToScreen("orderhistory",navController)
         },
-            colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(10.dp)
             ){
             //TODO: zmienić by vył R.string
             Text(text=  "Moje zamówienia")
@@ -92,7 +91,7 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
         Column(){
             SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false)
             //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
-            SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
+            //SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
         }
     }
 }

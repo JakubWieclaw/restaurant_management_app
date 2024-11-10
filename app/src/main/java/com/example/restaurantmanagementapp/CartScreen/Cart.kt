@@ -21,8 +21,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.ui.theme.light_onPrimary
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
@@ -41,6 +43,7 @@ import org.json.JSONObject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel) {
+
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
     val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
@@ -90,7 +93,8 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
         sheetContent = {
             MealEditSheet(orderViewModel,selectedMealIdx,scope,sheetState)
         },
-        sheetPeekHeight = 0.dp
+        sheetPeekHeight = 0.dp,
+        containerColor = Color.Transparent
     ) {
 
         Column(
@@ -98,7 +102,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
-            Text(text = stringResource(id = R.string.cart_heading), style = Typography.titleLarge)
+            Text(text = stringResource(id = R.string.cart_heading), style = Typography.titleLarge )
             Divider(
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
@@ -267,7 +271,7 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
             Text(text = stringResource(id = R.string.mealeditheader) +" "+ tmeal.name,style = Typography.titleSmall , modifier = Modifier.padding(bottom = 16.dp))
             tmeal.ingredients.forEach { ingredient ->
                 val isRemoved = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.fillMaxWidth().padding(vertical=10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, style= Typography.labelMedium)
                     Row(){
                         IconButton(
