@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
@@ -28,7 +29,6 @@ import kotlin.math.min
 
 @Composable
 fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, navController: NavController) {
-
     var totalItems by remember { mutableIntStateOf(4) }
     var completed by remember { mutableIntStateOf(0) }
 
@@ -39,10 +39,13 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     var viewModelsReady by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+
     LaunchedEffect(!viewModelsReady) {
         if(!viewModelsReady) {
             categoriesViewModel.fetchCategories(onComplete = { completed++ })
             mealsViewModel.fetchMeals(onComplete = { completed++;mealsReady = true })
+
             //TODO: Poprawić customer id
             couponsViewModel.fetchCoupons(customerId = 1,onComplete = {completed++})
         }
@@ -53,6 +56,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
         if (mealsReady) {
             //totalItems += mealsViewModel.meals.size
             mealsViewModel.meals.forEach { meal ->
+                mealsViewModel.downloadAndSaveImage(context = context,meal.photographUrl,onComplete={})
                 val avgRatingResponse = RetrofitInstance.api.getAvgRating(meal.id)
                 avgRatingResponse.enqueue(
                     CallbackHandler(

@@ -67,7 +67,7 @@ interface ApiService {
 
     //photo-controller
     @GET("api/photos/download")
-    fun getPhoto(): Call<ResponseBody>
+    fun getPhoto(@Query("filename") filename:String): Call<ResponseBody>
 
     //customer-controller
     @GET("api/customer/get/{id}")

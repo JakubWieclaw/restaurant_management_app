@@ -13,6 +13,17 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import com.example.restaurantmanagementapp.apithings.CallbackHandlerImage
+import kotlinx.coroutines.CoroutineStart
+import java.io.File
+import java.io.FileOutputStream
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 class MealsViewModel : ViewModel() {
@@ -76,7 +87,62 @@ class MealsViewModel : ViewModel() {
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
+    fun downloadAndSaveImage(context:Context, filename:String, onComplete: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var file = File(context.filesDir, filename)
+            if (!file.exists()) {
+                try {
+                    val response = RetrofitInstance.api.getPhoto(filename = filename)
+                    response.enqueue(
+                        CallbackHandlerImage(
+                            onSuccess = { responseBody ->
+                                try {
+                                    file = File(context.filesDir, filename)
+                                    FileOutputStream(file).use{ outputStream ->
+                                        outputStream.write(responseBody)
+                                        outputStream.flush()
+                                    }
+                                    println("Pobrano $filename")
+                                    onComplete()
+                                } catch (e: Exception) {
+                                    println("Parsing error: ${e.message}")
+                                    errorMessage = "Error: ${e.message}"
+                                }
+                            },
+                            onError = { code, errorBody ->
+                                println("Błąd: $code")
+                                println("Treść błędu: $errorBody")
+                            },
+                            onFailure = { throwable ->
+                                println("Request failed: ${throwable.message}")
+                            }
+                        )
+                    )
+                } catch (e: Exception) {
+                    errorMessage = "Error: ${e.message}"
+                }
+            }else{
+                println("Obraz $filename znajduje się już na urządzeniu")
+            }
+            onComplete()
+        }
+    }
+
+
     fun findMeal(mealId:Int):Meal?{
         return meals.find{it.id == mealId}
+    }
+}
+
+fun loadImageFromDevice(context: Context, filename: String): ImageBitmap? {
+    val file = File(context.filesDir, filename)
+    return if (file.exists()) {
+        println("Wczytywanie $filename")
+        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+        bitmap?.asImageBitmap()
+    } else {
+        println("Plik $filename nie istnieje")
+        null
     }
 }

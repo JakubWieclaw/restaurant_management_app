@@ -26,7 +26,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,9 +41,13 @@ import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.viewmodels.loadImageFromDevice
 
 @Composable
 fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navController: NavController) {
+    val context = LocalContext.current
+    val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = meal.photographUrl)
+        ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
     Column(modifier = modifier.padding(start = 8.dp, end = 8.dp, top = 12.dp)) {
 
         val shape = RoundedCornerShape(30.dp)
@@ -51,7 +58,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 .background(Color.White, shape = shape)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.test_meal_picture_1),
+                bitmap = imageBitmap,
                 contentDescription = "Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

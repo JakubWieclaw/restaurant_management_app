@@ -41,7 +41,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +60,7 @@ import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
+import com.example.restaurantmanagementapp.viewmodels.loadImageFromDevice
 import kotlin.math.round
 
 @Preview(showBackground = true)
@@ -76,6 +80,9 @@ fun MealScreen(
 
     var showReviews by remember { mutableStateOf(false) }
     var isPictureVisible by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = meal.photographUrl)
+        ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
 
     val pictureShape = RoundedCornerShape(
         topStart = 0.dp,
@@ -107,7 +114,7 @@ fun MealScreen(
                 exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Top)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.test_meal_picture_1),
+                    bitmap = imageBitmap,
                     contentDescription = "Picture",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
