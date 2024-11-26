@@ -1,65 +1,26 @@
 package com.example.restaurantmanagementapp
 
+import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
+import com.example.restaurantmanagementapp.apithings.schemasclasses.LoginResponse
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
+import com.example.restaurantmanagementapp.classes.Meal
 import com.example.restaurantmanagementapp.classes.Table
 
 object TestData {
-//    val mealListSample = listOf(
-//        Meal(
-//            0,
-//            "Pierogi",
-//            6.99,
-//            0,
-//            0,
-//            0,
-//            "NoneNow"
-//        ),
-//        Meal(
-//            1,
-//            "Spaghetti",
-//            4.99,
-//            1,
-//            1,
-//            1,
-//            "NoneNow"
-//        ),
-//        Meal(
-//            2,
-//            "Ciastka",
-//            16.99,
-//            0,
-//            2,
-//            2,
-//            "NoneNow"
-//        ),
-//        Meal(
-//            3,
-//            "Murzynek",
-//            13.99,
-//            0,
-//            3,
-//            3,
-//            "NoneNow"
-//        ),
-//        Meal(
-//            4,
-//            "Kiełbasa śląska",
-//            16.99,
-//            2,
-//            4,
-//            4,
-//            "NoneNow"
-//        ),
-//        Meal(
-//            5,
-//            "Pomidor",
-//            6.99,
-//            3,
-//            5,
-//            5,
-//            "NoneNow"
-//        )
-//    )
+    val mealListSample = listOf(
+        Meal(
+            id=1,
+            name="Spaghetti",
+            price=4.99,
+            photographUrl = "string",
+            ingredients = listOf("ser,pieczarki"),
+            weightOrVolume = .3,
+            unitType = "GRAMY",
+            categoryId = 1,
+            allergens = listOf("białko"),
+            calories = 233
+        )
+    )
 
     val opinionsListSample = listOf(
         Opinion(2,5,  "Bardzo dobre danie, zawsze gdy jestem w Wyzimie odwiedzam to miejsce i próbuję tej potrawy."),
@@ -69,11 +30,10 @@ object TestData {
     )
 
     val categories = listOf(
-        "Cat1",
-        "Cat2",
-        "Cat3",
-        "Cat4",
-        "Cat5"
+        Category(1,"Cat1","string"),
+        Category(2,"Cat2","string"),
+        Category(3,"Cat3","string"),
+        Category(4,"Cat4","string")
     )
 
     val availableTimes = listOf(
@@ -144,6 +104,15 @@ object TestData {
 //        Table(9,6,"12:00","18:00"),
 //    )
 
+    val testUser =
+        LoginResponse (
+        token= "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhc2RAYXNkLmFzZCIsImlhdCI6MTczMjU3MzAzNSwiZXhwIjoxNzMyNjA5MDM1fQ.ZHD8JnpHLYhlOknRZ7EerO-2NhksHmD8jh7huGP-RIdNnbd47IxNoU4oYr8PEb8wfoMyRjxb4ElvSA1TWFG4RQ",
+        customerId= 1,
+        customerName="asd",
+        customerSurname="asd",
+        customerEmail="asd@asd.asd",
+        isAdmin= true
+    )
     val restaurantDescription = "Odkryj kulinarną podróż w sercu miasta w restauracji Słoneczne Smaki! Serwujemy dania inspirowane kuchnią śródziemnomorską, z naciskiem na świeżość i najwyższą jakość składników. W naszym menu znajdziesz zarówno klasyczne włoskie makarony, jak i wykwintne owoce morza, soczyste steki oraz aromatyczne sałatki.\n" +
             "\n" +
             "Nasza przytulna atmosfera, klimatyczne wnętrze i przyjazna obsługa sprawią, że poczujesz się jak na wakacjach nad Morzem Śródziemnym. Każdego dnia oferujemy również specjalne menu lunchowe oraz unikalne propozycje sezonowe, które zaskoczą nawet najbardziej wymagających smakoszy.\n" +

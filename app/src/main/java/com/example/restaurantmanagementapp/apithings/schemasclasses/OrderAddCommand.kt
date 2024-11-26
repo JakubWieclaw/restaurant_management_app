@@ -10,5 +10,6 @@ class OrderAddCommand(
     val deliveryDistance: Double,
     val tableId: String,
     val people: Int,
-    val minutesForReservation: Int
+    val minutesForReservation: Int,
+    val couponCode: String?
 )

@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.restaurantmanagementapp.LoginScreen.LoginScreen
 import com.example.restaurantmanagementapp.CartScreen.CartScreen
+import com.example.restaurantmanagementapp.CartScreen.PaymentConfirm
 import com.example.restaurantmanagementapp.FavouriteMealsScreen.FavouriteMeals
 import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
@@ -69,7 +70,7 @@ fun SetupNavGraph(
             MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel, favMealsViewModel = favMealsViewModel)
         }
         composable("cart") {
-            CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel)
+            CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel,navController=navController)
         }
 
 
@@ -77,6 +78,9 @@ fun SetupNavGraph(
             SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel ,navController = navController)
         }
 
+        composable("paymentconfirm"){
+            PaymentConfirm(orderViewModel=orderViewModel,authViewModel=authViewModel,navController = navController)
+        }
 
     }
 }

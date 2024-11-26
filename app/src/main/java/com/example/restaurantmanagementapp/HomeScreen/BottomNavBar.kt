@@ -37,7 +37,7 @@ sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: 
     object Cart: BottomNavItem("Koszyk", Icons.Default.ShoppingCart, "cart")
 }
 @Composable
-fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewModel, authViewModel: AuthViewModel) {
+fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewModel, authViewModel: AuthViewModel,modifier:Modifier) {
     val items = listOf(
         BottomNavItem.GeneralInfo,
         BottomNavItem.DishSearch,
@@ -46,7 +46,7 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
         BottomNavItem.Cart
     )
 
-    NavigationBar {
+    NavigationBar(modifier = Modifier.then(modifier)) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(

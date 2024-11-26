@@ -77,7 +77,7 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
         LoyaltyHeader(points = 10)
         Button(
             onClick={
-            orderHistoryViewModel.fetchOrderHistory(customer.customerId, onComplete = {})
+            orderHistoryViewModel.fetchOrderHistory(customer.customerId,customer.token, onComplete = {})
             navigateToScreen("orderhistory",navController)
         },
             shape = RoundedCornerShape(18.dp),

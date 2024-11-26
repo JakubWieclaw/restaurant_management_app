@@ -19,13 +19,13 @@ class OrderHistoryViewModel: ViewModel() {
     var isLoading by mutableStateOf(true)
     var errorMessage by mutableStateOf<String?>(null)
 
-    fun fetchOrderHistory(customerId:Int,onComplete:() ->Unit){
+    fun fetchOrderHistory(customerId:Int,customerToken:String,onComplete:() ->Unit){
         isLoading = true
         errorMessage = null
 
         viewModelScope.launch(Dispatchers.IO){
             try{
-                val response = RetrofitInstance.api.getCustomerOrders(customerId)
+                val response = RetrofitInstance.api.getCustomerOrders(customerId,"Bearer $customerToken")
                 response.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->

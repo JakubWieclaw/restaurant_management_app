@@ -79,7 +79,7 @@ class OrderViewModel : ViewModel() {
     }
 
     //TODO: Sprawdzić potem czy działa
-    fun finalizeOrder(customerId:Int, orderType:String, orderStatus:String, deliveryAddress:String, deliveryDistance:Double){
+    fun finalizeOrder(customerId:Int,customerToken:String, orderType:String, orderStatus:String, deliveryAddress:String, deliveryDistance:Double){
         val mealQuantities = orderItems.map { meal->
             MealQuantity(mealId = meal.id, quantity = meal.quantity)
         }
@@ -91,21 +91,23 @@ class OrderViewModel : ViewModel() {
             }
         }
 
-       val orderAddCommand = OrderAddCommand(
-           mealIds = mealQuantities,
-           customerId = customerId,
-           type = orderType,
-           status = orderStatus,
-           unwantedIngredients = unwantedIngredients,
-           deliveryAddress = deliveryAddress,
-           deliveryDistance = deliveryDistance,
+        val orderAddCommand = OrderAddCommand(
+            mealIds = mealQuantities,
+            customerId = customerId,
+            type = orderType,
+            status = orderStatus,
+            unwantedIngredients = unwantedIngredients,
+            deliveryAddress = deliveryAddress,
+            deliveryDistance = deliveryDistance,
 
-           tableId = "",
-           minutesForReservation = 0,
-           people = 0
-       )
+            tableId = "",
+            people = 0,
+            minutesForReservation = 0,
+            couponCode = null
+        )
 
-        val call = RetrofitInstance.api.addNewOrder(orderAddCommand)
+        println(customerToken)
+        val call = RetrofitInstance.api.addNewOrder(orderAddCommand, "Bearer $customerToken")
         call.enqueue(
             CallbackHandler(
                 onSuccess = { responseBody ->
@@ -121,8 +123,5 @@ class OrderViewModel : ViewModel() {
                 }
             )
         )
-
-
     }
-
 }

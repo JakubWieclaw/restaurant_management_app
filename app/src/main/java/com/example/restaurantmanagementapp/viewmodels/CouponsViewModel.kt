@@ -19,41 +19,41 @@ class CouponsViewModel: ViewModel() {
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
 
-    fun fetchCoupons(customerId:Int,onComplete:() ->Unit){
+    fun fetchCoupons(customerId:Int,token:String,onComplete:() ->Unit){
         isLoading = true
         errorMessage = null
 
         viewModelScope.launch(Dispatchers.IO){
+            println("Pobieram kupony:")
             try{
-                val response = RetrofitInstance.api.getCustomerCoupons(customerId)
+                val response = RetrofitInstance.api.getCustomerCoupons(customerId,"Bearer $token")
                 response.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->
-                            println("Odpowiedz: $responseBody")
                             try{
                                 val gson = Gson()
                                 val objectType = object : TypeToken<List<CouponServer>>() {}.type
                                 coupons = gson.fromJson(responseBody,objectType)
                                 coupons?.forEach{ coupon->
-                                    println("Coupon ${coupon.id}: code ${coupon.code}")
+                                    println("\t* Coupon ${coupon.id}: code ${coupon.code}")
                                 }
                                 isLoading = false
                                 onComplete()
                             }catch (e:Exception){
                                 errorMessage = "Error: ${e.message}"
-                                println("Parsing error: ${e.message}")
+                                println("\t* Parsing error: ${e.message}")
                                 coupons = emptyList()
                             }
                         },
                         onError = {code, errorBody ->
-                            println("Błąd: $code")
-                            println("Treść błędu: $errorBody")},
+                            println("\t* Błąd: $code")
+                            println("\t* Treść błędu: $errorBody")},
                         onFailure = {throwable ->
-                            println("Request failed: ${throwable.message}")}
+                            println("\t* Request failed: ${throwable.message}")}
                     )
                 )
             }catch (e: Exception){
-                errorMessage = "Error: ${e.message}"
+                errorMessage = "\t* Error: ${e.message}"
                 println(errorMessage)
             }
         }

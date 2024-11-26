@@ -9,6 +9,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,9 +17,9 @@ import retrofit2.http.Query
 interface ApiService {
     //order-controller
     @POST("api/orders/add")
-    fun addNewOrder(@Body request: OrderAddCommand): Call<ResponseBody>
+    fun addNewOrder(@Body request: OrderAddCommand, @Header("Authorization") token :String): Call<ResponseBody>
     @GET("api/orders/get/customer/{customerId}")
-    fun getCustomerOrders(@Path("customerId") customerId: Int): Call<ResponseBody>
+    fun getCustomerOrders(@Path("customerId") customerId: Int, @Header("Authorization") token :String): Call<ResponseBody>
 
     //opinion-controller
     @POST("api/opinions/add")
@@ -34,7 +35,7 @@ interface ApiService {
 
     //coupon-controller
     @GET("api/coupons/customer/{customerId}")
-    fun getCustomerCoupons(@Path("customerId") customerId:Int): Call<ResponseBody>
+    fun getCustomerCoupons(@Path("customerId") customerId:Int, @Header("Authorization") token :String): Call<ResponseBody>
     //Niepotrzebne? chyba 'active' z kuponu wystarczy
 //    @GET("api/coupons/validate")
 //    fun getCouponValidate(): Call<ResponseBody>

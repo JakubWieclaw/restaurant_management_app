@@ -36,12 +36,12 @@ class MealsViewModel : ViewModel() {
         errorMessage = null
 
         viewModelScope.launch(Dispatchers.IO) {
+            println("Pobieram posiłki:")
             try {
                 val response = RetrofitInstance.api.getMeals()
                 response.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->
-                            println("Odpowiedź: $responseBody")
                             try {
                                 val mealListType = object : TypeToken<List<MealServer>>() {}.type
                                 val meals2: List<MealServer> = Gson().fromJson(responseBody, mealListType)
@@ -62,27 +62,27 @@ class MealsViewModel : ViewModel() {
                                     )
                                 }
                                 meals2.forEach { meal ->
-                                    println("Category: ${meal.name}, URL: ${meal.photographUrl}")
+                                    println("\t* Meal: ${meal.name}, category: ${meal.categoryId}, photo URL: ${meal.photographUrl}")
                                 }
                                 meals = meals3
                                 isLoading = false
                                 onComplete()
                             } catch (e: Exception) {
-                                println("Parsing error: ${e.message}")
-                                errorMessage = "Error: ${e.message}"
+                                println("\t* Parsing error: ${e.message}")
+                                errorMessage = "\t* Error: ${e.message}"
                             }
                         },
                         onError = { code, errorBody ->
-                            println("Błąd: $code")
-                            println("Treść błędu: $errorBody")
+                            println("\t* Błąd: $code")
+                            println("\t* Treść błędu: $errorBody")
                         },
                         onFailure = { throwable ->
-                            println("Request failed: ${throwable.message}")
+                            println("\t* Request failed: ${throwable.message}")
                         }
                     )
                 )
             } catch (e: Exception) {
-                errorMessage = "Error: ${e.message}"
+                errorMessage = "\t* Error: ${e.message}"
             }
         }
     }
@@ -103,27 +103,27 @@ class MealsViewModel : ViewModel() {
                                         outputStream.write(responseBody)
                                         outputStream.flush()
                                     }
-                                    println("Pobrano $filename")
+                                    println("\t* Pobrano obraz $filename")
                                     onComplete()
                                 } catch (e: Exception) {
-                                    println("Parsing error: ${e.message}")
-                                    errorMessage = "Error: ${e.message}"
+                                    println("\t* Parsing error: ${e.message}")
+                                    errorMessage = "\t* Error: ${e.message}"
                                 }
                             },
                             onError = { code, errorBody ->
-                                println("Błąd: $code")
-                                println("Treść błędu: $errorBody")
+                                println("\t* Błąd: $code")
+                                println("\t* Treść błędu: $errorBody")
                             },
                             onFailure = { throwable ->
-                                println("Request failed: ${throwable.message}")
+                                println("\t* Request failed: ${throwable.message}")
                             }
                         )
                     )
                 } catch (e: Exception) {
-                    errorMessage = "Error: ${e.message}"
+                    errorMessage = "\t* Error: ${e.message}"
                 }
             }else{
-                println("Obraz $filename znajduje się już na urządzeniu")
+                println("\t* Obraz $filename znajduje się już na urządzeniu")
             }
             onComplete()
         }

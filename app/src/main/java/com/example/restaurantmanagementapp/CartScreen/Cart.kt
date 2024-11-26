@@ -1,5 +1,6 @@
 package com.example.restaurantmanagementapp.CartScreen
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,8 +22,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
+import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.apithings.CallbackHandler
+import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.apithings.schemasclasses.MealQuantity
+import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
+import com.example.restaurantmanagementapp.apithings.schemasclasses.UnwantedIngredient
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.ui.theme.light_onPrimary
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
@@ -40,16 +48,23 @@ import org.json.JSONObject
     problem z getResource dot. animacji?
     W przypadku użycia na rzeczywistym telefonie działa poprawnie
 */
+
+/*
+* TODO: stworzyć nowy screen z już wypełnionymi niezmienialnymi danymi, gdzie paymentinit wywyluje sie qw launcheffect
+*  ,wtedy może zadziala jak wszystko bedzie czyste, bo juz * idzie dostać od implementacji tego stripe'a
+* */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel) {
+fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,navController:NavController) {
 
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
     val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
 
+
+    //var initcomplete by remember{mutableStateOf(false)}
     val context = LocalContext.current
-    var customerConfig by remember { mutableStateOf<PaymentSheet.CustomerConfiguration?>(null) }
+    //var customerConfig by remember { mutableStateOf<PaymentSheet.CustomerConfiguration?>(null) }
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
 
     val stripeServerMockInstance = remember { stripeServerMock() }
@@ -57,36 +72,6 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
     val sheetState = rememberBottomSheetScaffoldState(bottomSheetState = SheetState(initialValue = SheetValue.Hidden, skipPartiallyExpanded = false))
     val scope = rememberCoroutineScope()
     var selectedMealIdx by remember { mutableStateOf<Int?>(null) }
-
-    LaunchedEffect(Unit) { // Trigger on composition
-        // Call the go method and handle the result
-        try {
-            val responseJson0 = stripeServerMockInstance.go(object : stripeServerMock.Callback<String> {
-                override fun onSuccess(result: String) {
-                    val responseJson = JSONObject(result)
-
-                    paymentIntentClientSecret = responseJson.getString("paymentIntent")
-                    customerConfig = PaymentSheet.CustomerConfiguration(
-                        id = responseJson.getString("customer"),
-                        ephemeralKeySecret = responseJson.getString("ephemeralKey")
-                    )
-                    val publishableKey = responseJson.getString("publishableKey")
-                    PaymentConfiguration.init(context, publishableKey)
-                }
-
-                override fun onError(e: Exception) {
-                    // Handle the error here
-                    e.printStackTrace()
-                    // Optionally show an error message to the user
-                }
-            }) // Now a suspend function
-
-        } catch (e: Exception) {
-            // Handle any exceptions (optional)
-            e.printStackTrace()
-            // You may want to show an error message or handle the error gracefully
-        }
-    }
 
     BottomSheetScaffold(
         scaffoldState = sheetState,
@@ -193,12 +178,73 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+                    try {
+                        val mealQuantities = orderViewModel.orderItems.map { meal->
+                            MealQuantity(mealId = meal.id, quantity = meal.quantity)
+                        }
+                        val unwantedIngredients = orderViewModel.orderItems.mapIndexedNotNull { index, meal ->
+                            if(meal.removedIngredients.isNotEmpty()){
+                                UnwantedIngredient(mealIndex = index, ingredients = meal.removedIngredients)
+                            }else{
+                                null
+                            }
+                        }
 
-                    val currentConfig = customerConfig
-                    val currentClientSecret = paymentIntentClientSecret
+                        val orderAddCommand = OrderAddCommand(
+                            mealIds = mealQuantities,
+                            customerId = authViewModel.customerData!!.customerId,
+                            type = "NA_MIEJSCU",
+                            status = "GOTOWE",
+                            unwantedIngredients = unwantedIngredients,
+                            deliveryAddress = "",
+                            deliveryDistance = 0.0,
+                            tableId = "",
+                            people = 0,
+                            minutesForReservation = 120,
+                            couponCode = null
+                        )
+//                        //DEBUG
+//                        val stripeMock = stripeServerMock()
+//                        stripeMock.go(object : stripeServerMock.Callback<String> {
+//                            override fun onSuccess(result: String) {
+//
+//                                val jsonObject = JSONObject(result)
+//                                paymentIntentClientSecret = jsonObject.getString("paymentIntent")
+//                                val publishableKey = jsonObject.getString("publishableKey")
+//                                PaymentConfiguration.init(context, publishableKey)
+//                                paymentIntentClientSecret?.let { presentPaymentSheet(paymentSheet, it) }
+//                                // Możesz teraz użyć paymentIntent i publishableKey w swojej aplikacji
+//                            }
+//
+//                            override fun onError(e: Exception) {
+//
+//                            }
+//                        })
 
-                    if (currentConfig != null && currentClientSecret != null) {
-                        presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
+            val call = RetrofitInstance.api.addNewOrder(orderAddCommand, "Bearer ${authViewModel.customerData!!.token}")
+            call.enqueue(
+                CallbackHandler(
+                    onSuccess = { responseBody ->
+                        println("Odpowiedź: $responseBody")
+                        val responseJson = JSONObject(responseBody)
+                        paymentIntentClientSecret = responseJson.getString("paymentIntentClientSecret")
+                        println(paymentIntentClientSecret)
+                        val publishableKey = "pk_test_51Q4Qqx6w25OikflfELAfyRffrHpVJKl52TXAThc0QPyBccecIMGSZWK6No7HI0bZEkN8rHGgmkYFrSXbAiHL6AZ000pFpLF7Rz"
+
+                        PaymentConfiguration.init(context, publishableKey)
+                        paymentIntentClientSecret?.let { presentPaymentSheet(paymentSheet, it) }
+                    },
+                    onError = { code, errorBody ->
+                        println("Błąd: $code")
+                        println("Treść błędu: $errorBody")
+                    },
+                    onFailure = { throwable ->
+                        println("Request failed: ${throwable.message}")
+                    }
+                )
+            )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
             ) {
@@ -206,6 +252,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             }
         }
     }
+
 }
 @Composable
 fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
@@ -223,37 +270,6 @@ fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
             fontSize = if (isTotal) 20.sp else 16.sp,
             color = if (isTotal) Color.Black else Color.Gray
         )
-    }
-}
-private fun presentPaymentSheet(
-    paymentSheet: PaymentSheet,
-    customerConfig: PaymentSheet.CustomerConfiguration,
-    paymentIntentClientSecret: String
-) {
-    paymentSheet.presentWithPaymentIntent(
-        paymentIntentClientSecret,
-        PaymentSheet.Configuration(
-            merchantDisplayName = "My merchant name",
-            customer = customerConfig,
-            // Set `allowsDelayedPaymentMethods` to true if your business handles
-            // delayed notification payment methods like US bank accounts.
-            allowsDelayedPaymentMethods = true
-        )
-    )
-}
-
-private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
-    when(paymentSheetResult) {
-        is PaymentSheetResult.Canceled -> {
-            print("Canceled")
-        }
-        is PaymentSheetResult.Failed -> {
-            print("Error: ${paymentSheetResult.error}")
-        }
-        is PaymentSheetResult.Completed -> {
-            // Display for example, an order confirmation screen
-            print("Completed")
-        }
     }
 }
 
@@ -302,6 +318,33 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
                     }
                 }
             }
+        }
+    }
+}
+
+
+private fun presentPaymentSheet(
+    paymentSheet: PaymentSheet,
+    //customerConfig: PaymentSheet.CustomerConfiguration,
+    paymentIntentClientSecret: String
+) {
+    paymentSheet.presentWithPaymentIntent(
+        paymentIntentClientSecret,
+        PaymentSheet.Configuration(merchantDisplayName = "My merchant name")
+    )
+}
+
+private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+    when(paymentSheetResult) {
+        is PaymentSheetResult.Canceled -> {
+            println("Canceled")
+        }
+        is PaymentSheetResult.Failed -> {
+            println("Error: ${paymentSheetResult.error}")
+        }
+        is PaymentSheetResult.Completed -> {
+            // Display for example, an order confirmation screen
+            println("Completed")
         }
     }
 }

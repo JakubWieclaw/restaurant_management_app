@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
 import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
@@ -17,8 +18,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class AuthViewModel() : ViewModel() {
-    var customerData by mutableStateOf<LoginResponse?>(null)
-    var isLogged: Boolean = false
+    //TODO:Podmienić bo w celach testowych zmieniono
+    var customerData by mutableStateOf<LoginResponse?>(TestData.testUser)
+    var isLogged: Boolean = true
 
     fun login(loginRequest:LoginRequest) {
         val call = RetrofitInstance.api.login(loginRequest)
