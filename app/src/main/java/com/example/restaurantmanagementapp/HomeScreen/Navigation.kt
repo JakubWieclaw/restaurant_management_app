@@ -70,7 +70,7 @@ fun SetupNavGraph(
             MealScreen(meal = meal, navController = navController, orderViewModel = orderViewModel, authViewModel = authViewModel, favMealsViewModel = favMealsViewModel)
         }
         composable("cart") {
-            CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel,navController=navController)
+            CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel,hoursViewModel=hoursViewModel,navController=navController)
         }
 
 

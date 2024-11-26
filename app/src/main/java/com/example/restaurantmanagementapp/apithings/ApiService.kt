@@ -1,6 +1,7 @@
 package com.example.restaurantmanagementapp.apithings
 import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.MakeReservationCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OpinionAddCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.PossibleReservationHoursForDay
@@ -8,6 +9,7 @@ import com.example.restaurantmanagementapp.apithings.schemasclasses.ReservationR
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -20,6 +22,12 @@ interface ApiService {
     fun addNewOrder(@Body request: OrderAddCommand, @Header("Authorization") token :String): Call<ResponseBody>
     @GET("api/orders/get/customer/{customerId}")
     fun getCustomerOrders(@Path("customerId") customerId: Int, @Header("Authorization") token :String): Call<ResponseBody>
+    @POST("api/orders/add-to-reservation")
+    fun addToReservation(
+        @Query("reservationId") reservationId:Int,
+        @Query("orderId") orderId:Int,
+        @Header("Authorization") token :String
+    ): Call<ResponseBody>
 
     //opinion-controller
     @POST("api/opinions/add")
@@ -65,6 +73,13 @@ interface ApiService {
         @Query("numberOfPeople") numberOfPeople:Int,
         @Header("Authorization") token :String
     ): Call<ResponseBody>
+    @POST("/api/reservations")
+    fun createReservation(
+        @Body reservation: MakeReservationCommand,
+        @Header("Authorization") token :String
+    ): Call<ResponseBody>
+    @DELETE("api/reservations/{id}")
+    fun cancelReservation(@Path("id") id:Int, @Header("Authorization") token :String):Call<ResponseBody>
 
 
     //photo-controller

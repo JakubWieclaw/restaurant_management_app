@@ -35,6 +35,7 @@ import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.ui.theme.light_onPrimary
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
+import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
@@ -55,11 +56,37 @@ import org.json.JSONObject
 * */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,navController:NavController) {
+fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,hoursViewModel: HoursViewModel, navController:NavController) {
 
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
-    val paymentSheet = rememberPaymentSheet(::onPaymentSheetResult)
+    var paymentSucceed by remember { mutableStateOf(false) }
+    var orderId by remember { mutableIntStateOf(-1)}
+    val paymentSheet = rememberPaymentSheet {
+            paymentSheetResult ->
+        onPaymentSheetResult(paymentSheetResult, onComplete = {
+            try {
+                val call = RetrofitInstance.api.addToReservation(hoursViewModel.tableReservation!!.id,orderId, "Bearer ${authViewModel.customerData!!.token}")
+                call.enqueue(
+                    CallbackHandler(
+                        onSuccess = { responseBody ->
+                            println("Odpowiedź: $responseBody")
+                        },
+                        onError = { code, errorBody ->
+                            println("Błąd: $code")
+                            println("Treść błędu: $errorBody")
+                        },
+                        onFailure = { throwable ->
+                            println("Request failed: ${throwable.message}")
+                        }
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        })
+    }
+
 
 
     //var initcomplete by remember{mutableStateOf(false)}
@@ -92,6 +119,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
+            ReservationCard(hoursViewModel)
             // MealCartCard list
             LazyColumn(
                 modifier = Modifier.weight(1f)
@@ -230,15 +258,17 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                         paymentIntentClientSecret = responseJson.getString("paymentIntentClientSecret")
                         println(paymentIntentClientSecret)
                         val publishableKey = "pk_test_51Q4Qqx6w25OikflfELAfyRffrHpVJKl52TXAThc0QPyBccecIMGSZWK6No7HI0bZEkN8rHGgmkYFrSXbAiHL6AZ000pFpLF7Rz"
-
+                        orderId = responseJson.getInt("id")
                         PaymentConfiguration.init(context, publishableKey)
                         paymentIntentClientSecret?.let { presentPaymentSheet(paymentSheet, it) }
                     },
                     onError = { code, errorBody ->
+                        orderId=-1
                         println("Błąd: $code")
                         println("Treść błędu: $errorBody")
                     },
                     onFailure = { throwable ->
+                        orderId=-1
                         println("Request failed: ${throwable.message}")
                     }
                 )
@@ -253,7 +283,24 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
         }
     }
 
+
 }
+
+@Composable
+fun ReservationCard(hoursViewModel: HoursViewModel) {
+    if(hoursViewModel.tableReservation!=null){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+            Text(text = hoursViewModel.tableReservation!!.day)
+            Text(text = "${hoursViewModel.tableReservation!!.startTime} - ${hoursViewModel.tableReservation!!.endTime}")
+            Text(text = "Osoby: ${hoursViewModel.tableReservation!!.people}")
+        }
+    }else{
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
+            Text(text = "Zamówienie bez rezerwacji")
+        }
+    }
+}
+
 @Composable
 fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
     Row(
@@ -287,7 +334,9 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineSco
             Text(text = stringResource(id = R.string.mealeditheader) +" "+ tmeal.name,style = Typography.titleSmall , modifier = Modifier.padding(bottom = 16.dp))
             tmeal.ingredients.forEach { ingredient ->
                 val isRemoved = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
-                Row(modifier = Modifier.fillMaxWidth().padding(vertical=10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, style= Typography.labelMedium)
                     Row(){
                         IconButton(
@@ -334,7 +383,7 @@ private fun presentPaymentSheet(
     )
 }
 
-private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
+private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult, onComplete:() -> Unit) {
     when(paymentSheetResult) {
         is PaymentSheetResult.Canceled -> {
             println("Canceled")
@@ -345,6 +394,7 @@ private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         is PaymentSheetResult.Completed -> {
             // Display for example, an order confirmation screen
             println("Completed")
+            onComplete()
         }
     }
 }

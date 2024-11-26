@@ -1,8 +1,8 @@
 package com.example.restaurantmanagementapp.apithings.schemasclasses
 
-class LocalTime (
-    val hour: String,
-    val minute: String,
-    val second: String,
-    val nano: String,
+data class LocalTime (
+    val hour: Int,
+    val minute: Int,
+    val second: Int,
+    val nano: Int,
 )

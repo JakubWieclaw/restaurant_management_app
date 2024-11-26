@@ -5,6 +5,7 @@ import androidx.activity.contextaware.OnContextAvailableListener
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,12 +60,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
+import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.UserPanelScreen.ExposedDropdownMenuBox
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.LocalTime
+import com.example.restaurantmanagementapp.apithings.schemasclasses.TableReservation
 import com.example.restaurantmanagementapp.classes.Table
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
@@ -96,43 +100,104 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
 //            Text(selectedTime2)
 //            Text(selectedSits)
 
-        if(hoursViewModel.localTimes!=null) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .weight(1f)
-            ) {
-                items(hoursViewModel.localTimes!!.chunked(2)) { rowItems ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        // Dla każdego elementu w parze tworzymy kolumnę
-                        rowItems.forEachIndexed { index, time ->
-                            val actualIndex = hoursViewModel.localTimes!!.indexOf(time)
-                            TableCart(
-                                time = time,
-                                selectedSits = selectedSits,
-                                index = actualIndex,
-                                isChoosen = choosenCard == actualIndex.toString(),
-                                onChoose = { nr -> choosenCard = nr },
-                                modifier = Modifier.weight(0.5f)
-                            )
-                        }
+        if(hoursViewModel.tableReservation!=null){
+            TableReservationCard(hoursViewModel.tableReservation!!)
+        }else {
+
+
+            if (hoursViewModel.localTimes != null) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .weight(1f)
+                ) {
+                    items(hoursViewModel.localTimes!!.chunked(2)) { rowItems ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // Dla każdego elementu w parze tworzymy kolumnę
+                            rowItems.forEachIndexed { index, localTime ->
+                                val actualIndex = hoursViewModel.localTimes!!.indexOf(localTime)
+                                TableCart(
+                                    time = "${localTime.hour}-${localTime.minute}",
+                                    selectedSits = selectedSits,
+                                    index = actualIndex,
+                                    isChoosen = choosenCard == actualIndex.toString(),
+                                    onChoose = { nr -> choosenCard = nr },
+                                    modifier = Modifier.weight(0.5f)
+                                )
+                            }
 //                        // Jeśli jest tylko jeden element w rzędzie, dodaj pustą przestrzeń jako drugi element
 //                        if (rowItems.size < 2) {
 //                            Spacer(modifier = Modifier.weight(1f))
 //                        }
+                        }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
+            } else {
+                Text("Pusta lista", modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
             }
-        }else{
-            Text("Pusta lista",modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
+        }
+        if(hoursViewModel.tableReservation!=null){
+            Button(
+                onClick = {hoursViewModel.cancelReservation(customerToken = authViewModel.customerData!!.token)},
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp),
+                colors = ButtonDefaults.buttonColors(Color.Red)){
+                Text("Anuluj rezerwację", color = Color.White)
+            }
+        }else {
+            Button(
+                onClick = {
+                    if (hoursViewModel.localTimes != null && authViewModel.customerData != null) {
+                        hoursViewModel.makeReservation(
+                            day = selectedDate,
+                            startTime = hoursViewModel.localTimes!![choosenCard.toInt()],
+                            numberOfPeople = selectedSits.toInt(),
+                            customerId = authViewModel.customerData!!.customerId,
+                            customerToken = authViewModel.customerData!!.token
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                    .padding(bottom = 10.dp)
+            ) {
+                Text("Zarezerwuj")
+            }
         }
     }
 
 }
+
+@Composable
+fun TableReservationCard(tableReservation: TableReservation) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, shape = RoundedCornerShape(16.dp))
+            .border(2.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
+            .padding(16.dp)
+    ){
+        Image(
+            painter =
+            if(tableReservation.people<3) {
+                painterResource(R.drawable.table2) }else{
+                if(tableReservation.people<5){
+                    painterResource(R.drawable.table4)
+                }else{
+                    painterResource(R.drawable.table6)
+                }
+                }, contentDescription = null)
+        Column(){
+            Text(text = tableReservation.day)
+            Text(text = "Liczba osób: ${tableReservation.people}")
+            Text(text="${tableReservation.startTime} - ${tableReservation.endTime}")
+        }
+    }
+
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
