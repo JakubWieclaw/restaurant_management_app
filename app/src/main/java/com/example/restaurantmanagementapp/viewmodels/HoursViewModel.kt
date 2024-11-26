@@ -17,9 +17,9 @@ class HoursViewModel: ViewModel() {
     var isLoading by mutableStateOf(true)
     var errorMessage by mutableStateOf<String?>(null)
 
-    fun fetchAvailableHours(day:String,numberOfPeople:String){
+    fun fetchAvailableHours(day:String,numberOfPeople:String,token:String){
         try {
-            val response = RetrofitInstance.api.getAvailableHoursForDay(day,120,15,numberOfPeople.toInt())
+            val response = RetrofitInstance.api.getAvailableHoursForDay(day,120,15,numberOfPeople.toInt(),"Bearer $token")
             response.enqueue(
                 CallbackHandler(
                     onSuccess = { responseBody ->

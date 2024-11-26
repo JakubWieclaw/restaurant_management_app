@@ -106,7 +106,7 @@ object TestData {
 
     val testUser =
         LoginResponse (
-        token= "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhc2RAYXNkLmFzZCIsImlhdCI6MTczMjU3MzAzNSwiZXhwIjoxNzMyNjA5MDM1fQ.ZHD8JnpHLYhlOknRZ7EerO-2NhksHmD8jh7huGP-RIdNnbd47IxNoU4oYr8PEb8wfoMyRjxb4ElvSA1TWFG4RQ",
+        token= "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhc2RAYXNkLmFzZCIsImlhdCI6MTczMjYyNzg3NiwiZXhwIjoxNzMyNjYzODc2fQ.QM31qKObZa4XXChgcziVOhVI8JDHMD6DYiqQLW6D-KlRkz68jtZsn30q80uITFeXOW7mrs3g-yLJ3XsC3IIlqQ",
         customerId= 1,
         customerName="asd",
         customerSurname="asd",

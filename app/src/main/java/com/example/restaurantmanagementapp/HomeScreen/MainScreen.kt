@@ -1,5 +1,6 @@
 package com.example.restaurantmanagementapp.HomeScreen
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,6 +27,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDirection.Companion.Content
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -44,6 +48,7 @@ import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 
 class MainActivity : ComponentActivity() {
+    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

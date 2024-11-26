@@ -6,9 +6,9 @@ object RetrofitInstance {
     private val retrofit by lazy {
         Retrofit.Builder()
             //Dla emulatorów
-            //.baseUrl("http://10.0.2.2:8080/")
+            .baseUrl("http://10.0.2.2:8080/")
             //dla urządzeń fizyczych
-            .baseUrl("http://127.0.0.1:8080")
+            //.baseUrl("http://127.0.0.1:8080")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

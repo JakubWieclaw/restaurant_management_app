@@ -25,13 +25,14 @@ import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.math.abs
 import kotlin.math.min
 
 @Composable
-fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, navController: NavController) {
+fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel,authViewModel: AuthViewModel, navController: NavController) {
     var totalItems by remember { mutableIntStateOf(3) }
     var completed by remember { mutableIntStateOf(0) }
 
@@ -45,6 +46,9 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
     val context = LocalContext.current
 
     LaunchedEffect(!viewModelsReady) {
+        authViewModel.setContext(context)
+        authViewModel.loginFromSavedData()
+
         if(!viewModelsReady) {
             categoriesViewModel.fetchCategories(onComplete = { completed++ })
             mealsViewModel.fetchMeals(onComplete = { completed++;mealsReady = true })

@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -67,9 +68,9 @@ fun register(name:String,surname:String,email:String,phone:String,password:Strin
     navigateToScreen("meallist",navController)
 }
 
-fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel){
+fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel,checked:Boolean){
     val loginRequest = LoginRequest(email,password)
-    authViewModel.login(loginRequest)
+    authViewModel.login(loginRequest,checked)
     navigateToScreen("meallist",navController)
 }
 
@@ -80,19 +81,20 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
     var emailForgot by remember { mutableStateOf("") }
     val context = LocalContext.current
     val elementsStyle = Typography.bodyMedium
+    var checked by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(12.dp)){
-        Image(
-            painter = painterResource(id = R.drawable.tmpimg),
-            contentDescription = stringResource(id = R.string.logo_image_description),
-            modifier = Modifier
-                .size(140.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally)
-        )
+//        Image(
+//            painter = painterResource(id = R.drawable.tmpimg),
+//            contentDescription = stringResource(id = R.string.logo_image_description),
+//            modifier = Modifier
+//                .size(140.dp)
+//                .clip(RoundedCornerShape(20.dp))
+//                .fillMaxWidth()
+//                .align(Alignment.CenterHorizontally)
+//        )
         Spacer(modifier = Modifier.height(24.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -124,9 +126,15 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isLoginSelected) {
-            LoginFields(navController, authViewModel, elementsStyle)
+            LoginFields(navController, authViewModel, elementsStyle, checked)
         } else {
             RegisterFields(navController, authViewModel, elementsStyle)
+        }
+        if(isLoginSelected){
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp)){
+                Checkbox(checked = checked,onCheckedChange = { checked = it })
+                Text(text = stringResource(id = R.string.dontlogout),style = elementsStyle,modifier = Modifier.align(Alignment.CenterVertically))
+            }
         }
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -142,6 +150,8 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                 end = this.length
             )
         }
+
+
         ClickableText(text=annotatedString, onClick={isForgotSelected=!isForgotSelected}, modifier = Modifier.align(Alignment.CenterHorizontally))
         if(isForgotSelected){
             Row(horizontalArrangement = Arrangement.Center){
@@ -174,11 +184,12 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                 }
             }
         }
+
     }
 }
 
 @Composable
-fun LoginFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle){
+fun LoginFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle, checked:Boolean){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
@@ -206,7 +217,7 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel, eleme
                 .align(Alignment.CenterHorizontally)
                 .height(60.dp)
                 .padding(10.dp),
-            onClick = { login(email, password, navController, authViewModel) }) {
+            onClick = { login(email, password, navController, authViewModel,checked) }) {
             Text(text = stringResource(id = R.string.log_in), style = Typography.labelLarge)
         }
     }

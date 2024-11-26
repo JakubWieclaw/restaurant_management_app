@@ -66,13 +66,14 @@ import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.LocalTime
 import com.example.restaurantmanagementapp.classes.Table
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Calendar
 
 @Composable
-fun TableReservation(hoursViewModel: HoursViewModel) {
+fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewModel) {
 
     var selectedDate by remember { mutableStateOf("1990/1/1") }
     var selectedSits by remember { mutableStateOf("0") }
@@ -87,7 +88,7 @@ fun TableReservation(hoursViewModel: HoursViewModel) {
         FilterOptions(
             onDateChange = { date -> selectedDate = date },
             onSitsChange = { sits -> selectedSits = sits },
-            onSearchClick = { hoursViewModel.fetchAvailableHours(selectedDate,selectedSits)}
+            onSearchClick = { hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token)}
         )
           //Debug
 //            Text(selectedDate)

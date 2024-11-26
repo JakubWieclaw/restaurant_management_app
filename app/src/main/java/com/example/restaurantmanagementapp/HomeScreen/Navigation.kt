@@ -54,7 +54,7 @@ fun SetupNavGraph(
             OrderHistory(orderHistoryViewModel = orderHistoryViewModel, mealsViewModel = mealsViewModel)
         }
         composable("tablereservation"){
-            TableReservation(hoursViewModel = hoursViewModel)
+            TableReservation(hoursViewModel = hoursViewModel, authViewModel = authViewModel)
         }
         composable("favourites"){
             FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)
@@ -75,7 +75,7 @@ fun SetupNavGraph(
 
 
         composable("splashscreen"){
-            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel ,navController = navController)
+            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel ,navController = navController)
         }
 
         composable("paymentconfirm"){

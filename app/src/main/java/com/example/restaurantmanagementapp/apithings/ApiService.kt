@@ -62,7 +62,8 @@ interface ApiService {
         @Path("day") day:String,
         @Query("reservationDuration") reservationDuration:Int,
         @Query("minutesToAdd") minutesToAdd:Int,
-        @Query("numberOfPeople") numberOfPeople:Int
+        @Query("numberOfPeople") numberOfPeople:Int,
+        @Header("Authorization") token :String
     ): Call<ResponseBody>
 
 
