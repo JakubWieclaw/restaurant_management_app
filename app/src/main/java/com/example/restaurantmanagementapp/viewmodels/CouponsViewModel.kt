@@ -64,4 +64,48 @@ class CouponsViewModel: ViewModel() {
         selectedCoupon = tcoupon
     }
 
+    fun validateCoupon(customerToken:String,onComplete:(Boolean)->Unit){
+        if(selectedCoupon!=null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                println("Sprawdzam kupon:")
+                try {
+                    val response = RetrofitInstance.api.getCouponValidate(
+                        selectedCoupon!!.code,
+                        selectedCoupon!!.customer.id,
+                        selectedCoupon!!.meal.id,
+                        "Bearer $customerToken"
+                    )
+                    response.enqueue(
+                        CallbackHandler(
+                            onSuccess = { responseBody ->
+                                try {
+                                    val gson = Gson()
+                                    val objectType = object : TypeToken<Boolean>() {}.type
+                                    val result: Boolean = gson.fromJson(responseBody, objectType)
+                                    onComplete(result)
+                                } catch (e: Exception) {
+                                    errorMessage = "Error: ${e.message}"
+                                    println("\t* Parsing error: ${e.message}")
+                                    coupons = emptyList()
+                                }
+                            },
+                            onError = { code, errorBody ->
+                                println("\t* Błąd: $code")
+                                println("\t* Treść błędu: $errorBody")
+                            },
+                            onFailure = { throwable ->
+                                println("\t* Request failed: ${throwable.message}")
+                            }
+                        )
+                    )
+                } catch (e: Exception) {
+                    errorMessage = "\t* Error: ${e.message}"
+                    println(errorMessage)
+                }
+            }
+        }else{
+            onComplete(false)
+        }
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.restaurantmanagementapp.CartScreen
 
 import android.app.Activity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -87,6 +88,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
         })
     }
 
+    var promoCodeValid by remember{ mutableStateOf(true) }
 
 
     //var initcomplete by remember{mutableStateOf(false)}
@@ -136,27 +138,29 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
             // Promo code section
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
+                    .border(color = if(promoCodeValid) Color.Transparent else Color.Red, width = 1.5.dp,shape=RoundedCornerShape(16.dp))
                     .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 BasicTextField(
                     value = promoCode,
-                    onValueChange = {promoCode = it; selectedCoupon = null },
+                    onValueChange = {promoCode = it; selectedCoupon = null;promoCodeValid=true },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp, end = 8.dp)
                         .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
-                    textStyle = TextStyle(fontSize = 18.sp)
+                    textStyle = TextStyle(fontSize = 18.sp, color = if(promoCodeValid) Color.Black else Color.Red)
                 )
                 Button(
                     onClick = {
                         couponsViewModel.selectCoupon(promoCode)
+                        couponsViewModel.validateCoupon(customerToken = authViewModel.customerData!!.token,onComplete={result->promoCodeValid = result})
                     },
                     modifier = Modifier
                         .background(color = Color.Yellow)

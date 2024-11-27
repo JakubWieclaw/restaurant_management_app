@@ -51,9 +51,8 @@ interface ApiService {
     //coupon-controller
     @GET("api/coupons/customer/{customerId}")
     fun getCustomerCoupons(@Path("customerId") customerId:Int, @Header("Authorization") token :String): Call<ResponseBody>
-    //Niepotrzebne? chyba 'active' z kuponu wystarczy
-//    @GET("api/coupons/validate")
-//    fun getCouponValidate(): Call<ResponseBody>
+    @GET("api/coupons/validate")
+    fun getCouponValidate(@Query("code")code:String,@Query("customerId")customerId:Int,@Query("mealId")mealId:Int, @Header("Authorization") token :String): Call<ResponseBody>
 
     //categpry-controller
     @GET("api/categories/all")
