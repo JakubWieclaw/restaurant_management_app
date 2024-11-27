@@ -43,11 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
+import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
-data class SettingItemData(val label: String, val value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
+data class SettingItemData(val label: String, var value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
 
 
 
@@ -64,12 +65,13 @@ val settingItems3 = listOf(
 @Composable
 fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHistoryViewModel,authViewModel: AuthViewModel) {
     val customer = authViewModel.customerData!!
-    val settingItems = listOf(
-        SettingItemData(label = "Name", value = customer.customerName),
-        SettingItemData(label = "Surname", value = customer.customerSurname),
-        SettingItemData(label = "Email", value = customer.customerEmail),
-        SettingItemData(label = "Phone", value = "None",editable=true)
-    )
+
+    val settingItems by remember {mutableStateOf(listOf(
+        SettingItemData(label = "Imię", value = customer.customerName,editable=true),
+        SettingItemData(label = "Nazwisko", value = customer.customerSurname,editable=true),
+        SettingItemData(label = "Email", value = customer.customerEmail,editable=false),
+        SettingItemData(label = "Telefon", value =  if(authViewModel.phone!=null) authViewModel.phone!! else "123456789",editable=false)
+    ))}
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +91,18 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
             Text(text=  "Moje zamówienia")
         }
         Column(){
-            SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false)
+            SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false,
+                onValueChange={ index,newValue->
+                    settingItems[index].value = newValue
+                    val registerRequest = RegisterRequest(
+                        name = settingItems[0].value,
+                        surname = settingItems[1].value,
+                        email = settingItems[2].value,
+                        phone = settingItems[3].value,
+                        password = "",
+                    )
+                    authViewModel.updateCustomer(registerRequest)
+                })
             //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             //SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
         }
@@ -99,7 +112,7 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
 
 
 @Composable
-fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boolean, dropDownList: List<String>) {
+fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boolean, dropDownList: List<String>,onValueChange: (String) -> Unit) {
     var editMode by remember { mutableStateOf(false) }
     var itemValue by remember { mutableStateOf(value) }
     var itemValueOld by remember { mutableStateOf(value) }
@@ -120,7 +133,7 @@ fun SettingItem(label: String, value: String, editable: Boolean, isDropDown: Boo
                     modifier = Modifier.align(Alignment.CenterVertically),
                     singleLine = true,
                     leadingIcon ={
-                        IconButton(onClick = { editMode=false;itemValueOld = itemValue}) {
+                        IconButton(onClick = { editMode=false;itemValueOld = itemValue;onValueChange(itemValue)}) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "Clear text icon",
@@ -162,13 +175,12 @@ fun SettingList(
     label: String,
     icon: Int,
     settingItemsData: List<SettingItemData>,
-    foldable: Boolean = false
+    foldable: Boolean = false,
+    onValueChange: (Int,String) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(if (isExpanded) 180f else 0f, label = "")
     //val rotationAngle = if (isExpanded) 180f else 0f
-
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,8 +220,8 @@ fun SettingList(
                     .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
             ) {
                 Divider(modifier = Modifier.height(2.dp), color = Color.Black)
-                settingItemsData.forEach { item ->
-                    SettingItem(label = item.label, value = item.value, editable = item.editable, isDropDown = item.isDropDown, dropDownList = item.dropDownList)
+                settingItemsData.forEachIndexed {index, item ->
+                    SettingItem(label = item.label, value = item.value, editable = item.editable, isDropDown = item.isDropDown, dropDownList = item.dropDownList, onValueChange = {newValue->onValueChange(index,newValue)})
                 }
             }
         }

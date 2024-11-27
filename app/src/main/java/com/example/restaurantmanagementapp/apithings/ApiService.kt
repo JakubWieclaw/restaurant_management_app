@@ -13,6 +13,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -40,6 +41,12 @@ interface ApiService {
     //meal-controller
     @GET("api/meals/all")
     fun getMeals(): Call<ResponseBody>
+
+    //customer-controller
+    @GET("api/customer/get/{id}")
+    fun getCustomerData(@Path("id") id:Int, @Header("Authorization") token :String):Call<ResponseBody>
+    @PUT("api/customer/update/{id}")
+    fun updateCustomerData(@Path("id") id:Int, @Body request: RegisterRequest, @Header("Authorization") token :String):Call<ResponseBody>
 
     //coupon-controller
     @GET("api/coupons/customer/{customerId}")
@@ -86,7 +93,5 @@ interface ApiService {
     @GET("api/photos/download")
     fun getPhoto(@Query("filename") filename:String): Call<ResponseBody>
 
-    //customer-controller
-    @GET("api/customer/get/{id}")
-    fun getCustomerData(@Path("id") id:Int):Call<ResponseBody>
+
 }

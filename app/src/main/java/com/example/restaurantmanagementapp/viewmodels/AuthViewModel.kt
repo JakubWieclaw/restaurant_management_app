@@ -22,12 +22,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewModelScope
+import com.example.restaurantmanagementapp.apithings.schemasclasses.CustomerServer
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class AuthViewModel() : ViewModel() {
     var customerData by mutableStateOf<LoginResponse?>(null)
+    var phone by mutableStateOf<String?>(null)
     var isLogged: Boolean = false
     private val Context.dataStore by preferencesDataStore(name = "user_preferences")
     private val USERNAME_KEY = stringPreferencesKey("username")
@@ -74,10 +76,38 @@ class AuthViewModel() : ViewModel() {
                                 }
                             }
                         }
+                        getCustomerData(response.customerId,response.token)
                     } catch (e: Exception) {
                         println("Parsing error: ${e.message}")
                     }
-                            },
+                },
+                onError = {code, errorBody ->
+                    println("Błąd: $code")
+                    println("Treść błędu: $errorBody")
+                },
+                onFailure = {throwable ->
+                    println("Request failed: ${throwable.message}")
+                }
+            )
+        )
+    }
+
+    //Only for phone number :P
+    fun getCustomerData(customerId:Int, customerToken:String){
+        val call = RetrofitInstance.api.getCustomerData(customerId,"Bearer $customerToken")
+        call.enqueue(
+            CallbackHandler(
+                onSuccess = { responseBody ->
+                    println("Odpowiedź: $responseBody")
+                    try {
+                        val gson = Gson()
+                        val responseType = object : TypeToken<CustomerServer>() {}.type
+                        val response: CustomerServer = gson.fromJson(responseBody, responseType)
+                        phone = response.phone
+                    } catch (e: Exception) {
+                        println("Parsing error: ${e.message}")
+                    }
+                },
                 onError = {code, errorBody ->
                     println("Błąd: $code")
                     println("Treść błędu: $errorBody")
@@ -97,6 +127,36 @@ class AuthViewModel() : ViewModel() {
         }
         customerData = null
         isLogged = false
+    }
+
+    fun updateCustomer(registerRequest: RegisterRequest){
+        val oldCustomerData = customerData
+        runBlocking {
+            val preferences = context.dataStore.data.first()
+            //TODO: Może wystąpić problem dla użytkownika nie zapamiętującego danych logowania, a próbującego zmienić swoje dane
+            registerRequest.password = preferences[PASSWORD_KEY]!!
+        }
+        val call = RetrofitInstance.api.updateCustomerData(customerData!!.customerId,registerRequest,"Bearer ${customerData!!.token}")
+        call.enqueue(
+            CallbackHandler(
+                onSuccess = { responseBody ->
+                    println("Odpowiedź: $responseBody")
+                    customerData!!.customerName = registerRequest.name
+                    customerData!!.customerSurname = registerRequest.surname
+                    customerData!!.customerEmail = registerRequest.email
+                    phone = registerRequest.phone
+                },
+                onError = {code, errorBody ->
+                    println("Błąd: $code")
+                    println("Treść błędu: $errorBody")
+                    customerData = oldCustomerData
+                },
+                onFailure = {throwable ->
+                    println("Request failed: ${throwable.message}")
+                    customerData = oldCustomerData
+                }
+            )
+        )
     }
 
     fun register(registerRequest: RegisterRequest){
