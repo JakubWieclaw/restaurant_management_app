@@ -38,6 +38,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -105,6 +107,10 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
                 })
             //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             //SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
+        }
+        Row() {
+            Text("Masz uwagi, sugestie, pytania?")
+            Text("Wciśnij tutaj.",color = Color.Blue, textDecoration = TextDecoration.Underline, modifier = Modifier.clickable { navigateToScreen("suggestionform",navController)  })
         }
     }
 }

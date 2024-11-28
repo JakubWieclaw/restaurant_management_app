@@ -14,6 +14,7 @@ import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
 import com.example.restaurantmanagementapp.TableReservationScreen.TableReservation
 import com.example.restaurantmanagementapp.UserPanelScreen.OrderHistory
 import com.example.restaurantmanagementapp.UserPanelScreen.SettingsScreen
+import com.example.restaurantmanagementapp.UserPanelScreen.SuggestionForm
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
@@ -76,6 +77,10 @@ fun SetupNavGraph(
 
         composable("splashscreen"){
             SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel ,navController = navController)
+        }
+
+        composable("suggestionform"){
+            SuggestionForm(authViewModel=authViewModel,navController=navController)
         }
 
         composable("paymentconfirm"){

@@ -1,6 +1,7 @@
 package com.example.restaurantmanagementapp.apithings
 import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
 import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.ContactFormCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.MakeReservationCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OpinionAddCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
@@ -93,4 +94,7 @@ interface ApiService {
     fun getPhoto(@Query("filename") filename:String): Call<ResponseBody>
 
 
+    //contact-form-controller
+    @POST("/api/contact-form/send")
+    fun createContactForm(@Body contactForm: ContactFormCommand): Call<ResponseBody>
 }
