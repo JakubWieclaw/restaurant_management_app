@@ -125,7 +125,8 @@ class AuthViewModel() : ViewModel() {
                 preferences.clear()
             }
         }
-        customerData = null
+        //TODO: Poprawić, bo crashuje gdy customerData staje się null a gdzieś jest wymagane(np. w ustawieniach) jako !!
+        //customerData = null
         isLogged = false
     }
 

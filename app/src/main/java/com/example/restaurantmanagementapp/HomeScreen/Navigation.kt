@@ -8,6 +8,7 @@ import com.example.restaurantmanagementapp.LoginScreen.LoginScreen
 import com.example.restaurantmanagementapp.CartScreen.CartScreen
 import com.example.restaurantmanagementapp.CartScreen.PaymentConfirm
 import com.example.restaurantmanagementapp.FavouriteMealsScreen.FavouriteMeals
+import com.example.restaurantmanagementapp.LoginScreen.PasswordResetScreen
 import com.example.restaurantmanagementapp.MealListScreen.MealList
 import com.example.restaurantmanagementapp.MealDetailsScreen.MealScreen
 import com.example.restaurantmanagementapp.RestaurantInfoScreen.RestaurantInfo
@@ -82,7 +83,9 @@ fun SetupNavGraph(
         composable("suggestionform"){
             SuggestionForm(authViewModel=authViewModel,navController=navController)
         }
-
+        composable("passwordreset"){
+            PasswordResetScreen(navController)
+        }
         composable("paymentconfirm"){
             PaymentConfirm(orderViewModel=orderViewModel,authViewModel=authViewModel,navController = navController)
         }

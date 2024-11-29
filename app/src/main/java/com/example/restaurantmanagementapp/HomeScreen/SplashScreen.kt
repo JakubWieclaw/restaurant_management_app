@@ -137,6 +137,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
         //mealsViewModel.meals = TestData.mealListSample
 
         navigateToScreen("restaurantinfo", navController)
+        //navigateToScreen("passwordreset",navController)
     }
 
     // UI

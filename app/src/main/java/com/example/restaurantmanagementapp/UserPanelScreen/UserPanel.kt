@@ -78,7 +78,7 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LoyaltyHeader(points = 10)
+        LoyaltyHeader(points = 10,authViewModel = authViewModel,navController=navController)
         Button(
             onClick={
             orderHistoryViewModel.fetchOrderHistory(customer.customerId,customer.token, onComplete = {})
@@ -279,7 +279,7 @@ fun ExposedDropdownMenuBox(itemList:List<String>, onValueChange: (String)->Unit,
 }
 
 @Composable
-fun LoyaltyHeader(points: Int) {
+fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -312,11 +312,15 @@ fun LoyaltyHeader(points: Int) {
 
             // Right line
             //TODO: uncomment after loyalty points functionality will be added
-//            Column(modifier = Modifier.weight(1f)){
-//                Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
-//                Divider(thickness = 2.dp)
-//                Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
-//            }
+            Column(modifier = Modifier.weight(1f)){
+                Button(modifier = Modifier.align(Alignment.CenterHorizontally),onClick = {authViewModel.logout();navigateToScreen("loginscreen", navController)}){
+                    Text(text = "Wyloguj się")
+                }
+
+                //Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                //Divider(thickness = 2.dp)
+                //Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
         }
 
 

@@ -3,6 +3,7 @@ package com.example.restaurantmanagementapp.LoginScreen
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -138,53 +139,12 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        val annotatedString = buildAnnotatedString {
-            append(stringResource(id = R.string.forgotpassword))
-            addStyle(
-                style = SpanStyle(
-                    color = Color.Blue, // Kolor linku
-                    textDecoration = TextDecoration.Underline, // Podkreślenie
-                    fontSize = 20.sp
-                ),
-                start = 0,
-                end = this.length
-            )
-        }
 
-
-        ClickableText(text=annotatedString, onClick={isForgotSelected=!isForgotSelected}, modifier = Modifier.align(Alignment.CenterHorizontally))
-        if(isForgotSelected){
-            Row(horizontalArrangement = Arrangement.Center){
-                TextField(
-                    modifier = Modifier.weight(0.5f),
-                    value = emailForgot,
-                    onValueChange = {emailForgot = it},
-                    label = {Text(text = stringResource(id = R.string.email), style = elementsStyle)},
-                    maxLines = 2,
-                )
-                Button(onClick = {
-                    val call = RetrofitInstance.api.forgotPassword(email = emailForgot)
-                    call.enqueue(
-                        CallbackHandler(
-                            onSuccess = { _ ->
-                                isForgotSelected=false
-                                Toast.makeText(context,"Wysłano maila",Toast.LENGTH_LONG).show()
-                            },
-                            onError = { _, _->
-                                Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
-                            },
-                            onFailure = { _ ->
-                                Toast.makeText(context,"Błąd, nie udało się wysłać maila",Toast.LENGTH_LONG).show()
-                            }
-                        )
-                    )
-
-                }){
-                    Text(text = stringResource(id = R.string.reset), style = elementsStyle)
-                }
-            }
-        }
-
+        Text(text = "Zapomniałem hasła",
+            modifier = Modifier.clickable { navigateToScreen("passwordreset",navController) },
+            textDecoration = TextDecoration.Underline,
+            color = Color.Blue
+        )
     }
 }
 

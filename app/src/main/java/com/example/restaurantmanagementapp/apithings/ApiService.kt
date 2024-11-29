@@ -55,6 +55,8 @@ interface ApiService {
     @GET("api/coupons/validate")
     fun getCouponValidate(@Query("code")code:String,@Query("customerId")customerId:Int,@Query("mealId")mealId:Int, @Header("Authorization") token :String): Call<ResponseBody>
 
+
+
     //categpry-controller
     @GET("api/categories/all")
     fun getCategories(): Call<ResponseBody>
@@ -62,14 +64,15 @@ interface ApiService {
     //auth-controller
     @POST("auth/register")
     fun register(@Body request: RegisterRequest): Call<ResponseBody>
-//    @GET("auth/password-reset")
-//    fun getResetPassword(): Call<ResponseBody>
-//    @POST("/auth/password-reset")
-//    fun postResetPassword(@Body request: ResetPasswordRequest): Call<ResponseBody>
+    @GET("auth/password-reset")
+    fun getResetPassword(@Query("token") token:String ): Call<ResponseBody>
+    @POST("auth/password-reset")
+    fun postResetPassword(@Query("token") token:String, @Query("newPassword") newPassword:String): Call<ResponseBody>
+
     @POST("auth/login")
     fun login(@Body request: LoginRequest): Call<ResponseBody>
     @POST("/auth/forgot-password")
-    fun forgotPassword(@Body email: String): Call<ResponseBody>
+    fun forgotPassword(@Query("email") email: String): Call<ResponseBody>
 
     //table-reservation-controller
     @GET("/api/reservations/available-hours/{day}")
