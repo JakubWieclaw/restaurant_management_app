@@ -11,12 +11,14 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -98,22 +100,19 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
 
     val stripeServerMockInstance = remember { stripeServerMock() }
 
-    val sheetState = rememberBottomSheetScaffoldState(bottomSheetState = SheetState(initialValue = SheetValue.Hidden, skipPartiallyExpanded = false))
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true )
+    var showSheet by remember{ mutableStateOf(false)}
     val scope = rememberCoroutineScope()
     var selectedMealIdx by remember { mutableStateOf<Int?>(null) }
 
-    BottomSheetScaffold(
-        scaffoldState = sheetState,
-        sheetContent = {
-            MealEditSheet(orderViewModel,selectedMealIdx,scope,sheetState)
-        },
-        sheetPeekHeight = 0.dp,
-        containerColor = Color.Transparent
-    ) {
 
+    Scaffold(
+        containerColor = Color.Transparent
+    ) {innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .padding(12.dp)
         ) {
             Text(text = stringResource(id = R.string.cart_heading), style = Typography.titleLarge )
@@ -131,7 +130,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                         orderViewModel = orderViewModel,
                         couponsViewModel = couponsViewModel,
                         index = index,
-                        onEditClick = {selectedMealIdx = index;scope.launch { sheetState.bottomSheetState.expand()};println("Klik!")},
+                        onEditClick = {selectedMealIdx = index;showSheet=true;println("Klik!")},
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -143,7 +142,11 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .border(color = if(promoCodeValid) Color.Transparent else Color.Red, width = 1.5.dp,shape=RoundedCornerShape(16.dp))
+                    .border(
+                        color = if (promoCodeValid) Color.Transparent else Color.Red,
+                        width = 1.5.dp,
+                        shape = RoundedCornerShape(16.dp)
+                    )
                     .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -285,6 +288,15 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 Text(text = stringResource(id = R.string.gotopayment), style = Typography.labelLarge, color = Color.White)
             }
         }
+
+        if(showSheet){
+            MealEditSheet(
+                orderViewModel = orderViewModel,
+                index = selectedMealIdx,
+                onDismissRequest = { showSheet = false },
+                sheetState = sheetState
+            )
+        }
     }
 
 
@@ -326,47 +338,71 @@ fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?, scope:CoroutineScope, sheetState: BottomSheetScaffoldState ){
+fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?,onDismissRequest:()->Unit,sheetState:SheetState ){
     if(index!=null && index < orderViewModel.orderItems.size) {
-        val tmeal = orderViewModel.orderItems[index]
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = stringResource(id = R.string.mealeditheader) +" "+ tmeal.name,style = Typography.titleSmall , modifier = Modifier.padding(bottom = 16.dp))
-            tmeal.ingredients.forEach { ingredient ->
-                val isRemoved = tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
-                Row(modifier = Modifier
+        ModalBottomSheet(
+            onDismissRequest = {onDismissRequest()},
+            sheetState = sheetState
+            ) {
+            val tmeal = orderViewModel.orderItems[index]
+            Column(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "- $ingredient", textDecoration = if(isRemoved) TextDecoration.LineThrough else TextDecoration.None, style= Typography.labelMedium)
-                    Row(){
-                        IconButton(
-                            onClick = { orderViewModel.addIngredient(index, ingredient) },
-                            enabled = isRemoved,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(
-                                    color = if (isRemoved) Color.Green else Color.Gray,
-                                    shape = RoundedCornerShape(50)
-                                )
-                        ) {
-                            Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                        }
-                        Spacer(modifier = Modifier.width(20.dp))
-                        IconButton(
-                            onClick = { orderViewModel.removeIngredient(index, ingredient) },
-                            enabled = !isRemoved,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(
-                                    color = if (!isRemoved) Color.Red else Color.Gray,
-                                    shape = RoundedCornerShape(50)
-                                )
-                        ) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    .padding(16.dp).padding(bottom=40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(modifier = Modifier.fillMaxWidth()){
+                    Text(
+                        text = stringResource(id = R.string.mealeditheader) + " " + tmeal.name,
+                        style = Typography.titleSmall,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    IconButton(onClick={onDismissRequest()}){
+                        Icon(imageVector=Icons.Default.Close, contentDescription = null)
+                    }
+                }
+
+                tmeal.removableIngredients.forEach { ingredient ->
+                    val isRemoved =
+                        tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "- $ingredient",
+                            textDecoration = if (isRemoved) TextDecoration.LineThrough else TextDecoration.None,
+                            style = Typography.labelMedium
+                        )
+                        Row() {
+                            IconButton(
+                                onClick = { orderViewModel.addIngredient(index, ingredient) },
+                                enabled = isRemoved,
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = if (isRemoved) Color.Green else Color.Gray,
+                                        shape = RoundedCornerShape(50)
+                                    )
+                            ) {
+                                Icon(imageVector = Icons.Default.Check, contentDescription = null)
+                            }
+                            Spacer(modifier = Modifier.width(20.dp))
+                            IconButton(
+                                onClick = { orderViewModel.removeIngredient(index, ingredient) },
+                                enabled = !isRemoved,
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = if (!isRemoved) Color.Red else Color.Gray,
+                                        shape = RoundedCornerShape(50)
+                                    )
+                            ) {
+                                Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                            }
                         }
                     }
                 }

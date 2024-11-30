@@ -6,6 +6,7 @@ open class MealServer(
     open val price: Double,
     open val photographUrl: String,
     open val ingredients: List<String>,
+    open val removableIngredients: List<String>?,
     open val weightOrVolume: Double,
     open val unitType: String,
     open val categoryId: Int,

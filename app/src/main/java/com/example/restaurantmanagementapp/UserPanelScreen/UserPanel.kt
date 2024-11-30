@@ -322,10 +322,6 @@ fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavContr
                 //Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
             }
         }
-
-
-
-
     }
 }
 

@@ -6,7 +6,20 @@
         <State />
       </entry>
       <entry key="MainActivity (1)">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\Adrian\.android\avd\Pixel_6_API_28.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-11-30T16:26:18.402029500Z" />
+        </State>
       </entry>
       <entry key="PreviewSettingList">
         <State />

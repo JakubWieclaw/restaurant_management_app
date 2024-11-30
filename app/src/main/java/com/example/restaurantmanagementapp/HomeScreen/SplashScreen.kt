@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
+import com.example.restaurantmanagementapp.TestData.mealListSample
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.AvgRating
@@ -135,7 +136,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
     if (abs(progress - 1) < 0.001) {
         //categoriesViewModel.categoriesState = TestData.categories
         //mealsViewModel.meals = TestData.mealListSample
-
+        //mealsViewModel.meals = mealListSample
         navigateToScreen("restaurantinfo", navController)
         //navigateToScreen("passwordreset",navController)
     }
