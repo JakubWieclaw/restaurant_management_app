@@ -132,7 +132,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 shape = RoundedCornerShape(bottomStart = 30.dp),
                 onClick = { navigateToScreen("meal/${meal.id}",navController)},
                 modifier = Modifier
-                    .padding(start = 0.dp, end = 1.dp, top = 0.dp, bottom = 0.dp)
+                    .padding(start = 2.dp, end = 1.dp, top = 0.dp, bottom = 0.dp)
                     .weight(0.35f),
             ) {
                 Text(text= stringResource(R.string.details),style= Typography.labelLarge,maxLines = 1)
@@ -141,7 +141,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                 shape = RoundedCornerShape(bottomEnd = 30.dp),
                 onClick = {onAddToOrder(meal)},
                 modifier = Modifier
-                    .padding(start = 1.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
+                    .padding(start = 1.dp, end = 2.dp, top = 0.dp, bottom = 0.dp)
                     .weight(0.65f)
             ) {
                 Text(text= stringResource(R.string.add_to_order2),style= Typography.labelLarge, maxLines = 1)

@@ -8,6 +8,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,12 +23,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -207,19 +213,10 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 //modifier = Modifier.padding(all = 12.dp)
             ) {
-                Button(
+                IconButton(
                     onClick = { if (quantity > 1) quantity-- },
-                    border = BorderStroke(1.dp, Color.Black),
-                    //shape = RoundedCornerShape(50), // = 50% percent
-                    shape = CircleShape,
-                    modifier = Modifier.size(50.dp)
                 ) {
-                    Text(
-                        text = "-",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
+                    Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null,modifier = Modifier.size(60.dp).background(color = colorScheme.background, shape = RoundedCornerShape(50)),tint = colorScheme.primary)
                 }
 
                 BasicTextField(
@@ -244,32 +241,25 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
                         .padding(8.dp)
                 )
 
-                Button(
+                IconButton(
                     onClick = { if (quantity < 999) quantity++ },
-                    border = BorderStroke(1.dp, Color.Black),
                     //shape = RoundedCornerShape(50), // = 50% percent
-                    shape = CircleShape,
-                    modifier = Modifier.size(50.dp)
+                    //shape = CircleShape,
                 ) {
-                    Text(
-                        text = "+",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
+                    Icon(imageVector = Icons.Default.KeyboardArrowUp, contentDescription = null,modifier = Modifier.size(60.dp).background(color = colorScheme.background, shape = RoundedCornerShape(50)),tint = colorScheme.primary)
                 }
             }
             if(favMealsViewModel.findMeal(meal)){
                 IconButton(onClick = {
                     favMealsViewModel.removeFromFav(meal)
                 }) {
-                    Icon(imageVector =  Icons.Default.Favorite ,contentDescription = null)
+                    Icon(imageVector =  Icons.Default.Favorite ,contentDescription = null,modifier = Modifier.size(60.dp).background(color = Color.Black, shape = RoundedCornerShape(50)),tint = colorScheme.primary)
                 }
             }else{
                 IconButton(onClick = {
                     favMealsViewModel.addToFav(meal)
                 }) {
-                    Icon(imageVector =  Icons.Default.FavoriteBorder ,contentDescription = null)
+                    Icon(imageVector =  Icons.Default.FavoriteBorder ,contentDescription = null,modifier = Modifier.size(60.dp).background(color = colorScheme.background, shape = RoundedCornerShape(50)),tint = colorScheme.primary)
                 }
             }
 
@@ -278,7 +268,7 @@ fun MealScreenFooter(orderViewModel: OrderViewModel, meal: Meal, navController: 
         Button(modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
-            .padding(start = 12.dp, end = 12.dp),
+            .padding(start = 12.dp, end = 12.dp, bottom=10.dp),
                 onClick = {for(i in 1..quantity){orderViewModel.addToOrder(meal)} },
             ) {
                 Text(text = stringResource(id = R.string.add_to_order) +" ${round(quantity * meal.price * 100) / 100}"+ stringResource(id=R.string.currency)+") ", style = Typography.labelMedium)

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -94,18 +96,22 @@ fun MealList(
             Header(navController = navController)
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
+            Spacer(modifier = Modifier.height(10.dp))
             if(categories!=null) {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
-                    categories.forEachIndexed { index, category ->
-                        Tab(selected = pagerState.currentPage == index, onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                                searchText = ""
+                for(i in 0..(categories.size/4)){
+                    TabRow(
+                        selectedTabIndex = if(pagerState.currentPage in 4*i..4*i+3) pagerState.currentPage%4 else 5
+                    ) {
+                        categories.forEachIndexed { index, category ->
+                            if(index in 4*i..4*i+3){
+                                Tab(selected = pagerState.currentPage == index, onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                        searchText = ""
+                                    }
+                                }, text = { Text(text = category.name, style = Typography.labelMedium, softWrap = false) })
                             }
-                        }, text = { Text(text = category.name, style = Typography.labelMedium) })
+                        }
                     }
                 }
             }
