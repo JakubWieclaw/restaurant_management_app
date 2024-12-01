@@ -69,7 +69,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             paymentSheetResult ->
         onPaymentSheetResult(paymentSheetResult, onComplete = {
             try {
-                val call = RetrofitInstance.api.addToReservation(hoursViewModel.tableReservation!!.id,orderId, "Bearer ${authViewModel.customerData!!.token}")
+                val call = RetrofitInstance.api.addToReservation(hoursViewModel.tableReservations[0].id,orderId, "Bearer ${authViewModel.customerData!!.token}")
                 call.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->
@@ -304,11 +304,11 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
 
 @Composable
 fun ReservationCard(hoursViewModel: HoursViewModel) {
-    if(hoursViewModel.tableReservation!=null){
+    if(hoursViewModel.tableReservations.isNotEmpty()){
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-            Text(text = hoursViewModel.tableReservation!!.day)
-            Text(text = "${hoursViewModel.tableReservation!!.startTime} - ${hoursViewModel.tableReservation!!.endTime}")
-            Text(text = "Osoby: ${hoursViewModel.tableReservation!!.people}")
+            Text(text = hoursViewModel.tableReservations[0].day)
+            Text(text = "${hoursViewModel.tableReservations[0].startTime} - ${hoursViewModel.tableReservations[0].endTime}")
+            Text(text = "Osoby: ${hoursViewModel.tableReservations[0].people}")
         }
     }else{
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){

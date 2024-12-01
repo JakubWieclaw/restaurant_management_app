@@ -18,7 +18,7 @@ class HoursViewModel: ViewModel() {
     var localTimes by mutableStateOf<List<LocalTime>?>(null)
     var isLoading by mutableStateOf(true)
     var errorMessage by mutableStateOf<String?>(null)
-    var tableReservation by mutableStateOf<TableReservation?>(null)
+    var tableReservations by mutableStateOf<List<TableReservation>>(emptyList())
 
     fun fetchAvailableHours(day:String,numberOfPeople:String,token:String) {
         try {
@@ -77,11 +77,11 @@ class HoursViewModel: ViewModel() {
                         println("Odpowiedź: $responseBody")
                         try {
                             val gson = Gson()
-                            val tableReservationType = object : TypeToken<TableReservation>() {}.type
-                            tableReservation = gson.fromJson(responseBody, tableReservationType)
+                            val tableReservationsType = object : TypeToken<TableReservation>() {}.type
+                            tableReservations = listOf(gson.fromJson(responseBody, tableReservationsType))
                         } catch (e: Exception) {
                             println("Parsing error: ${e.message}")
-                            tableReservation = null
+                            tableReservations = emptyList()
                             errorMessage = "Error: ${e.message}"
                         }
                     },
@@ -100,20 +100,20 @@ class HoursViewModel: ViewModel() {
     }
 
     fun cancelReservation(customerToken: String){
-        if(tableReservation!=null){
+        if(tableReservations.isNotEmpty()){
             try {
                 println("Bearer $customerToken")
-                val response = RetrofitInstance.api.cancelReservation(tableReservation!!.id,"Bearer $customerToken")
+                val response = RetrofitInstance.api.cancelReservation(tableReservations[0].id,"Bearer $customerToken")
                 response.enqueue(
                     CallbackHandler(
                         onSuccess = { responseBody ->
                             println("Odpowiedź: $responseBody")
-                            tableReservation = null
+                            tableReservations = emptyList()
                         },
                         onError = { code, errorBody ->
                             println("Błąd: $code")
                             println("Treść błędu: $errorBody")
-                            tableReservation = null
+                            tableReservations = emptyList()
                         },
                         onFailure = { throwable ->
                             println("Request failed: ${throwable.message}")
@@ -124,5 +124,39 @@ class HoursViewModel: ViewModel() {
                 errorMessage = "Error: ${e.message}"
             }
         }
+    }
+
+    fun getReservations(customerId: Int,customerToken: String): Boolean {
+        try {
+            println("Bearer $customerToken")
+            val response = RetrofitInstance.api.getReservations(customerId,"Bearer $customerToken")
+            response.enqueue(
+                CallbackHandler(
+                    onSuccess = { responseBody ->
+                        println("Odpowiedź: $responseBody")
+                        try {
+                            val gson = Gson()
+                            val objectType = object : TypeToken<List<TableReservation>>() {}.type
+                            tableReservations = gson.fromJson(responseBody, objectType)
+                        } catch (e: Exception) {
+                            println("Parsing error: ${e.message}")
+                            tableReservations = emptyList()
+                            errorMessage = "Error: ${e.message}"
+                        }
+                    },
+                    onError = { code, errorBody ->
+                        println("Błąd: $code")
+                        println("Treść błędu: $errorBody")
+                        tableReservations = emptyList()
+                    },
+                    onFailure = { throwable ->
+                        println("Request failed: ${throwable.message}")
+                    }
+                )
+            )
+        } catch (e: Exception) {
+            errorMessage = "Error: ${e.message}"
+        }
+        return true
     }
 }

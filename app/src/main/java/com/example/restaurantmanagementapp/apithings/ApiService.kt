@@ -90,7 +90,8 @@ interface ApiService {
     ): Call<ResponseBody>
     @DELETE("api/reservations/{id}")
     fun cancelReservation(@Path("id") id:Int, @Header("Authorization") token :String):Call<ResponseBody>
-
+    @GET("api/reservations/customer/{customerId}")
+    fun getReservations(@Path("customerId") customerId: Int, @Header("Authorization") token :String):Call<ResponseBody>
 
     //photo-controller
     @GET("api/photos/download")

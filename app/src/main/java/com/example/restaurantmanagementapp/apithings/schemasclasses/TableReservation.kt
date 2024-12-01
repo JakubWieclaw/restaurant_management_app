@@ -9,5 +9,5 @@ data class TableReservation(
     val endTime: String,
     val duration: Int,
     val customerId: Int,
-    val orders: Any
+    val orders: List<Order>
 )

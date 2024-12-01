@@ -82,6 +82,13 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
     var selectedDate by remember { mutableStateOf("1990/1/1") }
     var selectedSits by remember { mutableStateOf("0") }
     var choosenCard by remember { mutableStateOf("-1") }
+    var reservationFetched by remember { mutableStateOf(false) }
+
+    LaunchedEffect(!reservationFetched) {
+        if(authViewModel.isLogged){
+            reservationFetched = hoursViewModel.getReservations(authViewModel.customerData!!.customerId,authViewModel.customerData!!.token)
+        }
+    }
 
 
     //val choosenTable = tables.find { table -> table.nr == tablenr }
@@ -100,11 +107,9 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
 //            Text(selectedTime2)
 //            Text(selectedSits)
 
-        if(hoursViewModel.tableReservation!=null){
-            TableReservationCard(hoursViewModel.tableReservation!!)
+        if(hoursViewModel.tableReservations.isNotEmpty()&&reservationFetched){
+            TableReservationCard(hoursViewModel.tableReservations[0])
         }else {
-
-
             if (hoursViewModel.localTimes != null) {
                 LazyColumn(
                     modifier = Modifier
@@ -139,10 +144,12 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
                 Text("Pusta lista", modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
             }
         }
-        if(hoursViewModel.tableReservation!=null){
+        if(hoursViewModel.tableReservations.isNotEmpty()){
             Button(
                 onClick = {hoursViewModel.cancelReservation(customerToken = authViewModel.customerData!!.token)},
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
                     .padding(bottom = 10.dp),
                 colors = ButtonDefaults.buttonColors(Color.Red)){
                 Text("Anuluj rezerwację", color = Color.White)
@@ -160,7 +167,9 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
                         )
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp)
                     .padding(bottom = 10.dp)
             ) {
                 Text("Zarezerwuj")
@@ -220,7 +229,9 @@ fun FilterOptions(
         onDateChange(selectedDate)
     }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 10.dp)){
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 10.dp, end = 10.dp, top = 10.dp)){
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text("Dzień")
@@ -261,7 +272,9 @@ fun FilterOptions(
                 }
 
         }
-            Row(modifier = Modifier.fillMaxWidth().padding(10.dp)){
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)){
                 Button(onClick = onSearchClick,modifier= Modifier.fillMaxWidth()){
                     Text("Szukaj ",style = Typography.labelLarge)
                     Icon(imageVector = Icons.Default.Search, contentDescription = null)
