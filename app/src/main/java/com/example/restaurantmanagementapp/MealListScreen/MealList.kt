@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -94,6 +95,7 @@ fun MealList(
         Column(modifier = Modifier
             .fillMaxSize()) {
             Header(navController = navController)
+
             SearchBar(searchText, onSearchTextChange = {searchText = it})
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -168,7 +170,7 @@ fun Header(navController: NavController){
             .padding(top = 10.dp)
     ) {
         Text(
-            text = stringResource(id = R.string.app_name), style = Typography.titleMedium, modifier = Modifier
+            text = stringResource(id = R.string.meallist), style = Typography.titleLarge, modifier = Modifier
                 .padding(start = 10.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.50f)
@@ -193,6 +195,10 @@ fun Header(navController: NavController){
             }
         }
     }
+    Divider(
+        color = Color.Gray,
+        modifier = Modifier.padding(vertical = 8.dp).padding(horizontal = 12.dp)
+    )
 }
 
 @Composable

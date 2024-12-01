@@ -42,4 +42,6 @@
     <string name="details">Szczegóły</string>
     <string name="add_to_order2">Dodaj do zamówienia</string>
     <string name="dontlogout">Nie wylogowuj mnie</string>
+    <string name="meallist">Lista dań</string>
+    <string name="reservation">Rezerwacja</string>
 </resources>

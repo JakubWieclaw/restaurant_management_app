@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken
 
 class HoursViewModel: ViewModel() {
     var localTimes by mutableStateOf<List<LocalTime>?>(null)
+    var tableHours by mutableStateOf<List<String>?>(null)
     var isLoading by mutableStateOf(true)
     var errorMessage by mutableStateOf<String?>(null)
     var tableReservations by mutableStateOf<List<TableReservation>>(emptyList())
@@ -32,6 +33,7 @@ class HoursViewModel: ViewModel() {
                             val gson = Gson()
                             val localTimeListType = object : TypeToken<List<String>>() {}.type
                             val localTimesString:List<String> = gson.fromJson(responseBody, localTimeListType)
+                            tableHours = localTimesString
                             localTimes  = localTimesString.map{
                                 val trimmed:List<String> = it.split(":")
                                 LocalTime(hour = trimmed[0].toInt(), minute = trimmed[1].toInt(), second = trimmed[2].toInt(),nano=0)
@@ -41,6 +43,7 @@ class HoursViewModel: ViewModel() {
                         } catch (e: Exception) {
                             println("Parsing error: ${e.message}")
                             localTimes = emptyList()
+                            tableHours = emptyList()
                             errorMessage = "Error: ${e.message}"
                         }
                     },
@@ -62,8 +65,8 @@ class HoursViewModel: ViewModel() {
         val endTime = LocalTime((startTime.hour+2),startTime.minute,startTime.second,startTime.nano)
         val makeReservationCommand = MakeReservationCommand(
             day = day,
-            startTime = "${startTime.hour}:${startTime.minute}:00",
-            endTime = "${endTime.hour}:${endTime.minute}:00",
+            startTime = "${String.format("%02d",startTime.hour)}:${String.format("%02d",startTime.minute)}:00",
+            endTime = "${String.format("%02d",endTime.hour)}:${String.format("%02d",endTime.minute)}:00",
             numberOfPeople = numberOfPeople,
             customerId = customerId
         )

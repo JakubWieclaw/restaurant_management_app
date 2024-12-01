@@ -362,7 +362,7 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?,onDismissRequest:()
                     }
                 }
 
-                tmeal.removableIngredients.forEach { ingredient ->
+                tmeal.removableIngredList.forEach { ingredient ->
                     val isRemoved =
                         tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
                     Row(

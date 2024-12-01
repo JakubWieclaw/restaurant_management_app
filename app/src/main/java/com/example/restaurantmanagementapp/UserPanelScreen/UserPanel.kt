@@ -294,9 +294,9 @@ fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavContr
         ) {
             // Left line
             Column(modifier = Modifier.weight(1f)){
-                Text(text =  "Twój profil", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
-                Divider(thickness = 2.dp)
-                Text(text = " ", fontSize = 18.sp)
+                Text(text =  "Twój ", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Divider(color = Color.Gray)
+                Text(text = "profil ", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
             }
 
 

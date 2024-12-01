@@ -14,7 +14,7 @@ object TestData {
             price=4.99,
             photographUrl = "string",
             ingredients = listOf("ser,pieczarki"),
-            removableIngredients = listOf("ser"),
+            removableIngredList = listOf("ser"),
             weightOrVolume = .3,
             unitType = "GRAMY",
             categoryId = 1,

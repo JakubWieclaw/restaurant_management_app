@@ -67,8 +67,11 @@ fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navCon
             .padding(10.dp))
     {
         //TypographyPreview()
-        Text(text =stringResource(id = R.string.restaurant) +  stringResource(id = R.string.restaurant_name), style = Typography.titleLarge)
-        Divider(modifier = Modifier.height(2.dp))
+        Text(text =stringResource(id = R.string.restaurant_name), style = Typography.titleLarge)
+        Divider(
+            color = Color.Gray,
+            modifier = Modifier.padding(vertical = 8.dp).padding(horizontal = 12.dp)
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.about_us), style = Typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))

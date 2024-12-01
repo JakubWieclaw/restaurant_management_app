@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -56,6 +57,7 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,7 +82,7 @@ import java.util.Calendar
 fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewModel) {
 
     var selectedDate by remember { mutableStateOf("1990/1/1") }
-    var selectedSits by remember { mutableStateOf("0") }
+    var selectedSits by remember { mutableStateOf("1") }
     var choosenCard by remember { mutableStateOf("-1") }
     var reservationFetched by remember { mutableStateOf(false) }
 
@@ -95,10 +97,19 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
     val filteredTables = mutableListOf(Table("1",2),Table("2",4))
 
     Column(modifier = Modifier
-        .fillMaxSize()) {
+        .fillMaxSize()
+        .padding(12.dp)) {
+
+        Text(text = stringResource(id = R.string.reservation), style = Typography.titleLarge )
+        Divider(
+            color = Color.Gray,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .padding(horizontal = 12.dp)
+        )
         FilterOptions(
-            onDateChange = { date -> selectedDate = date },
-            onSitsChange = { sits -> selectedSits = sits },
+            onDateChange = { date -> selectedDate = date;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
+            onSitsChange = { sits -> selectedSits = sits;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
             onSearchClick = { hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token)}
         )
           //Debug
@@ -110,34 +121,36 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
         if(hoursViewModel.tableReservations.isNotEmpty()&&reservationFetched){
             TableReservationCard(hoursViewModel.tableReservations[0])
         }else {
-            if (hoursViewModel.localTimes != null) {
+            if (hoursViewModel.tableHours != null) {
                 LazyColumn(
                     modifier = Modifier
-                        .padding(10.dp)
                         .weight(1f)
                 ) {
-                    items(hoursViewModel.localTimes!!.chunked(2)) { rowItems ->
+                    items(hoursViewModel.tableHours!!.chunked(2)) { rowItems ->
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             // Dla każdego elementu w parze tworzymy kolumnę
                             rowItems.forEachIndexed { index, localTime ->
-                                val actualIndex = hoursViewModel.localTimes!!.indexOf(localTime)
+                                val actualIndex = hoursViewModel.tableHours!!.indexOf(localTime)
+                                Spacer(modifier = Modifier.width(4.dp))
                                 TableCart(
-                                    time = "${localTime.hour}-${localTime.minute}",
+                                    time = localTime.dropLast(3),
                                     selectedSits = selectedSits,
                                     index = actualIndex,
                                     isChoosen = choosenCard == actualIndex.toString(),
                                     onChoose = { nr -> choosenCard = nr },
                                     modifier = Modifier.weight(0.5f)
                                 )
+                                Spacer(modifier = Modifier.width(4.dp))
                             }
+
 //                        // Jeśli jest tylko jeden element w rzędzie, dodaj pustą przestrzeń jako drugi element
 //                        if (rowItems.size < 2) {
 //                            Spacer(modifier = Modifier.weight(1f))
 //                        }
                         }
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
             } else {
@@ -157,7 +170,7 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
         }else {
             Button(
                 onClick = {
-                    if (hoursViewModel.localTimes != null && authViewModel.customerData != null) {
+                    if (hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1) {
                         hoursViewModel.makeReservation(
                             day = selectedDate,
                             startTime = hoursViewModel.localTimes!![choosenCard.toInt()],
@@ -169,8 +182,8 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .padding(bottom = 10.dp)
+                    .padding(10.dp),
+                enabled = hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1
             ) {
                 Text("Zarezerwuj")
             }
@@ -219,7 +232,7 @@ fun FilterOptions(
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
-    var selectedDate by remember { mutableStateOf("$year-${month + 1}-$day") }
+    var selectedDate by remember { mutableStateOf("$year-${String.format("%02d",month + 1)}-${String.format("%02d",day)}") }
     val context = LocalContext.current
 
     val sitsNum = listOf("1","2","3","4","5","6")
@@ -231,8 +244,8 @@ fun FilterOptions(
 
     Column(modifier = Modifier
         .fillMaxWidth()
-        .padding(start = 10.dp, end = 10.dp, top = 10.dp)){
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+        .padding(top = 10.dp)){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 Text("Dzień")
                 Button(modifier = Modifier
@@ -243,7 +256,7 @@ fun FilterOptions(
                         val datePickerDialog = android.app.DatePickerDialog(
                             context,
                             { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-                                selectedDate = "$selectedYear-${selectedMonth + 1}-${
+                                selectedDate = "$selectedYear-${String.format("%02d",selectedMonth + 1)}-${
                                     String.format(
                                         "%02d",
                                         selectedDayOfMonth

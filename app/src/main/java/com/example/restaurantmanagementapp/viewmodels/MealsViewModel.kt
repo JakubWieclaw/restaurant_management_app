@@ -52,7 +52,7 @@ class MealsViewModel : ViewModel() {
                                         price = mealServer.price,
                                         photographUrl = mealServer.photographUrl,
                                         ingredients = mealServer.ingredients,
-                                        removableIngredients = if(mealServer.removableIngredients==null) listOf("") else mealServer.removableIngredients!!,
+                                        removableIngredList = if(mealServer.removableIngredList.isNullOrEmpty()) listOf("") else mealServer.removableIngredList!!,
                                         weightOrVolume = mealServer.weightOrVolume,
                                         unitType = mealServer.unitType,
                                         categoryId = mealServer.categoryId,
