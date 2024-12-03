@@ -7,7 +7,7 @@
     <string name="mealeditheader">Usuń składniki z:</string>
     <string name="total">Cena:</string>
     <string name="currency">zł</string>
-    <string name="price">Cena:</string>
+    <string name="price">Cena</string>
     <string name="favourite">"Ulubione: "</string>
     <string name="downloaded">Pobrano:</string>
     <string name="loging">Logowanie</string>
@@ -44,4 +44,9 @@
     <string name="dontlogout">Nie wylogowuj mnie</string>
     <string name="meallist">Lista dań</string>
     <string name="reservation">Rezerwacja</string>
+    <string name="day">Dzień</string>
+    <string name="number_of_people">Liczba osób</string>
+    <string name="hour">Godzina</string>
+    <string name="order">Zamówienie</string>
+    <string name="totalSum">Łączna cena</string>
 </resources>

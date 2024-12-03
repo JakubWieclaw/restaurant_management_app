@@ -191,21 +191,22 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 val addons = 0.0
                 val discount = itemprice - orderViewModel.getOrderTotal(mealId = couponsViewModel.selectedCoupon?.meal?.id, discount = couponsViewModel.selectedCoupon?.discountPercentage)
 
-                CartSummaryItem(label = "Item Price", price = itemprice)
-                CartSummaryItem(label = "Addons", price = addons)
-                Divider(
-                    color = Color.Gray,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-                CartSummaryItem(label = "Subtotal", price = itemprice + addons)
-                CartSummaryItem(label = "Discount", price = -discount)
-                Divider(
-                    color = Color.Gray,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+//                CartSummaryItem(label = "Item Price", price = itemprice)
+//                CartSummaryItem(label = "Addons", price = addons)
+//                Divider(
+//                    color = Color.Gray,
+//                    modifier = Modifier.padding(vertical = 8.dp)
+//                )
+//                CartSummaryItem(label = "Subtotal", price = itemprice + addons)
+//                CartSummaryItem(label = "Discount", price = -discount)
+//                Divider(
+//                    color = Color.Gray,
+//                    modifier = Modifier.padding(vertical = 8.dp)
+//                )
                 CartSummaryItem(
                     label = "Total",
-                    price = itemprice + addons - discount,
+                    price = itemprice + addons,
+                    discount = discount,
                     isTotal = true
                 )
             }
@@ -318,7 +319,7 @@ fun ReservationCard(hoursViewModel: HoursViewModel) {
 }
 
 @Composable
-fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
+fun CartSummaryItem(label: String, price: Double, discount: Double, isTotal: Boolean = false) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -328,11 +329,22 @@ fun CartSummaryItem(label: String, price: Double, isTotal: Boolean = false) {
             fontSize = if (isTotal) 20.sp else 16.sp,
             color = if (isTotal) Color.Black else Color.Gray
         )
-        Text(
-            text = "${String.format("%.2f", price)} zł",
-            fontSize = if (isTotal) 20.sp else 16.sp,
-            color = if (isTotal) Color.Black else Color.Gray
-        )
+        Row(){
+            Text(
+                text = "${String.format("%.2f", price)} zł",
+                fontSize = if (discount>0) 16.sp else 20.sp,
+                color = if (discount>0) Color.Red else Color.Black,
+                textDecoration = if(discount>0) TextDecoration.LineThrough else null
+            )
+            if(discount>0){
+                Text(
+                    text = "${String.format("%.2f", price-discount)} zł",
+                    fontSize = 20.sp,
+                    color = Color.Black
+                )
+            }
+        }
+
     }
 }
 

@@ -40,7 +40,7 @@ class AuthViewModel() : ViewModel() {
         this.context = context
     }
 
-    fun loginFromSavedData():Boolean{
+    fun loginFromSavedData(onComplete: (String, Int) -> Unit):Boolean{
         val username: String?
         val password: String?
         runBlocking {
@@ -50,13 +50,13 @@ class AuthViewModel() : ViewModel() {
         }
         if(username!=null&&password!=null){
             val loginRequest = LoginRequest(username,password)
-            login(loginRequest,true)
+            login(loginRequest,true,onComplete={token,id -> onComplete(token,id)})
             return true
         }
         return false
     }
 
-    fun login(loginRequest:LoginRequest,dontlogout:Boolean) {
+    fun login(loginRequest:LoginRequest,dontlogout:Boolean,onComplete:(String,Int)->Unit) {
         val call = RetrofitInstance.api.login(loginRequest)
         call.enqueue(
             CallbackHandler(
@@ -77,6 +77,7 @@ class AuthViewModel() : ViewModel() {
                             }
                         }
                         getCustomerData(response.customerId,response.token)
+                        onComplete(customerData!!.token,customerData!!.customerId)
                     } catch (e: Exception) {
                         println("Parsing error: ${e.message}")
                     }
@@ -94,6 +95,8 @@ class AuthViewModel() : ViewModel() {
 
     //Only for phone number :P
     fun getCustomerData(customerId:Int, customerToken:String){
+        //TODO: Poprawić customer id
+        //TODO: fetchowanie kuponów po zalogowaniu
         val call = RetrofitInstance.api.getCustomerData(customerId,"Bearer $customerToken")
         call.enqueue(
             CallbackHandler(
@@ -160,7 +163,7 @@ class AuthViewModel() : ViewModel() {
         )
     }
 
-    fun register(registerRequest: RegisterRequest){
+    fun register(registerRequest: RegisterRequest,onComplete: (String, Int) -> Unit){
         val call = RetrofitInstance.api.register(registerRequest)
         call.enqueue(
             CallbackHandler(
@@ -170,7 +173,7 @@ class AuthViewModel() : ViewModel() {
 //                        val gson = Gson()
 //                        val responseType = object : TypeToken<RequestResponse>() {}.type
 //                        val response: RequestResponse = gson.fromJson(responseBody, responseType)
-                        login(LoginRequest(registerRequest.email,registerRequest.password),false)
+                        login(LoginRequest(registerRequest.email,registerRequest.password),false,onComplete = {token,id -> onComplete(token,id)})
                     } catch (e: Exception) {
                         println("Parsing error: ${e.message}")
                     } },

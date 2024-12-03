@@ -26,7 +26,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -74,12 +76,13 @@ import com.example.restaurantmanagementapp.classes.Table
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
+import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.Calendar
 
 @Composable
-fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewModel) {
+fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewModel,mealsViewModel: MealsViewModel) {
 
     var selectedDate by remember { mutableStateOf("1990/1/1") }
     var selectedSits by remember { mutableStateOf("1") }
@@ -96,129 +99,109 @@ fun TableReservation(hoursViewModel: HoursViewModel, authViewModel: AuthViewMode
     //val choosenTable = tables.find { table -> table.nr == tablenr }
     val filteredTables = mutableListOf(Table("1",2),Table("2",4))
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(12.dp)) {
+    val colScrollState = rememberScrollState()
 
-        Text(text = stringResource(id = R.string.reservation), style = Typography.titleLarge )
-        Divider(
-            color = Color.Gray,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .padding(horizontal = 12.dp)
-        )
-        FilterOptions(
-            onDateChange = { date -> selectedDate = date;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
-            onSitsChange = { sits -> selectedSits = sits;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
-            onSearchClick = { hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token)}
-        )
-          //Debug
+    Column(
+        modifier = if(hoursViewModel.tableReservations.isNotEmpty()){
+        Modifier
+            .verticalScroll(colScrollState)
+            .fillMaxSize().padding(12.dp) } else {
+        Modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    }){
+
+            Text(text = stringResource(id = R.string.reservation), style = Typography.titleLarge )
+            Divider(
+                color = Color.Gray,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .padding(horizontal = 12.dp)
+            )
+            FilterOptions(
+                onDateChange = { date -> selectedDate = date;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
+                onSitsChange = { sits -> selectedSits = sits;hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token) },
+                onSearchClick = { hoursViewModel.fetchAvailableHours(selectedDate,selectedSits,authViewModel.customerData!!.token)}
+            )
+            //Debug
 //            Text(selectedDate)
 //            Text(selectedTime1)
 //            Text(selectedTime2)
 //            Text(selectedSits)
 
-        if(hoursViewModel.tableReservations.isNotEmpty()&&reservationFetched){
-            TableReservationCard(hoursViewModel.tableReservations[0])
-        }else {
-            if (hoursViewModel.tableHours != null) {
-                LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    items(hoursViewModel.tableHours!!.chunked(2)) { rowItems ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            // Dla każdego elementu w parze tworzymy kolumnę
-                            rowItems.forEachIndexed { index, localTime ->
-                                val actualIndex = hoursViewModel.tableHours!!.indexOf(localTime)
-                                Spacer(modifier = Modifier.width(4.dp))
-                                TableCart(
-                                    time = localTime.dropLast(3),
-                                    selectedSits = selectedSits,
-                                    index = actualIndex,
-                                    isChoosen = choosenCard == actualIndex.toString(),
-                                    onChoose = { nr -> choosenCard = nr },
-                                    modifier = Modifier.weight(0.5f)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                            }
+            if(hoursViewModel.tableReservations.isNotEmpty()&&reservationFetched){
+                TableReservationCard(hoursViewModel.tableReservations[0], mealsViewModel = mealsViewModel)
+            }else {
+                if (hoursViewModel.tableHours != null) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                    ) {
+                        items(hoursViewModel.tableHours!!.chunked(2)) { rowItems ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                // Dla każdego elementu w parze tworzymy kolumnę
+                                rowItems.forEachIndexed { index, localTime ->
+                                    val actualIndex = hoursViewModel.tableHours!!.indexOf(localTime)
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    TableCart(
+                                        time = localTime.dropLast(3),
+                                        selectedSits = selectedSits,
+                                        index = actualIndex,
+                                        isChoosen = choosenCard == actualIndex.toString(),
+                                        onChoose = { nr -> choosenCard = nr },
+                                        modifier = Modifier.weight(0.5f)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                }
 
 //                        // Jeśli jest tylko jeden element w rzędzie, dodaj pustą przestrzeń jako drugi element
 //                        if (rowItems.size < 2) {
 //                            Spacer(modifier = Modifier.weight(1f))
 //                        }
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
                     }
+                } else {
+                    Text("Pusta lista", modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
                 }
-            } else {
-                Text("Pusta lista", modifier = Modifier.fillMaxSize(), textAlign = TextAlign.Center)
             }
-        }
-        if(hoursViewModel.tableReservations.isNotEmpty()){
-            Button(
-                onClick = {hoursViewModel.cancelReservation(customerToken = authViewModel.customerData!!.token)},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .padding(bottom = 10.dp),
-                colors = ButtonDefaults.buttonColors(Color.Red)){
-                Text("Anuluj rezerwację", color = Color.White)
-            }
-        }else {
-            Button(
-                onClick = {
-                    if (hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1) {
-                        hoursViewModel.makeReservation(
-                            day = selectedDate,
-                            startTime = hoursViewModel.localTimes!![choosenCard.toInt()],
-                            numberOfPeople = selectedSits.toInt(),
-                            customerId = authViewModel.customerData!!.customerId,
-                            customerToken = authViewModel.customerData!!.token
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                enabled = hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1
-            ) {
-                Text("Zarezerwuj")
+            if(hoursViewModel.tableReservations.isNotEmpty()){
+                Button(
+                    onClick = {hoursViewModel.cancelReservation(customerToken = authViewModel.customerData!!.token)},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    colors = ButtonDefaults.buttonColors(Color.Red)){
+                    Text("Anuluj rezerwację", color = Color.White)
+                }
+            }else {
+                Button(
+                    onClick = {
+                        if (hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1) {
+                            hoursViewModel.makeReservation(
+                                day = selectedDate,
+                                startTime = hoursViewModel.localTimes!![choosenCard.toInt()],
+                                numberOfPeople = selectedSits.toInt(),
+                                customerId = authViewModel.customerData!!.customerId,
+                                customerToken = authViewModel.customerData!!.token
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    enabled = hoursViewModel.localTimes != null && authViewModel.customerData != null && choosenCard.toInt()>-1
+                ) {
+                    Text("Zarezerwuj")
+                }
             }
         }
     }
 
-}
 
-@Composable
-fun TableReservationCard(tableReservation: TableReservation) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, shape = RoundedCornerShape(16.dp))
-            .border(2.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
-            .padding(16.dp)
-    ){
-        Image(
-            painter =
-            if(tableReservation.people<3) {
-                painterResource(R.drawable.table2) }else{
-                if(tableReservation.people<5){
-                    painterResource(R.drawable.table4)
-                }else{
-                    painterResource(R.drawable.table6)
-                }
-                }, contentDescription = null)
-        Column(){
-            Text(text = tableReservation.day)
-            Text(text = "Liczba osób: ${tableReservation.people}")
-            Text(text="${tableReservation.startTime} - ${tableReservation.endTime}")
-        }
-    }
-
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

@@ -54,6 +54,7 @@ import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequ
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
+import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 
 //@Preview
 //@Composable
@@ -63,20 +64,20 @@ import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 //    }
 //}
 
-fun register(name:String,surname:String,email:String,phone:String,password:String,navController: NavController, authViewModel: AuthViewModel){
+fun register(name:String,surname:String,email:String,phone:String,password:String,navController: NavController, authViewModel: AuthViewModel,couponsViewModel: CouponsViewModel){
     val registerRequest = RegisterRequest(name,surname,email,phone,password)
-    authViewModel.register(registerRequest)
+    authViewModel.register(registerRequest, onComplete = {token,id -> couponsViewModel.fetchCoupons(customerId = id,token=token, onComplete = {})})
     navigateToScreen("meallist",navController)
 }
 
-fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel,checked:Boolean){
+fun login(email:String,password:String,navController: NavController,authViewModel: AuthViewModel, couponsViewModel: CouponsViewModel,checked:Boolean){
     val loginRequest = LoginRequest(email,password)
-    authViewModel.login(loginRequest,checked)
+    authViewModel.login(loginRequest,checked, onComplete = {token,id -> couponsViewModel.fetchCoupons(customerId = id,token=token, onComplete = {})})
     navigateToScreen("meallist",navController)
 }
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, authViewModel: AuthViewModel){
+fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, authViewModel: AuthViewModel,couponsViewModel:CouponsViewModel,){
     var isLoginSelected by remember { mutableStateOf(true) }
     var isForgotSelected by remember { mutableStateOf(false) }
     var emailForgot by remember { mutableStateOf("") }
@@ -127,9 +128,9 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isLoginSelected) {
-            LoginFields(navController, authViewModel, elementsStyle, checked)
+            LoginFields(navController, authViewModel, couponsViewModel, elementsStyle, checked)
         } else {
-            RegisterFields(navController, authViewModel, elementsStyle)
+            RegisterFields(navController, authViewModel,couponsViewModel, elementsStyle)
         }
         if(isLoginSelected){
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp)){
@@ -149,7 +150,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
 }
 
 @Composable
-fun LoginFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle, checked:Boolean){
+fun LoginFields(navController: NavController,authViewModel: AuthViewModel,couponsViewModel: CouponsViewModel, elementsStyle: TextStyle, checked:Boolean){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Column(modifier = Modifier.fillMaxWidth(),verticalArrangement = Arrangement.SpaceBetween){
@@ -177,7 +178,7 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel, eleme
                 .align(Alignment.CenterHorizontally)
                 .height(60.dp)
                 .padding(10.dp),
-            onClick = { login(email, password, navController, authViewModel,checked) }) {
+            onClick = { login(email, password, navController, authViewModel, couponsViewModel, checked) }) {
             Text(text = stringResource(id = R.string.log_in), style = Typography.labelLarge)
         }
     }
@@ -185,7 +186,7 @@ fun LoginFields(navController: NavController,authViewModel: AuthViewModel, eleme
 
 
 @Composable
-fun RegisterFields(navController: NavController,authViewModel: AuthViewModel, elementsStyle: TextStyle){
+fun RegisterFields(navController: NavController,authViewModel: AuthViewModel,couponsViewModel:CouponsViewModel ,elementsStyle: TextStyle){
     var name by remember { mutableStateOf("")}
     var surname by remember { mutableStateOf("")}
     var email by remember { mutableStateOf("")}
@@ -238,7 +239,7 @@ fun RegisterFields(navController: NavController,authViewModel: AuthViewModel, el
                 .align(Alignment.CenterHorizontally)
                 .height(60.dp)
                 .padding(10.dp),
-            onClick= {register(name,surname,email,phone,password,navController,authViewModel)}){
+            onClick= {register(name,surname,email,phone,password,navController,authViewModel,couponsViewModel)}){
             Text(text = stringResource(id = R.string.register), style = Typography.labelLarge)
         }
     }

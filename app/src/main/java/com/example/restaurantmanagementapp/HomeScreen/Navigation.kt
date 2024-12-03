@@ -47,7 +47,7 @@ fun SetupNavGraph(
             RestaurantInfo(images = images, couponsViewModel = couponsViewModel,navController = navController)
         }
         composable("loginscreen") {
-            LoginScreen(navController = navController ,authViewModel = authViewModel)
+            LoginScreen(navController = navController ,authViewModel = authViewModel, couponsViewModel = couponsViewModel)
         }
         composable("userpanel"){
             SettingsScreen(navController = navController, orderHistoryViewModel = orderHistoryViewModel, authViewModel = authViewModel)
@@ -56,7 +56,7 @@ fun SetupNavGraph(
             OrderHistory(orderHistoryViewModel = orderHistoryViewModel, mealsViewModel = mealsViewModel)
         }
         composable("tablereservation"){
-            TableReservation(hoursViewModel = hoursViewModel, authViewModel = authViewModel)
+            TableReservation(hoursViewModel = hoursViewModel, authViewModel = authViewModel, mealsViewModel = mealsViewModel)
         }
         composable("favourites"){
             FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)

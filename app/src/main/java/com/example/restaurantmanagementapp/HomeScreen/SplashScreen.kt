@@ -50,15 +50,17 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     LaunchedEffect(!viewModelsReady) {
         authViewModel.setContext(context)
-        authViewModel.loginFromSavedData()
+        //TODO: W zasadzie bezparametrowe onComplete wystarczy, bo wtedy authviewmodel.customerdata na pewno istnieje i można z niego skorzystać
+        authViewModel.loginFromSavedData(onComplete = {token,id ->
+            couponsViewModel.fetchCoupons(
+            customerId = id,
+            onComplete = {},
+            token = token)
+        })
 
         if(!viewModelsReady) {
             categoriesViewModel.fetchCategories(onComplete = { completed++ })
             mealsViewModel.fetchMeals(onComplete = { completed++;mealsReady = true })
-
-            //TODO: Poprawić customer id
-            //TODO: fetchowanie kuponów po zalogowaniu
-            //couponsViewModel.fetchCoupons(customerId = 1,onComplete = {completed++})
         }
         viewModelsReady = true
     }

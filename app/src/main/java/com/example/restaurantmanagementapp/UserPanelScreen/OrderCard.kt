@@ -29,32 +29,37 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
+fun OrderCard(order: Order, mealsViewModel: MealsViewModel, toTableRes:Boolean = false) {
         Column(
-            modifier = Modifier
+            modifier = if(!toTableRes){
+                Modifier
                 .fillMaxWidth()
                 .background(Color.White, shape = RoundedCornerShape(16.dp))  // Tło dla karty
                 .border(2.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
-                .padding(16.dp)  // Większy padding wewnętrzny
+                .padding(16.dp) } else {
+                    Modifier
+                    .fillMaxWidth()}
+
         ) {
             // Górna sekcja - Typ zamówienia i data
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(id = R.string.type) + getOrderType(order.type),
-                    fontWeight = FontWeight.Bold,
-                    style = Typography.labelMedium
-                )
-                Text(
-                    text = formatDateTime(order.dateTime),
-                    color = Color.Gray,  // Szary kolor dla mniej ważnej informacji
-                    style = Typography.labelMedium
-                )
+            if(!toTableRes){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.type) + getOrderType(order.type),
+                        fontWeight = FontWeight.Bold,
+                        style = Typography.labelMedium
+                    )
+                    Text(
+                        text = formatDateTime(order.dateTime),
+                        color = Color.Gray,
+                        style = Typography.labelMedium
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
             }
-
-            Spacer(modifier = Modifier.height(10.dp))  // Odstęp między sekcjami
 
             // Lista posiłków i niechciane składniki
             Text(
@@ -120,7 +125,7 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel) {
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
                 Text(
-                    text = stringResource(id = R.string.price)+ order.orderPrice+ stringResource(id = R.string.currency),
+                    text = stringResource(id = R.string.price)+ ": "+ order.orderPrice+ stringResource(id = R.string.currency),
                     fontWeight = FontWeight.Bold,
                 )
             }
