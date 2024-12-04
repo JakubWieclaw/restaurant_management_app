@@ -158,7 +158,7 @@ fun getOrderStatus(status:String):String{
         "OCZEKUJĄCE" -> "OCZEKUJĄCE"
         "W_TRAKCIE_REALIZACJI"-> "W REALIZACJI"
         "GOTOWE"-> "GOTOWE"
-        "W_DOSTRACZENIU"-> "W DOSTARCZENOI"
+        "W_DOSTARCZENIU"-> "W DOSTARCZENIU"
         "DOSTARCZONE"-> "DOSTARCZONE"
         "ODRZUCONE"-> "ODRZUCONE"
         else -> "nieznane"
