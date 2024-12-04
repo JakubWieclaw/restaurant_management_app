@@ -1,6 +1,7 @@
 package com.example.restaurantmanagementapp.CartScreen
 
 import android.app.Activity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
@@ -29,12 +31,14 @@ import androidx.navigation.NavController
 import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
+import com.example.restaurantmanagementapp.UserPanelScreen.OrderCard
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.MealQuantity
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.UnwantedIngredient
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.ui.theme.light_background
 import com.example.restaurantmanagementapp.ui.theme.light_onPrimary
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
@@ -62,7 +66,7 @@ import org.json.JSONObject
 fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,hoursViewModel: HoursViewModel, navController:NavController) {
 
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
-    var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "") }
+    var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "Tu wpisz kod promocyjny") }
     var paymentSucceed by remember { mutableStateOf(false) }
     var orderId by remember { mutableIntStateOf(-1)}
     val paymentSheet = rememberPaymentSheet {
@@ -120,8 +124,9 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            ReservationCard(hoursViewModel)
+            ReservationCard(hoursViewModel, onBtnClick = { navigateToScreen("tablereservation",navController)})
             // MealCartCard list
+            Spacer(modifier = Modifier.height(10.dp))
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
@@ -158,7 +163,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                         .weight(1f)
                         .padding(start = 8.dp, end = 8.dp)
                         .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
-                    textStyle = TextStyle(fontSize = 18.sp, color = if(promoCodeValid) Color.Black else Color.Red)
+                    textStyle = TextStyle(fontSize = 18.sp, color = if(promoCodeValid) Color.Black else Color.Red),
                 )
                 Button(
                     onClick = {
@@ -204,7 +209,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
 //                    modifier = Modifier.padding(vertical = 8.dp)
 //                )
                 CartSummaryItem(
-                    label = "Total",
+                    label = stringResource(id = R.string.totalSum),
                     price = itemprice + addons,
                     discount = discount,
                     isTotal = true
@@ -304,16 +309,30 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
 }
 
 @Composable
-fun ReservationCard(hoursViewModel: HoursViewModel) {
+fun ReservationCard(hoursViewModel: HoursViewModel, onBtnClick:()->Unit) {
     if(hoursViewModel.tableReservations.isNotEmpty()){
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-            Text(text = hoursViewModel.tableReservations[0].day)
-            Text(text = "${hoursViewModel.tableReservations[0].startTime} - ${hoursViewModel.tableReservations[0].endTime}")
-            Text(text = "Osoby: ${hoursViewModel.tableReservations[0].people}")
-        }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .background(color = light_background, shape = RoundedCornerShape(16.dp))
+                .border(2.dp, Color.Gray, shape = RoundedCornerShape(16.dp))
+                .padding(10.dp)
+                , horizontalArrangement = Arrangement.SpaceBetween) {
+                Column(modifier = Modifier.weight(0.5f)){
+                    Text(text = stringResource(id = R.string.reservation))
+                    Text(text = hoursViewModel.tableReservations[0].day)
+                }
+                Column(modifier = Modifier.weight(0.5f)){
+                    Text(text = stringResource(id = R.string.hour) + ": ${hoursViewModel.tableReservations[0].startTime.dropLast(3)}-${hoursViewModel.tableReservations[0].endTime.dropLast(3)}")
+                    Text(text = stringResource(id = R.string.number_of_people) +": ${hoursViewModel.tableReservations[0].people}")
+                }
+
+            }
     }else{
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween){
-            Text(text = "Zamówienie bez rezerwacji")
+            Text(text = "Zamówienie bez rezerwacji", softWrap = true, modifier = Modifier.weight(0.5f))
+            Button(onClick = {onBtnClick()}, modifier = Modifier.weight(0.5f)){
+                Text(text = stringResource(id = R.string.add_reservation), softWrap = false)
+            }
         }
     }
 }
@@ -338,7 +357,7 @@ fun CartSummaryItem(label: String, price: Double, discount: Double, isTotal: Boo
             )
             if(discount>0){
                 Text(
-                    text = "${String.format("%.2f", price-discount)} zł",
+                    text = " ${String.format("%.2f", price-discount)} zł",
                     fontSize = 20.sp,
                     color = Color.Black
                 )
@@ -360,7 +379,8 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?,onDismissRequest:()
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp).padding(bottom=40.dp),
+                    .padding(16.dp)
+                    .padding(bottom = 40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(modifier = Modifier.fillMaxWidth()){
@@ -420,6 +440,8 @@ fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?,onDismissRequest:()
                 }
             }
         }
+    }else{
+        println("index = null")
     }
 }
 

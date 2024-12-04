@@ -28,6 +28,7 @@ import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
+import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.math.abs
@@ -35,7 +36,7 @@ import kotlin.math.min
 
 @Composable
 fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel, favMealsViewModel: FavMealsViewModel,
-                 navController: NavController) {
+                 hoursViewModel: HoursViewModel, navController: NavController) {
     var totalItems by remember { mutableIntStateOf(3) }
     var completed by remember { mutableIntStateOf(0) }
 
@@ -55,7 +56,10 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
             couponsViewModel.fetchCoupons(
             customerId = id,
             onComplete = {},
-            token = token)
+            token = token);
+            hoursViewModel.getReservations(
+                customerId = id,
+                customerToken = token)
         })
 
         if(!viewModelsReady) {

@@ -49,4 +49,5 @@
     <string name="hour">Godzina</string>
     <string name="order">Zamówienie</string>
     <string name="totalSum">Łączna cena</string>
+    <string name="add_reservation">Dodaj rezerwacje</string>
 </resources>

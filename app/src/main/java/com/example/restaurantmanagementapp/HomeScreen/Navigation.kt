@@ -77,7 +77,7 @@ fun SetupNavGraph(
 
 
         composable("splashscreen"){
-            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel,favMealsViewModel = favMealsViewModel, navController = navController)
+            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel,favMealsViewModel = favMealsViewModel,hoursViewModel=hoursViewModel, navController = navController)
         }
 
         composable("suggestionform"){

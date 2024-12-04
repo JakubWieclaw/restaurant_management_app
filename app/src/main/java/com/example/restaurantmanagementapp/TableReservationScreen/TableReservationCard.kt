@@ -53,8 +53,9 @@ fun TableReservationCard(tableReservation: TableReservation, mealsViewModel: Mea
                     }else{
                         painterResource(R.drawable.table6)
                     }
-                }, contentDescription = null, alignment = Alignment.CenterStart)
-            Column(){
+                }, contentDescription = null, alignment = Alignment.CenterStart,
+                modifier = Modifier.weight(0.3f))
+            Column(modifier = Modifier.weight(0.7f)){
                 Text(text = stringResource(id = R.string.day) +": " +tableReservation.day)
                 Text(text = stringResource(id = R.string.number_of_people) +": ${tableReservation.people}")
                 Text(text= stringResource(id = R.string.hour) +": ${tableReservation.startTime.dropLast(3)} - ${tableReservation.endTime.dropLast(3)}")

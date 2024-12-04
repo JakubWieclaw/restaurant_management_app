@@ -108,8 +108,8 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
             //SettingList(label = "Card Settings", icon = android.R.drawable.ic_btn_speak_now, settingItemsData = settingItems2, foldable = true)
             //SettingList(label = "Settings", icon = android.R.drawable.ic_menu_manage, settingItemsData =settingItems3, foldable = false)
         }
-        Row() {
-            Text("Masz uwagi, sugestie, pytania?")
+        Row(modifier = Modifier.padding(10.dp)) {
+            Text("Masz uwagi, sugestie, pytania? ")
             Text("Wciśnij tutaj.",color = Color.Blue, textDecoration = TextDecoration.Underline, modifier = Modifier.clickable { navigateToScreen("suggestionform",navController)  })
         }
     }
@@ -294,9 +294,9 @@ fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavContr
         ) {
             // Left line
             Column(modifier = Modifier.weight(1f)){
-                Text(text =  "Twój ", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Text(text =  "Twój ", style = Typography.labelLarge, fontSize = 20.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
                 Divider(color = Color.Gray)
-                Text(text = "profil ", style = Typography.labelLarge, fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                Text(text = "profil ", style = Typography.labelLarge, fontSize = 20.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
             }
 
 
@@ -317,9 +317,9 @@ fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavContr
                     Text(text = "Wyloguj się")
                 }
 
-                //Text(text = "Loyalty points:", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                //Text(text = "Loyalty points:", fontSize = 20.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
                 //Divider(thickness = 2.dp)
-                //Text(text = "$points", fontSize = 18.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
+                //Text(text = "$points", fontSize = 20.sp,modifier = Modifier.align(Alignment.CenterHorizontally))
             }
         }
     }
