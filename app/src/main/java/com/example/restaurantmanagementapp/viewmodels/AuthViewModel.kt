@@ -4,20 +4,14 @@ import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
-import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
-import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
-import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.LoginRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.RegisterRequest
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.LoginResponse
-import com.example.restaurantmanagementapp.apithings.schemasclasses.RequestResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import androidx.datastore.preferences.preferencesDataStore
@@ -56,7 +50,7 @@ class AuthViewModel() : ViewModel() {
         return false
     }
 
-    fun login(loginRequest:LoginRequest,dontlogout:Boolean,onComplete:(String,Int)->Unit) {
+    fun login(loginRequest: LoginRequest, dontlogout:Boolean, onComplete:(String, Int)->Unit) {
         val call = RetrofitInstance.api.login(loginRequest)
         call.enqueue(
             CallbackHandler(
@@ -163,7 +157,7 @@ class AuthViewModel() : ViewModel() {
         )
     }
 
-    fun register(registerRequest: RegisterRequest,onComplete: (String, Int) -> Unit){
+    fun register(registerRequest: RegisterRequest, onComplete: (String, Int) -> Unit){
         val call = RetrofitInstance.api.register(registerRequest)
         call.enqueue(
             CallbackHandler(
@@ -173,7 +167,7 @@ class AuthViewModel() : ViewModel() {
 //                        val gson = Gson()
 //                        val responseType = object : TypeToken<RequestResponse>() {}.type
 //                        val response: RequestResponse = gson.fromJson(responseBody, responseType)
-                        login(LoginRequest(registerRequest.email,registerRequest.password),false,onComplete = {token,id -> onComplete(token,id)})
+                        login(LoginRequest(registerRequest.email,registerRequest.password),false,onComplete = { token, id -> onComplete(token,id)})
                     } catch (e: Exception) {
                         println("Parsing error: ${e.message}")
                     } },

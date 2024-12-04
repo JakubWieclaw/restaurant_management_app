@@ -70,5 +70,4 @@ fun TableReservationCard(tableReservation: TableReservation, mealsViewModel: Mea
             Text(text = stringResource(id = R.string.totalSum) +": ${tableReservation.orders.sumOf{it.orderPrice}} " + stringResource(id = R.string.currency))
         }
     }
-
 }

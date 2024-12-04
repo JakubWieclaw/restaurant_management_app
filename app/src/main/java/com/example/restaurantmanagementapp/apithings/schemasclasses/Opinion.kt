@@ -6,7 +6,3 @@ class Opinion(
     val comment: String
 )
 
-data class AvgRating(
-    val averageRating: Double,
-    val numberOfOpinions: Int
-)

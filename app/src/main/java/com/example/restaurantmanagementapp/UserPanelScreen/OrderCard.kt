@@ -82,9 +82,9 @@ fun OrderCard(order: Order, mealsViewModel: MealsViewModel, toTableRes:Boolean =
                     if (unwanted.ingredients.isNotEmpty()) {
                         Text(
                             text = "\t Usunięte składniki: ${unwanted.ingredients.joinToString(", ")}",
-                            color = Color.Red,  // Wyróżnienie usuniętych składników
-                            fontStyle = FontStyle.Italic,  // Tekst pochylony dla estetyki
-                            fontSize = 12.sp  // Mniejszy rozmiar dla mniej ważnych informacji
+                            color = Color.Red,
+                            fontStyle = FontStyle.Italic,
+                            fontSize = 12.sp
                         )
                     }
                 }

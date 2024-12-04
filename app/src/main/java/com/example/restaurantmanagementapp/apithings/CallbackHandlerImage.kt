@@ -1,17 +1,15 @@
 package com.example.restaurantmanagementapp.apithings
-import android.util.Base64
+
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 class CallbackHandlerImage(
     private val onSuccess: (ByteArray) -> Unit,
     private val onError: (Int, String?) -> Unit,
     private val onFailure: (Throwable) -> Unit
 ) : Callback<ResponseBody> {
-    @OptIn(ExperimentalEncodingApi::class)
     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
         try {
             if (response.isSuccessful) {

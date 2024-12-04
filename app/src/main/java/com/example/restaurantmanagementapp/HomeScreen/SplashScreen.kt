@@ -37,14 +37,13 @@ import kotlin.math.min
 @Composable
 fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel, favMealsViewModel: FavMealsViewModel,
                  hoursViewModel: HoursViewModel, navController: NavController) {
-    var totalItems by remember { mutableIntStateOf(3) }
+    val totalItems by remember { mutableIntStateOf(3) }
     var completed by remember { mutableIntStateOf(0) }
 
     var mealSize by remember {mutableIntStateOf(100)}
     var completed2 by remember{ mutableIntStateOf(0)}
 
     var mealsReady by remember { mutableStateOf(false) }
-
     var viewModelsReady by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -71,7 +70,6 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     LaunchedEffect(mealsReady) {
         if (mealsReady) {
-            //totalItems += mealsViewModel.meals.size
             println("Pobieram obrazy, opinie i średnie oceny posiłków:")
             mealsViewModel.meals.forEach { meal ->
                 mealsViewModel.downloadAndSaveImage(context = context,meal.photographUrl,onComplete={completed2++})
@@ -99,7 +97,6 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
                         }
                     )
                 )
-                //totalItems += mealsViewModel.meals.size
                 val opinionsResponse = RetrofitInstance.api.getOpinionsForMeal(meal.id)
                 opinionsResponse.enqueue(
                     CallbackHandler(
@@ -134,12 +131,6 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
             favMealsViewModel.loadFavMeals(mealsViewModel.meals)
         }
     }
-
-//    if(mealSize in 1..completed2){
-//        completed++
-//    }
-
-
 
     val progress = (completed.toFloat() + completed2.toFloat()/mealSize.toFloat()) / totalItems.toFloat()
 

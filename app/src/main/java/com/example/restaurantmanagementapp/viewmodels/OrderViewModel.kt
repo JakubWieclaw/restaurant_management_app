@@ -9,7 +9,7 @@ import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.MealQuantity
 import com.example.restaurantmanagementapp.apithings.schemasclasses.OrderAddCommand
 import com.example.restaurantmanagementapp.apithings.schemasclasses.UnwantedIngredient
-import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
 
 class OrderViewModel : ViewModel() {
     private val _orderItems = mutableStateListOf<Meal>()

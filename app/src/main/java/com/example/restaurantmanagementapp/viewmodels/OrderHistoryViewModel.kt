@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
-import com.example.restaurantmanagementapp.apithings.RequestClasses.CouponServer
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Order
 import com.google.gson.Gson

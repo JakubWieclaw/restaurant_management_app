@@ -45,18 +45,6 @@ import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 
-//@Preview
-//@Composable
-//fun RestaurantInfo2Preview(){
-//    RestaurantInfo2(listOf(
-//        R.drawable.test_meal_picture_1,
-//        R.drawable.test_meal_picture_1,
-//        R.drawable.test_meal_picture_1,
-//        R.drawable.test_meal_picture_1,
-//        R.drawable.test_meal_picture_1
-//        ))
-//}
-
 @Composable
 fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navController: NavController){
     val colScrollState = rememberScrollState()
@@ -189,34 +177,4 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
             }
         }
     }
-}
-
-
-@Composable
-fun TypographyPreview() {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(text = "Display Large", style = Typography.displayLarge)
-                Text(text = "Display Medium", style = Typography.displayMedium)
-                Text(text = "Display Small", style = Typography.displaySmall)
-
-                Text(text = "Headline Large", style = Typography.headlineLarge)
-                Text(text = "Headline Medium", style = Typography.headlineMedium)
-                Text(text = "Headline Small", style = Typography.headlineSmall)
-
-                Text(text = "Title Large", style = Typography.titleLarge)
-                Text(text = "Title Medium", style = Typography.titleMedium)
-                Text(text = "Title Small", style = Typography.titleSmall)
-
-                Text(text = "Body Large", style = Typography.bodyLarge)
-                Text(text = "Body Medium", style = Typography.bodyMedium)
-                Text(text = "Body Small", style = Typography.bodySmall)
-
-                Text(text = "Label Large", style = Typography.labelLarge)
-                Text(text = "Label Medium", style = Typography.labelMedium)
-                Text(text = "Label Small", style = Typography.labelSmall)
-            }
 }

@@ -47,7 +47,5 @@ fun FavouriteMeals(orderViewModel: OrderViewModel, favMealsViewModel: FavMealsVi
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-
     }
-
 }

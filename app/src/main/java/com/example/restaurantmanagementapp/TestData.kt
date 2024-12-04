@@ -1,10 +1,9 @@
 package com.example.restaurantmanagementapp
 
-import com.example.restaurantmanagementapp.apithings.RequestClasses.Category
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Category
 import com.example.restaurantmanagementapp.apithings.schemasclasses.LoginResponse
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
-import com.example.restaurantmanagementapp.classes.Meal
-import com.example.restaurantmanagementapp.classes.Table
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
 
 object TestData {
     val mealListSample = listOf(

@@ -12,5 +12,4 @@ open class MealServer(
     open val categoryId: Int,
     open val allergens: List<String>,
     open val calories: Int,
-    //open val unitTypeMandatory: Boolean,
 )

@@ -1,6 +1,6 @@
 package com.example.restaurantmanagementapp.apithings.schemasclasses
 
-class UnwantedIngredient(
+data class UnwantedIngredient(
     val mealIndex:Int,
     val ingredients:List<String>
 )

@@ -1,8 +1,10 @@
 package com.example.restaurantmanagementapp.apithings
+
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 class CallbackHandler(
     private val onSuccess: (String) -> Unit,
     private val onError: (Int, String?) -> Unit,

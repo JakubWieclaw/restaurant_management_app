@@ -30,11 +30,11 @@ import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
-    object GeneralInfo : BottomNavItem("Aktualności", Icons.Default.Info, "restaurantinfo")
-    object DishSearch : BottomNavItem("Szukaj", Icons.Default.Search, "meallist")
-    object TableReservation : BottomNavItem("Rezerwacja", Icons.Default.Star, "tablereservation")
-    object UserProfile : BottomNavItem("Profil", Icons.Default.Person, "userpanel")
-    object Cart: BottomNavItem("Koszyk", Icons.Default.ShoppingCart, "cart")
+    data object GeneralInfo : BottomNavItem("Aktualności", Icons.Default.Info, "restaurantinfo")
+    data object DishSearch : BottomNavItem("Szukaj", Icons.Default.Search, "meallist")
+    data object TableReservation : BottomNavItem("Rezerwacja", Icons.Default.Star, "tablereservation")
+    data object UserProfile : BottomNavItem("Profil", Icons.Default.Person, "userpanel")
+    data object Cart: BottomNavItem("Koszyk", Icons.Default.ShoppingCart, "cart")
 }
 @Composable
 fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewModel, authViewModel: AuthViewModel,modifier:Modifier) {
@@ -88,17 +88,16 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
 fun CartIconWithBadge(cartItemCount: Int, modifier:Modifier) {
     Box(contentAlignment = Alignment.TopEnd) {
         Icon(
-            imageVector = Icons.Default.ShoppingCart, // Ikona koszyka
+            imageVector = Icons.Default.ShoppingCart,
             contentDescription = "Cart",
             modifier = Modifier.then(modifier) // Rozmiar ikony koszyka
         )
 
         if (cartItemCount > 0) {
-            // Licznik elementów w koszyku
             Text(
                 text = cartItemCount.toString(),
                 color = Color.White,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 modifier = Modifier
                     .offset(x = 12.dp, y = (-10).dp) // Przesunięcie liczby nad ikoną koszyka
                     .background(Color.Red, shape = CircleShape) // Tło w formie okręgu

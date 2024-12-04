@@ -1,4 +1,4 @@
-package com.example.restaurantmanagementapp.apithings.RequestClasses
+package com.example.restaurantmanagementapp.apithings.schemasclasses
 
 data class RegisterRequest(
     val name: String,

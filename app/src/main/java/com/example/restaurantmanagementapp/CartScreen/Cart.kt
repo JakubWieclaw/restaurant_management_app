@@ -52,22 +52,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-/*TODO: W android studio na urządzeniu aplikacja się crashuje przy próbie dokonania płatności (jakiś
-    problem z getResource dot. animacji?
-    W przypadku użycia na rzeczywistym telefonie działa poprawnie
-*/
-
-/*
-* TODO: stworzyć nowy screen z już wypełnionymi niezmienialnymi danymi, gdzie paymentinit wywyluje sie qw launcheffect
-*  ,wtedy może zadziala jak wszystko bedzie czyste, bo juz * idzie dostać od implementacji tego stripe'a
-* */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,hoursViewModel: HoursViewModel, navController:NavController) {
 
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "Tu wpisz kod promocyjny") }
-    var paymentSucceed by remember { mutableStateOf(false) }
     var orderId by remember { mutableIntStateOf(-1)}
     val paymentSheet = rememberPaymentSheet {
             paymentSheetResult ->
@@ -95,20 +85,11 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
     }
 
     var promoCodeValid by remember{ mutableStateOf(true) }
-
-
-    //var initcomplete by remember{mutableStateOf(false)}
     val context = LocalContext.current
-    //var customerConfig by remember { mutableStateOf<PaymentSheet.CustomerConfiguration?>(null) }
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
-
-    val stripeServerMockInstance = remember { stripeServerMock() }
-
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true )
     var showSheet by remember{ mutableStateOf(false)}
-    val scope = rememberCoroutineScope()
     var selectedMealIdx by remember { mutableStateOf<Int?>(null) }
-
 
     Scaffold(
         containerColor = Color.Transparent
@@ -125,8 +106,8 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             ReservationCard(hoursViewModel, onBtnClick = { navigateToScreen("tablereservation",navController)})
-            // MealCartCard list
             Spacer(modifier = Modifier.height(10.dp))
+            // MealCartCard list
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
@@ -140,8 +121,8 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
+
             // Promo code section
             Row(
                 modifier = Modifier
@@ -195,19 +176,6 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 val itemprice = orderViewModel.getOrderTotal()
                 val addons = 0.0
                 val discount = itemprice - orderViewModel.getOrderTotal(mealId = couponsViewModel.selectedCoupon?.meal?.id, discount = couponsViewModel.selectedCoupon?.discountPercentage)
-
-//                CartSummaryItem(label = "Item Price", price = itemprice)
-//                CartSummaryItem(label = "Addons", price = addons)
-//                Divider(
-//                    color = Color.Gray,
-//                    modifier = Modifier.padding(vertical = 8.dp)
-//                )
-//                CartSummaryItem(label = "Subtotal", price = itemprice + addons)
-//                CartSummaryItem(label = "Discount", price = -discount)
-//                Divider(
-//                    color = Color.Gray,
-//                    modifier = Modifier.padding(vertical = 8.dp)
-//                )
                 CartSummaryItem(
                     label = stringResource(id = R.string.totalSum),
                     price = itemprice + addons,
@@ -244,24 +212,6 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                             minutesForReservation = 120,
                             couponCode = null
                         )
-//                        //DEBUG
-//                        val stripeMock = stripeServerMock()
-//                        stripeMock.go(object : stripeServerMock.Callback<String> {
-//                            override fun onSuccess(result: String) {
-//
-//                                val jsonObject = JSONObject(result)
-//                                paymentIntentClientSecret = jsonObject.getString("paymentIntent")
-//                                val publishableKey = jsonObject.getString("publishableKey")
-//                                PaymentConfiguration.init(context, publishableKey)
-//                                paymentIntentClientSecret?.let { presentPaymentSheet(paymentSheet, it) }
-//                                // Możesz teraz użyć paymentIntent i publishableKey w swojej aplikacji
-//                            }
-//
-//                            override fun onError(e: Exception) {
-//
-//                            }
-//                        })
-
             val call = RetrofitInstance.api.addNewOrder(orderAddCommand, "Bearer ${authViewModel.customerData!!.token}")
             call.enqueue(
                 CallbackHandler(
@@ -363,85 +313,6 @@ fun CartSummaryItem(label: String, price: Double, discount: Double, isTotal: Boo
                 )
             }
         }
-
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MealEditSheet(orderViewModel: OrderViewModel, index:Int?,onDismissRequest:()->Unit,sheetState:SheetState ){
-    if(index!=null && index < orderViewModel.orderItems.size) {
-        ModalBottomSheet(
-            onDismissRequest = {onDismissRequest()},
-            sheetState = sheetState
-            ) {
-            val tmeal = orderViewModel.orderItems[index]
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .padding(bottom = 40.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(modifier = Modifier.fillMaxWidth()){
-                    Text(
-                        text = stringResource(id = R.string.mealeditheader) + " " + tmeal.name,
-                        style = Typography.titleSmall,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    IconButton(onClick={onDismissRequest()}){
-                        Icon(imageVector=Icons.Default.Close, contentDescription = null)
-                    }
-                }
-
-                tmeal.removableIngredList.forEach { ingredient ->
-                    val isRemoved =
-                        tmeal.removedIngredients.find { item -> item == ingredient } == ingredient
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "- $ingredient",
-                            textDecoration = if (isRemoved) TextDecoration.LineThrough else TextDecoration.None,
-                            style = Typography.labelMedium
-                        )
-                        Row() {
-                            IconButton(
-                                onClick = { orderViewModel.addIngredient(index, ingredient) },
-                                enabled = isRemoved,
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = if (isRemoved) Color.Green else Color.Gray,
-                                        shape = RoundedCornerShape(50)
-                                    )
-                            ) {
-                                Icon(imageVector = Icons.Default.Check, contentDescription = null)
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                            IconButton(
-                                onClick = { orderViewModel.removeIngredient(index, ingredient) },
-                                enabled = !isRemoved,
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = if (!isRemoved) Color.Red else Color.Gray,
-                                        shape = RoundedCornerShape(50)
-                                    )
-                            ) {
-                                Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }else{
-        println("index = null")
     }
 }
 
@@ -466,7 +337,6 @@ private fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult, onCompl
             println("Error: ${paymentSheetResult.error}")
         }
         is PaymentSheetResult.Completed -> {
-            // Display for example, an order confirmation screen
             println("Completed")
             onComplete()
         }

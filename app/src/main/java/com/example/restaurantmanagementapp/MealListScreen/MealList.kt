@@ -50,28 +50,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CategoriesViewModel
-import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Category
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
 import com.example.restaurantmanagementapp.ui.theme.RestaurantManagementAppTheme
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.launch
 
-@Preview(
-    showBackground = true
-)
-@Composable
-fun MealListPreview() {
-    RestaurantManagementAppTheme {
-        //MealList(TestData.mealListSample, listOf("Cat0", "Cat1", "Cat2", "Cat3", "Cat4", "Cat5"))
-    }
-}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MealList(
@@ -81,7 +71,7 @@ fun MealList(
     authViewModel: AuthViewModel,
     categoriesViewModel: CategoriesViewModel
 ) {
-    val categories = categoriesViewModel.categoriesState
+    val categories:List<Category> ?= categoriesViewModel.categoriesState
 
     val pagerState = rememberPagerState(
         initialPage = 1,

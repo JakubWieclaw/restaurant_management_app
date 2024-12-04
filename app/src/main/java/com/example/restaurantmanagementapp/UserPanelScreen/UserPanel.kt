@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
@@ -37,33 +36,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
-import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.RegisterRequest
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
 data class SettingItemData(val label: String, var value: String, val editable: Boolean = false, val isDropDown:Boolean = false, val dropDownList:List<String> = listOf())
 
-
-
-val settingItems2 = listOf(
-    SettingItemData(label = "card number", value = "1323 1233 1233 1233"),
-    )
-
-val settingItems3 = listOf(
-    SettingItemData(label = "Language", value = "English", isDropDown = true, dropDownList = listOf("Polish","English","Spanish")),
-)
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHistoryViewModel,authViewModel: AuthViewModel) {
     val customer = authViewModel.customerData!!
@@ -90,10 +74,10 @@ fun SettingsScreen(navController: NavController,orderHistoryViewModel: OrderHist
                 .padding(10.dp)
             ){
             //TODO: zmienić by vył R.string
-            Text(text=  "Moje zamówienia")
+            Text(text= "Moje zamówienia")
         }
         Column(){
-            SettingList(label = "Profile Settings", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false,
+            SettingList(label = "Ustawienia profilu", icon = android.R.drawable.ic_menu_info_details, settingItemsData = settingItems, foldable = false,
                 onValueChange={ index,newValue->
                     settingItems[index].value = newValue
                     val registerRequest = RegisterRequest(
@@ -324,11 +308,3 @@ fun LoyaltyHeader(points: Int,authViewModel:AuthViewModel,navController:NavContr
         }
     }
 }
-
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewSettingList() {
-//    SettingsScreen(authViewModel)
-//}

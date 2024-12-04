@@ -46,14 +46,11 @@ fun MealCartCard(
     onEditClick: () -> Unit,
 ) {
     val cartItem = orderViewModel.orderItems[index]
-    //var quantity by remember { mutableIntStateOf(cartItem.quantity) }
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
-
     val selectedCoupon = couponsViewModel.selectedCoupon
     val isDiscount = selectedCoupon!=null && selectedCoupon.meal.id == cartItem.id
-
 
     Box(
         modifier = Modifier

@@ -1,12 +1,10 @@
-package com.example.restaurantmanagementapp.classes
+package com.example.restaurantmanagementapp.apithings.schemasclasses
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.restaurantmanagementapp.apithings.schemasclasses.MealServer
-import com.example.restaurantmanagementapp.apithings.schemasclasses.Opinion
 
 data class Meal(
     override val id: Int,

@@ -22,10 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
-import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -37,11 +36,9 @@ fun FavouriteMealCard(
     onAddToCart: (Meal) -> Unit,
     onDelete: (Meal) -> Unit
 ) {
-
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
-
 
     Box(
         modifier = Modifier
@@ -145,9 +142,3 @@ fun FavouriteMealCard(
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun FavouriteMealCardPreview(){
-//    FavouriteMealCard(meal = TestData.mealListSample[0], onAddToCart = {}, onDelete = {})
-//}

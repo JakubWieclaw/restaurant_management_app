@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.restaurantmanagementapp.LoginScreen.LoginScreen
 import com.example.restaurantmanagementapp.CartScreen.CartScreen
-import com.example.restaurantmanagementapp.CartScreen.PaymentConfirm
 import com.example.restaurantmanagementapp.FavouriteMealsScreen.FavouriteMeals
 import com.example.restaurantmanagementapp.LoginScreen.PasswordResetScreen
 import com.example.restaurantmanagementapp.MealListScreen.MealList
@@ -22,7 +21,6 @@ import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.FavMealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
-import com.example.restaurantmanagementapp.classes.Table
 import com.example.restaurantmanagementapp.viewmodels.HoursViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 
@@ -61,8 +59,6 @@ fun SetupNavGraph(
         composable("favourites"){
             FavouriteMeals(orderViewModel = orderViewModel,favMealsViewModel = favMealsViewModel)
         }
-
-
         composable("meallist") {
             MealList(meals = mealsViewModel.meals,navController = navController, orderViewModel = orderViewModel,authViewModel = authViewModel, categoriesViewModel = categoriesViewModel)
         }
@@ -74,22 +70,15 @@ fun SetupNavGraph(
         composable("cart") {
             CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel,hoursViewModel=hoursViewModel,navController=navController)
         }
-
-
         composable("splashscreen"){
             SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel,favMealsViewModel = favMealsViewModel,hoursViewModel=hoursViewModel, navController = navController)
         }
-
         composable("suggestionform"){
             SuggestionForm(authViewModel=authViewModel,navController=navController)
         }
         composable("passwordreset"){
             PasswordResetScreen(navController)
         }
-        composable("paymentconfirm"){
-            PaymentConfirm(orderViewModel=orderViewModel,authViewModel=authViewModel,navController = navController)
-        }
-
     }
 }
 

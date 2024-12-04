@@ -1,30 +1,22 @@
 package com.example.restaurantmanagementapp.LoginScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,32 +29,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.restaurantmanagementapp.HomeScreen.CustomBackground
 import com.example.restaurantmanagementapp.HomeScreen.navigateToScreen
 import com.example.restaurantmanagementapp.R
-import com.example.restaurantmanagementapp.apithings.CallbackHandler
-import com.example.restaurantmanagementapp.apithings.RequestClasses.LoginRequest
-import com.example.restaurantmanagementapp.apithings.RequestClasses.RegisterRequest
-import com.example.restaurantmanagementapp.apithings.RetrofitInstance
+import com.example.restaurantmanagementapp.apithings.schemasclasses.LoginRequest
+import com.example.restaurantmanagementapp.apithings.schemasclasses.RegisterRequest
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.AuthViewModel
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
-
-//@Preview
-//@Composable
-//fun LoginScreenPreview(){
-//    RestaurantManagementAppTheme {
-//        LoginScreen()
-//    }
-//}
 
 fun register(name:String,surname:String,email:String,phone:String,password:String,navController: NavController, authViewModel: AuthViewModel,couponsViewModel: CouponsViewModel){
     val registerRequest = RegisterRequest(name,surname,email,phone,password)
@@ -77,26 +54,14 @@ fun login(email:String,password:String,navController: NavController,authViewMode
 }
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, authViewModel: AuthViewModel,couponsViewModel:CouponsViewModel,){
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel,couponsViewModel:CouponsViewModel){
     var isLoginSelected by remember { mutableStateOf(true) }
-    var isForgotSelected by remember { mutableStateOf(false) }
-    var emailForgot by remember { mutableStateOf("") }
-    val context = LocalContext.current
     val elementsStyle = Typography.bodyMedium
     var checked by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(12.dp)){
-//        Image(
-//            painter = painterResource(id = R.drawable.tmpimg),
-//            contentDescription = stringResource(id = R.string.logo_image_description),
-//            modifier = Modifier
-//                .size(140.dp)
-//                .clip(RoundedCornerShape(20.dp))
-//                .fillMaxWidth()
-//                .align(Alignment.CenterHorizontally)
-//        )
         Spacer(modifier = Modifier.height(24.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -113,7 +78,7 @@ fun LoginScreen(modifier: Modifier = Modifier,navController: NavController, auth
                 Text(text = stringResource(id = R.string.loging), color = Color.White)
             }
 
-            Spacer(modifier = Modifier.width(16.dp)) // Przestrzeń między przyciskami
+            Spacer(modifier = Modifier.width(16.dp))
 
             Button(
                 onClick = { isLoginSelected = false },

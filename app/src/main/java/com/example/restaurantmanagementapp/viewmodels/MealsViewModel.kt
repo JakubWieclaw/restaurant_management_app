@@ -8,19 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.restaurantmanagementapp.apithings.CallbackHandler
 import com.example.restaurantmanagementapp.apithings.RetrofitInstance
 import com.example.restaurantmanagementapp.apithings.schemasclasses.MealServer
-import com.example.restaurantmanagementapp.classes.Meal
+import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Base64
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.example.restaurantmanagementapp.apithings.CallbackHandlerImage
-import kotlinx.coroutines.CoroutineStart
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -131,7 +128,7 @@ class MealsViewModel : ViewModel() {
     }
 
 
-    fun findMeal(mealId:Int):Meal?{
+    fun findMeal(mealId:Int): Meal?{
         return meals.find{it.id == mealId}
     }
 }
