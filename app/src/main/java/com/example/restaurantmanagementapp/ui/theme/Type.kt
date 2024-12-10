@@ -77,7 +77,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
     ),
     bodySmall= TextStyle(
-        fontSize = 12.sp,
+        fontSize = 9.sp,
         fontWeight = FontWeight.SemiBold,
         fontFamily = fontFamily,
     ),

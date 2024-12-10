@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 fun TestMainScreen(){
     val navController = rememberNavController()
     val mealsViewModel: MealsViewModel = viewModel()
-    val images = listOf("image1.jpg","image2.jpg","image3.jpg","image4.jpg","lokalizacja.jpg")
+    val images = listOf("image1.jpg","image2.jpg","image3.jpg")
     val orderViewModel: OrderViewModel = viewModel()
     val authViewModel: AuthViewModel = viewModel()
     val favMealsViewModel: FavMealsViewModel = viewModel()

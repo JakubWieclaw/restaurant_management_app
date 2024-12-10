@@ -36,7 +36,7 @@ import kotlin.math.min
 
 @Composable
 fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: MealsViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel, favMealsViewModel: FavMealsViewModel,
-                 hoursViewModel: HoursViewModel, navController: NavController) {
+                 hoursViewModel: HoursViewModel,images: List<String>, navController: NavController) {
     val totalItems by remember { mutableIntStateOf(3) }
     var completed by remember { mutableIntStateOf(0) }
 
@@ -52,6 +52,10 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
     mealsViewModel.downloadAndSaveImage(context,"lokalizacja.jpg", onComplete = {})
 
     // Pobranie galerii
+    for (image in images) {
+        mealsViewModel.downloadAndSaveImage(context,image, onComplete = {})
+    }
+
 
 
 
@@ -160,7 +164,7 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.test_meal_picture_1),
+                painter = painterResource(id = R.drawable.logoicon),
                 contentDescription = "Logo",
                 modifier = Modifier.size(150.dp)
             )

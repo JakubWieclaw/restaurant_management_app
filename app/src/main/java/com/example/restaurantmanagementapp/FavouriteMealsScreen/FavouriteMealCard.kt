@@ -114,7 +114,7 @@ fun FavouriteMealCard(
                     Text(text = meal.name, style = Typography.labelLarge, maxLines = 2)
 
                     // Rating stars
-                    StarRating(rating = 2, size=16.dp)
+                    StarRating(rating = meal.avgRating.toInt(), size=16.dp)
 
                     Spacer(modifier = Modifier.height(8.dp))
 

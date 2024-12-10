@@ -123,7 +123,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     .padding(start = 2.dp, end = 1.dp, top = 0.dp, bottom = 0.dp)
                     .weight(0.35f),
             ) {
-                Text(text= stringResource(R.string.details),style= Typography.labelLarge,maxLines = 1)
+                Text(text= stringResource(R.string.details),style= Typography.labelMedium,maxLines = 1)
             }
             Button(
                 shape = RoundedCornerShape(bottomEnd = 30.dp),
@@ -132,7 +132,7 @@ fun MealCard(meal: Meal, onAddToOrder: (Meal) -> Unit, modifier: Modifier, navCo
                     .padding(start = 1.dp, end = 2.dp, top = 0.dp, bottom = 0.dp)
                     .weight(0.65f)
             ) {
-                Text(text= stringResource(R.string.add_to_order2),style= Typography.labelLarge, maxLines = 1)
+                Text(text= stringResource(R.string.add_to_order2),style= Typography.labelMedium, maxLines = 1)
             }
         }
     }

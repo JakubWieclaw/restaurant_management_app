@@ -40,7 +40,7 @@
     <string name="unknown_meal">Nieznane danie</string>
     <string name="number_of_meals">Ilość:</string>
     <string name="details">Szczegóły</string>
-    <string name="add_to_order2">Dodaj do zamówienia</string>
+    <string name="add_to_order2">Dodaj do koszyka</string>
     <string name="dontlogout">Nie wylogowuj mnie</string>
     <string name="meallist">Lista dań</string>
     <string name="reservation">Rezerwacja</string>
@@ -50,4 +50,6 @@
     <string name="order">Zamówienie</string>
     <string name="totalSum">Łączna cena</string>
     <string name="add_reservation">Dodaj rezerwacje</string>
+    <string name="orderonsite">Na miejscu</string>
+    <string name="orderdelivery">Dostawa</string>
 </resources>

@@ -55,42 +55,54 @@ import org.json.JSONObject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,hoursViewModel: HoursViewModel, navController:NavController) {
-
+    var onsiteOrDelivery by remember { mutableStateOf("NA_MIEJSCU")}
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
     var promoCode by remember { mutableStateOf(selectedCoupon?.code) }
     var orderId by remember { mutableIntStateOf(-1)}
     val paymentSheet = rememberPaymentSheet {
             paymentSheetResult ->
         onPaymentSheetResult(paymentSheetResult, onComplete = {
-            try {
-                val call = RetrofitInstance.api.addToReservation(hoursViewModel.tableReservations[0].id,orderId, "Bearer ${authViewModel.customerData!!.token}")
-                call.enqueue(
-                    CallbackHandler(
-                        onSuccess = { responseBody ->
-                            println("Odpowiedź: $responseBody")
-                        },
-                        onError = { code, errorBody ->
-                            println("Błąd: $code")
-                            println("Treść błędu: $errorBody")
-                        },
-                        onFailure = { throwable ->
-                            println("Request failed: ${throwable.message}")
-                        }
+            if(onsiteOrDelivery=="NA_MIEJSCU") {
+
+
+                try {
+                    val call = RetrofitInstance.api.addToReservation(
+                        hoursViewModel.tableReservations[0].id,
+                        orderId,
+                        "Bearer ${authViewModel.customerData!!.token}"
                     )
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
+                    call.enqueue(
+                        CallbackHandler(
+                            onSuccess = { responseBody ->
+                                println("Odpowiedź: $responseBody")
+                            },
+                            onError = { code, errorBody ->
+                                println("Błąd: $code")
+                                println("Treść błędu: $errorBody")
+                            },
+                            onFailure = { throwable ->
+                                println("Request failed: ${throwable.message}")
+                            }
+                        )
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
+            orderViewModel.clearOrder()
+            promoCode=""
+            couponsViewModel.selectedCoupon = null
         })
     }
 
     var promoCodeValid by remember{ mutableIntStateOf(0) }
-    var promoTextFieldBorderColor = if(promoCodeValid==-1) Color.Red else if(promoCodeValid==0) Color.Transparent else Color.Green
+    val promoTextFieldBorderColor = if(promoCodeValid==-1) Color.Red else if(promoCodeValid==0) Color.Transparent else Color.Green
     val context = LocalContext.current
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true )
     var showSheet by remember{ mutableStateOf(false)}
     var selectedMealIdx by remember { mutableStateOf<Int?>(null) }
+    var address by remember { mutableStateOf("")}
 
     Scaffold(
         containerColor = Color.Transparent
@@ -106,7 +118,29 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                 color = Color.Gray,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            ReservationCard(hoursViewModel, onBtnClick = { navigateToScreen("tablereservation",navController)})
+            if(onsiteOrDelivery=="NA_MIEJSCU") {
+                ReservationCard(
+                    hoursViewModel,
+                    onBtnClick = { navigateToScreen("tablereservation", navController) })
+            }else{
+                TextField(
+                    label = {Text("Adres dostawy")} ,
+                    value = address,
+                    onValueChange = {address = it},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp),
+                    textStyle = TextStyle(fontSize = 18.sp, color = Color.Black)
+                )
+            }
+            Row(modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth()){
+                Button(modifier = Modifier.padding(horizontal = 4.dp).weight(0.5f), colors = if(onsiteOrDelivery=="NA_MIEJSCU") ButtonDefaults.buttonColors(Color.Green) else ButtonDefaults.buttonColors(), onClick = {onsiteOrDelivery="NA_MIEJSCU"}){
+                    Text(text = stringResource(id = R.string.orderonsite))
+                }
+                Button(modifier = Modifier.padding(horizontal = 4.dp).weight(0.5f), colors = if(onsiteOrDelivery=="DOSTAWA") ButtonDefaults.buttonColors(Color.Green) else ButtonDefaults. buttonColors(), onClick = {onsiteOrDelivery="DOSTAWA"}){
+                    Text(text = stringResource(id = R.string.orderdelivery))
+                }
+            }
             Spacer(modifier = Modifier.height(10.dp))
             // MealCartCard list
             LazyColumn(
@@ -203,13 +237,14 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                         val orderAddCommand = OrderAddCommand(
                             mealIds = mealQuantities,
                             customerId = authViewModel.customerData!!.customerId,
-                            type = "NA_MIEJSCU",
-                            status = "GOTOWE",
+                            type = onsiteOrDelivery,
+                            status = "OCZEKUJĄCE",
                             unwantedIngredients = unwantedIngredients,
-                            deliveryAddress = "",
-                            deliveryDistance = 0.0,
-                            tableId = "",
-                            people = 1,
+                            deliveryAddress = address,
+                            //TODO: Do poprawy
+                            deliveryDistance = if(onsiteOrDelivery=="NA_MIEJSCU") 0.0 else 5.0,
+                            tableId = if(hoursViewModel.tableReservations.isNotEmpty()) hoursViewModel.tableReservations[0].tableId else "",
+                            people = if(hoursViewModel.tableReservations.isNotEmpty()) hoursViewModel.tableReservations[0].people else 1,
                             minutesForReservation = 120,
                             couponCode = promoCode
                         )

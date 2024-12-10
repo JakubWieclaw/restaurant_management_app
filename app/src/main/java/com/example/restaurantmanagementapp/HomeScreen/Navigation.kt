@@ -71,7 +71,7 @@ fun SetupNavGraph(
             CartScreen(orderViewModel = orderViewModel,couponsViewModel = couponsViewModel,authViewModel = authViewModel,hoursViewModel=hoursViewModel,navController=navController)
         }
         composable("splashscreen"){
-            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel,favMealsViewModel = favMealsViewModel,hoursViewModel=hoursViewModel, navController = navController)
+            SplashScreen(categoriesViewModel = categoriesViewModel, mealsViewModel = mealsViewModel, couponsViewModel = couponsViewModel, authViewModel = authViewModel,favMealsViewModel = favMealsViewModel,hoursViewModel=hoursViewModel,images=images, navController = navController)
         }
         composable("suggestionform"){
             SuggestionForm(authViewModel=authViewModel,navController=navController)

@@ -48,7 +48,7 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
 
     NavigationBar(modifier = Modifier.then(modifier)) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        items.forEach { item ->
+        items.forEachIndexed { index,item ->
             NavigationBarItem(
                 icon = {
                     if(item == BottomNavItem.Cart)
@@ -63,7 +63,7 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
                     }
                 },
                 label = {
-                    Text(text = item.title, style = Typography.bodySmall)
+                    Text(text = item.title, style = Typography.bodySmall, maxLines = 1)
                 },
                 selected = currentRoute == item.route,
                 onClick = {
@@ -78,7 +78,8 @@ fun BottomNavigationBar(navController: NavController, orderViewModel: OrderViewM
                             navigateToScreen(item.route,navController)
                         }
                     }
-                }
+                },
+                enabled = !((index==2||index==4)&&!authViewModel.isLogged)
             )
         }
     }
