@@ -57,7 +57,7 @@ import org.json.JSONObject
 fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewModel, authViewModel: AuthViewModel,hoursViewModel: HoursViewModel, navController:NavController) {
 
     var selectedCoupon by remember { mutableStateOf(couponsViewModel.selectedCoupon)}
-    var promoCode by remember { mutableStateOf(if(selectedCoupon!=null)selectedCoupon!!.code else "Tu wpisz kod promocyjny") }
+    var promoCode by remember { mutableStateOf(selectedCoupon?.code) }
     var orderId by remember { mutableIntStateOf(-1)}
     val paymentSheet = rememberPaymentSheet {
             paymentSheetResult ->
@@ -84,7 +84,8 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
         })
     }
 
-    var promoCodeValid by remember{ mutableStateOf(true) }
+    var promoCodeValid by remember{ mutableIntStateOf(0) }
+    var promoTextFieldBorderColor = if(promoCodeValid==-1) Color.Red else if(promoCodeValid==0) Color.Transparent else Color.Green
     val context = LocalContext.current
     var paymentIntentClientSecret by remember { mutableStateOf<String?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true )
@@ -129,7 +130,7 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
                     .border(
-                        color = if (promoCodeValid) Color.Transparent else Color.Red,
+                        color = promoTextFieldBorderColor,
                         width = 1.5.dp,
                         shape = RoundedCornerShape(16.dp)
                     )
@@ -138,18 +139,18 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
             ) {
 
                 BasicTextField(
-                    value = promoCode,
-                    onValueChange = {promoCode = it; selectedCoupon = null;promoCodeValid=true },
+                    value = promoCode?: "",
+                    onValueChange = {promoCode = it; selectedCoupon = null;promoCodeValid=0 },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp, end = 8.dp)
                         .background(color = Color.LightGray, shape = MaterialTheme.shapes.small),
-                    textStyle = TextStyle(fontSize = 18.sp, color = if(promoCodeValid) Color.Black else Color.Red),
+                    textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
                 )
                 Button(
                     onClick = {
-                        couponsViewModel.selectCoupon(promoCode)
-                        couponsViewModel.validateCoupon(customerToken = authViewModel.customerData!!.token,onComplete={result->promoCodeValid = result})
+                        couponsViewModel.selectCoupon(promoCode?:"")
+                        couponsViewModel.validateCoupon(customerToken = authViewModel.customerData!!.token,onComplete={result->if(result) promoCodeValid=1 else promoCodeValid=-1})
                     },
                     modifier = Modifier
                         .background(color = Color.Yellow)
@@ -208,9 +209,9 @@ fun CartScreen(orderViewModel: OrderViewModel, couponsViewModel: CouponsViewMode
                             deliveryAddress = "",
                             deliveryDistance = 0.0,
                             tableId = "",
-                            people = 0,
+                            people = 1,
                             minutesForReservation = 120,
-                            couponCode = null
+                            couponCode = promoCode
                         )
             val call = RetrofitInstance.api.addNewOrder(orderAddCommand, "Bearer ${authViewModel.customerData!!.token}")
             call.enqueue(

@@ -16,8 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
@@ -26,6 +29,7 @@ import com.example.restaurantmanagementapp.MealDetailsScreen.StarRating
 import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.apithings.schemasclasses.Meal
 import com.example.restaurantmanagementapp.ui.theme.Typography
+import com.example.restaurantmanagementapp.viewmodels.loadImageFromDevice
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -39,6 +43,9 @@ fun FavouriteMealCard(
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = meal.photographUrl)
+        ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
 
     Box(
         modifier = Modifier
@@ -92,7 +99,7 @@ fun FavouriteMealCard(
             ) {
                 // Image with rounded corners
                 Image(
-                    painter = painterResource(id = R.drawable.test_meal_picture_1),
+                    bitmap = imageBitmap,
                     contentDescription = "Meal Image",
                     modifier = Modifier
                         .size(80.dp)

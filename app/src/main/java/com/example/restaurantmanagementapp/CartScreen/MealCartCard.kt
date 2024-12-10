@@ -21,8 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -34,6 +37,7 @@ import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
 import com.example.restaurantmanagementapp.viewmodels.OrderViewModel
+import com.example.restaurantmanagementapp.viewmodels.loadImageFromDevice
 import kotlinx.coroutines.launch
 import kotlin.math.round
 import kotlin.math.roundToInt
@@ -45,13 +49,15 @@ fun MealCartCard(
     index: Int,
     onEditClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     val cartItem = orderViewModel.orderItems[index]
     val maxOffsetX = -200f // Przesuwanie w lewo (wartość ujemna)
     val offsetX = remember { Animatable(0f) }
     val coroutineScope = rememberCoroutineScope()
     val selectedCoupon = couponsViewModel.selectedCoupon
     val isDiscount = selectedCoupon!=null && selectedCoupon.meal.id == cartItem.id
-
+    val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = cartItem.photographUrl)
+        ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,7 +109,7 @@ fun MealCartCard(
                     .padding(8.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.test_meal_picture_1),
+                    bitmap = imageBitmap,
                     contentDescription = "Meal Image",
                     modifier = Modifier
                         .height(120.dp)

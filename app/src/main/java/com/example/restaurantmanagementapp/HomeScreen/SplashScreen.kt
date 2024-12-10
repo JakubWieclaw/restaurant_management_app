@@ -48,6 +48,13 @@ fun SplashScreen(categoriesViewModel: CategoriesViewModel, mealsViewModel: Meals
 
     val context = LocalContext.current
 
+    // Pobranie obrazka lokalizacji
+    mealsViewModel.downloadAndSaveImage(context,"lokalizacja.jpg", onComplete = {})
+
+    // Pobranie galerii
+
+
+
     LaunchedEffect(!viewModelsReady) {
         authViewModel.setContext(context)
         //TODO: W zasadzie bezparametrowe onComplete wystarczy, bo wtedy authviewmodel.customerdata na pewno istnieje i można z niego skorzystać

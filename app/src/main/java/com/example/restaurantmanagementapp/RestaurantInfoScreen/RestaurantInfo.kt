@@ -31,8 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -44,10 +46,16 @@ import com.example.restaurantmanagementapp.R
 import com.example.restaurantmanagementapp.TestData
 import com.example.restaurantmanagementapp.ui.theme.Typography
 import com.example.restaurantmanagementapp.viewmodels.CouponsViewModel
+import com.example.restaurantmanagementapp.viewmodels.MealsViewModel
+import com.example.restaurantmanagementapp.viewmodels.loadImageFromDevice
 
 @Composable
-fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navController: NavController){
+fun RestaurantInfo(images: List<String>, couponsViewModel: CouponsViewModel, mealsViewModel: MealsViewModel,
+                   navController: NavController){
     val colScrollState = rememberScrollState()
+    val context = LocalContext.current
+    val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = "lokalizacja.jpg")
+        ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
 
     Column(
         modifier = Modifier
@@ -71,12 +79,12 @@ fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navCon
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.today_coupons), style = Typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
-        CouponCarousel(couponsViewModel,imageSize =300.dp)
+        CouponCarousel(couponsViewModel,mealsViewModel,imageSize =300.dp)
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = stringResource(id = R.string.localization), style = Typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
         Image(
-            painter = painterResource(id = images[0]),
+            bitmap = imageBitmap,
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -87,8 +95,9 @@ fun RestaurantInfo(images: List<Int>, couponsViewModel: CouponsViewModel, navCon
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImageCarousel(images: List<Int>, imageSize: Dp) {
+fun ImageCarousel(images: List<String>, imageSize: Dp) {
     val listState = rememberLazyListState(0)
+    val context = LocalContext.current
     LazyRow(
         state = listState,
         contentPadding = PaddingValues(horizontal = (imageSize / 5)),
@@ -96,12 +105,14 @@ fun ImageCarousel(images: List<Int>, imageSize: Dp) {
         flingBehavior = rememberSnapFlingBehavior(listState)
     ) {
         items(images) { imageRes ->
+            val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = imageRes)
+                ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
             Box(
                 modifier = Modifier
                     .size(width = imageSize, height = imageSize.times(1.2f))
             ) {
                 Image(
-                    painter = painterResource(id = imageRes),
+                    bitmap = imageBitmap,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -113,7 +124,7 @@ fun ImageCarousel(images: List<Int>, imageSize: Dp) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
+fun CouponCarousel(couponsViewModel: CouponsViewModel,mealsViewModel: MealsViewModel, imageSize: Dp) {
     val listState = rememberLazyListState(0)
     val context = LocalContext.current
     LazyRow(
@@ -124,6 +135,9 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
     ) {
         if(couponsViewModel.coupons!=null){
             items(couponsViewModel.coupons!!) { coupon ->
+                val imageName = mealsViewModel.findMeal(coupon.meal.id)?.photographUrl
+                val imageBitmap: ImageBitmap = loadImageFromDevice(context = context, filename = imageName?: "")
+                    ?: ImageBitmap.imageResource(id = R.drawable.no_photo)
                 Box(
                     modifier = Modifier
                         .size(width = imageSize, height = imageSize.times(1.2f))
@@ -135,7 +149,7 @@ fun CouponCarousel(couponsViewModel: CouponsViewModel, imageSize: Dp) {
                         }
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.test_meal_picture_1),
+                        bitmap = imageBitmap,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

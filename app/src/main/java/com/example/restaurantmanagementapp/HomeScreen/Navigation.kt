@@ -27,7 +27,7 @@ import com.example.restaurantmanagementapp.viewmodels.OrderHistoryViewModel
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    images: List<Int>,
+    images: List<String>,
     mealsViewModel: MealsViewModel,
     orderViewModel: OrderViewModel,
     authViewModel: AuthViewModel,
@@ -42,7 +42,7 @@ fun SetupNavGraph(
         startDestination = "splashscreen"
     ) {
         composable("restaurantinfo") {
-            RestaurantInfo(images = images, couponsViewModel = couponsViewModel,navController = navController)
+            RestaurantInfo(images = images, couponsViewModel = couponsViewModel, mealsViewModel = mealsViewModel, navController = navController)
         }
         composable("loginscreen") {
             LoginScreen(navController = navController ,authViewModel = authViewModel, couponsViewModel = couponsViewModel)
